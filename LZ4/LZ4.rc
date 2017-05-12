@@ -1,0 +1,36 @@
+// Engine Resource Control file
+
+1 VERSIONINFO
+FILEFLAGSMASK 0x3FL
+FILEFLAGS     0L
+FILEOS        0x40004L
+FILETYPE      2L
+FILESUBTYPE   0L
+
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName",      "Trinity Software, LLC\000"
+            VALUE "FileDescription",  "A BSD-licenced lossless compression algorithm.\000"
+            VALUE "FileVersion",      "1.7.5-7\000"
+            VALUE "InternalName",     "lz4\000"
+            VALUE "LegalCopyright",   "Copyright \251 2017 Trinity Software, LLC\000"
+            VALUE "OriginalFilename", "lz4.dll\000"
+            VALUE "ProductName",      "LZ4 Compression Library\000"
+            VALUE "ProductVersion",   "1.7.5-7\000"
+        END
+    END
+
+    BLOCK "VarFileInfo"
+    BEGIN
+        /* The following line should only be modified for localized versions.     */
+        /* It consists of any number of WORD,WORD pairs, with each pair           */
+        /* describing a language,codepage combination supported by the file.      */
+        /*                                                                        */
+        /* For example, a file might have values "0x409,1252" indicating that it  */
+        /* supports English language (0x409) in the Windows ANSI codepage (1252). */
+        VALUE "Translation", 0x409, 1252
+    END
+END
