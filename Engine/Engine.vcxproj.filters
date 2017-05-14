@@ -21,9 +21,15 @@
     <ClCompile Include="mainloop.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="package.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mainloop.hh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="package.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

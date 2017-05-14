@@ -27,6 +27,9 @@
     <ClCompile Include="xxhash.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="lz4.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lz4.h">
@@ -45,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="xxhash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lz4.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

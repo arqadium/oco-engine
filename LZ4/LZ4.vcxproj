@@ -199,12 +199,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="lz4.c" />
+    <ClCompile Include="lz4.cc" />
     <ClCompile Include="lz4frame.c" />
     <ClCompile Include="lz4hc.c" />
     <ClCompile Include="xxhash.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lz4.h" />
+    <ClInclude Include="lz4.hh" />
     <ClInclude Include="lz4frame.h" />
     <ClInclude Include="lz4frame_static.h" />
     <ClInclude Include="lz4hc.h" />
