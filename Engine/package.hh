@@ -10,6 +10,7 @@
 
 #include <cstdint>
 #include <fstream>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -29,8 +30,10 @@ namespace Engine
 	private:
 		std::ifstream stream;
 		bool checked;
+		std::map<std::string, std::uint32_t> fileNames;
 
-		bool Check( );
+		bool ChecksumsInvalid( );
+		void IndexFiles( );
 	};
 }
 

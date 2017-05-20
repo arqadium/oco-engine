@@ -27,7 +27,7 @@
     <ClCompile Include="xxhash.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lz4.cc">
+    <ClCompile Include="lz4mm.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,7 +50,7 @@
     <ClInclude Include="xxhash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lz4.hh">
+    <ClInclude Include="lz4mm.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

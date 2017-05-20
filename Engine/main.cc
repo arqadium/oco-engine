@@ -31,7 +31,7 @@ namespace
 {
 	const array<string, 4> kStartupText{
 		u8"",
-		u8"Project Mochi - Game Engine",
+		u8"Project Mochi ÔÇô Game Engine",
 		u8"Copyright (C) 2017 Trinity Software. All rights reserved",
 		u8""
 	};
