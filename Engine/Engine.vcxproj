@@ -141,6 +141,12 @@
     <PostBuildEvent>
       <Message>Auto-increment build number</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>"$(SolutionDir)Dependencies\Toolchain\CopyDeps.exe" "$(ProjectDir)Dependencies" "$(SolutionDir)$(Platform)\$(Configuration)" $(PlatformTarget) $(Configuration)</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Runs command-line tool to copy over needed dependencies into build directory</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -180,6 +186,12 @@
     <PostBuildEvent>
       <Message>Auto-increment build number</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>"$(SolutionDir)Dependencies\Toolchain\CopyDeps.exe" "$(ProjectDir)Dependencies" "$(SolutionDir)$(Platform)\$(Configuration)" $(PlatformTarget) $(Configuration)</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Runs command-line tool to copy over needed dependencies into build directory</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -266,6 +278,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="console.cc" />
     <ClCompile Include="main.cc" />
     <ClCompile Include="mainloop.cc" />
     <ClCompile Include="package.cc" />

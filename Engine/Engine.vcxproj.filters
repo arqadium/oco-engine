@@ -24,6 +24,9 @@
     <ClCompile Include="package.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="console.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mainloop.hh">
