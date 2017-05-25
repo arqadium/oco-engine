@@ -284,6 +284,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
+    <ClInclude Include="helpers.hh" />
     <ClInclude Include="mainloop.hh" />
     <ClInclude Include="package.hh" />
   </ItemGroup>

@@ -19,11 +19,15 @@
 
 #include "config.h"
 
+#include "helpers.hh"
+
 
 
 using boost::crc_32_type;
 using boost::filesystem::ifstream;
 using boost::filesystem::path;
+using Engine::Helpers::charArrToU16;
+using Engine::Helpers::charArrToU32;
 using std::array;
 using std::runtime_error;
 using std::ios;
@@ -41,8 +45,11 @@ namespace
 
 // Imported from config.h
 const wstring pkgExt{ Config::pkgFileExt_L };
-constexpr uintmax_t headerRawSize = 0x1C;
-constexpr uint8_t curVersion = 0;
+constexpr size_t magicBytesSz{ 0x1C };
+constexpr uint8_t curVersion{ 0 };
+constexpr size_t headerSize{ 0x30 };
+constexpr size_t fileCountOffset{ 0x10 };
+constexpr size_t crcTableCrcOffset{ 0x14 };
 
 bool hasEnding( wstring const& fullString, wstring const& ending )
 {
@@ -67,44 +74,6 @@ bool headerMismatch( vector<uint8_t> data )
 	return false;
 }
 
-uint16_t charArrToU16( array<char, 2> bytes )
-{
-	uint16_t ret{ 0 };
-
-	ret |= static_cast<uint16_t>(bytes[0]) << 8;
-	ret |= static_cast<uint16_t>(bytes[1]);
-
-	return ret;
-}
-
-uint32_t charArrToU32( array<char, 4> bytes )
-{
-	uint32_t ret{ 0 };
-
-	ret |= static_cast<uint32_t>(bytes[0]) << 24;
-	ret |= static_cast<uint32_t>(bytes[1]) << 16;
-	ret |= static_cast<uint32_t>(bytes[2]) << 8;
-	ret |= static_cast<uint32_t>(bytes[3]);
-
-	return ret;
-}
-
-uint64_t charArrToU64( array<char, 8> bytes )
-{
-	uint64_t ret{ 0 };
-
-	ret |= static_cast<uint64_t>(bytes[0]) << 56;
-	ret |= static_cast<uint64_t>(bytes[1]) << 48;
-	ret |= static_cast<uint64_t>(bytes[2]) << 40;
-	ret |= static_cast<uint64_t>(bytes[3]) << 32;
-	ret |= static_cast<uint64_t>(bytes[4]) << 24;
-	ret |= static_cast<uint64_t>(bytes[5]) << 16;
-	ret |= static_cast<uint64_t>(bytes[6]) << 8;
-	ret |= static_cast<uint64_t>(bytes[7]);
-
-	return ret;
-}
-
 } // namespace
 
 Engine::Package::Package( path filePath, bool check )
@@ -122,9 +91,9 @@ Engine::Package::Package( path filePath, bool check )
 	// Read the file header into a byte vector
 	vector<uint8_t> headerRaw;
 
-	headerRaw.resize( headerRawSize );
+	headerRaw.resize( magicBytesSz );
 	this->stream.read( reinterpret_cast<char*>(headerRaw.data( )),
-		headerRawSize );
+		magicBytesSz );
 
 	// Abort if the header doesn't match
 	if(headerMismatch( headerRaw ))
@@ -162,7 +131,7 @@ bool Engine::Package::ChecksumsInvalid( )
 	array<char, 2> fileCountBytes;
 	uint16_t fileCount;
 
-	this->stream.seekg( 0x10 );
+	this->stream.seekg( fileCountOffset );
 	this->stream.read( fileCountBytes.data( ), 2 );
 
 	fileCount = charArrToU16( fileCountBytes );
@@ -172,13 +141,13 @@ bool Engine::Package::ChecksumsInvalid( )
 	vector<uint8_t> crcTable{ };
 
 	crcTable.resize( crcTableSz );
-	this->stream.seekg( 0x30 );
+	this->stream.seekg( headerSize );
 	this->stream.read( reinterpret_cast<char*>(crcTable.data( )),
 		crcTableSz );
 
 	// Retrieve our expected checksum
 	array<char, 4> expectedBytes;
-	this->stream.seekg( 0x14 );
+	this->stream.seekg( crcTableCrcOffset );
 	this->stream.read( expectedBytes.data( ), 4 );
 
 	// We're done with the stream, so close it
