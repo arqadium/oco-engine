@@ -283,6 +283,7 @@
     <ClCompile Include="package.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config.h" />
     <ClInclude Include="mainloop.hh" />
     <ClInclude Include="package.hh" />
   </ItemGroup>
