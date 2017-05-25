@@ -71,8 +71,8 @@ uint16_t charArrToU16( array<char, 2> bytes )
 {
 	uint16_t ret{ 0 };
 
-	ret |= bytes[0] << 8;
-	ret |= bytes[1];
+	ret |= static_cast<uint16_t>(bytes[0]) << 8;
+	ret |= static_cast<uint16_t>(bytes[1]);
 
 	return ret;
 }
@@ -81,10 +81,10 @@ uint32_t charArrToU32( array<char, 4> bytes )
 {
 	uint32_t ret{ 0 };
 
-	ret |= bytes[0] << 24;
-	ret |= bytes[1] << 16;
-	ret |= bytes[2] << 8;
-	ret |= bytes[3];
+	ret |= static_cast<uint32_t>(bytes[0]) << 24;
+	ret |= static_cast<uint32_t>(bytes[1]) << 16;
+	ret |= static_cast<uint32_t>(bytes[2]) << 8;
+	ret |= static_cast<uint32_t>(bytes[3]);
 
 	return ret;
 }
@@ -93,14 +93,14 @@ uint64_t charArrToU64( array<char, 8> bytes )
 {
 	uint64_t ret{ 0 };
 
-	ret |= bytes[0] << 56;
-	ret |= bytes[1] << 48;
-	ret |= bytes[2] << 40;
-	ret |= bytes[3] << 32;
-	ret |= bytes[4] << 24;
-	ret |= bytes[5] << 16;
-	ret |= bytes[6] << 8;
-	ret |= bytes[7];
+	ret |= static_cast<uint64_t>(bytes[0]) << 56;
+	ret |= static_cast<uint64_t>(bytes[1]) << 48;
+	ret |= static_cast<uint64_t>(bytes[2]) << 40;
+	ret |= static_cast<uint64_t>(bytes[3]) << 32;
+	ret |= static_cast<uint64_t>(bytes[4]) << 24;
+	ret |= static_cast<uint64_t>(bytes[5]) << 16;
+	ret |= static_cast<uint64_t>(bytes[6]) << 8;
+	ret |= static_cast<uint64_t>(bytes[7]);
 
 	return ret;
 }
@@ -168,7 +168,7 @@ bool Engine::Package::ChecksumsInvalid( )
 	fileCount = charArrToU16( fileCountBytes );
 
 	// Read in the checksum table
-	const size_t crcTableSz{ fileCount * 4 };
+	const size_t crcTableSz{ static_cast<size_t>(fileCount * 4) };
 	vector<uint8_t> crcTable{ };
 
 	crcTable.resize( crcTableSz );
