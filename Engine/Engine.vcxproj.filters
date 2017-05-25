@@ -24,18 +24,12 @@
     <ClCompile Include="package.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="console.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mainloop.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="package.hh">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="console.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -14,6 +14,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/filesystem.hpp>
+
 
 
 namespace Engine
@@ -21,16 +23,16 @@ namespace Engine
 	class Package
 	{
 	public:
-		Package( std::string filePath, bool check = false );
+		Package( boost::filesystem::path filePath, bool check = false );
 		~Package( );
 
 		std::vector<std::uint8_t> ReadFile( std::string name );
 		std::uint8_t ReadPFlags( std::string name );
 
 	private:
-		std::ifstream stream;
+		boost::filesystem::ifstream stream;
 		bool checked;
-		std::map<std::string, std::uint32_t> fileNames;
+		std::map<std::string, std::uint32_t> fileChecksums;
 
 		bool ChecksumsInvalid( );
 		void IndexFiles( );

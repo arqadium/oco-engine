@@ -8,6 +8,7 @@
 #include "mainloop.hh"
 
 #include <string>
+#include <sstream>
 #include <vector>
 
 #include <SFML/Graphics.hpp>
@@ -21,21 +22,22 @@ using std::vector;
 
 namespace
 {
-	const string kSampleImagePath{ "SampleImage.png" };
+	constexpr auto kSampleImagePath{ "SampleImage.png" };
 }
 
 void Engine::MainLoop( vector<string> args )
 {
-	RenderWindow window( VideoMode( 640, 360 ), "Project Mochi!" );
+	RenderWindow window{ VideoMode{ 640, 360 }, "Project Mochi!" };
 	sf::Texture img;
 
 	img.loadFromFile( kSampleImagePath );
 
-	sf::Sprite spr( img );
+	sf::Sprite spr{ img };
 
 	while(window.isOpen( ))
 	{
 		sf::Event event;
+
 		while(window.pollEvent( event ))
 		{
 			if(event.type == sf::Event::Closed)
