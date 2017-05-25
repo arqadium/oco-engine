@@ -20,23 +20,27 @@
 
 namespace Engine
 {
-	class Package
-	{
-	public:
-		Package( boost::filesystem::path filePath, bool check = false );
-		~Package( );
 
-		std::vector<std::uint8_t> ReadFile( std::string name );
-		std::uint8_t ReadPFlags( std::string name );
+class Package
+{
+public:
+	Package( boost::filesystem::path filePath, bool check = false );
+	~Package( );
+	std::vector<std::uint8_t> ReadFile( std::string name );
+	std::uint8_t ReadPFlags( std::string name );
 
-	private:
-		boost::filesystem::ifstream stream;
-		bool checked;
-		std::map<std::string, std::uint32_t> fileChecksums;
+private:
+	boost::filesystem::path filePath;
+	boost::filesystem::ifstream stream;
+	bool checked;
+	std::map<std::string, std::uint32_t> fileChecksums;
 
-		bool ChecksumsInvalid( );
-		void IndexFiles( );
-	};
+	bool ChecksumsInvalid( );
+	void IndexFiles( );
+	void EnsureOpenStream( );
+	void EnsureClosedStream( );
+};
+
 }
 
 

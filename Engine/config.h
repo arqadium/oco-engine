@@ -10,6 +10,8 @@
 
 #ifndef __cplusplus
 
+#if __STDC_VERSION__ >= 201112L
+
 #define CFG__MAGIC_BYTES u8"\x89MOCHIPKG\r\n\x1A\n" // See notes below
 #define CFG__PKG_FILE_EXT u8".mochipkg"
 #define CFG__PKG_FILE_EXT_L u".mochipkg"
@@ -17,6 +19,30 @@
 #define CFG__ERR_BAD_FILE_HEADER_L u"File header bytes are invalid"
 #define CFG__ERR_BAD_FILE_EXT u8"File extension is invalid"
 #define CFG__ERR_BAD_FILE_EXT_L u"File extension is invalid"
+#define CFG__ERR_BAD_FILE_STREAM u8"Failed to open file (read)"
+#define CFG__ERR_BAD_FILE_STREAM_L u"Failed to open file (read)"
+#define CFG__ERR_BAD_CHECKSUM u8"Checksumming failed"
+#define CFG__ERR_BAD_CHECKSUM_L u"Checksumming failed"
+#define CFG__ERR_CANNOT_CLOSE_STREAM u8"Cannot close file stream"
+#define CFG__ERR_CANNOT_CLOSE_STREAM_L u"Cannot close file stream"
+
+#else
+
+#define CFG__MAGIC_BYTES "\x89MOCHIPKG\r\n\x1A\n" // See notes below
+#define CFG__PKG_FILE_EXT ".mochipkg"
+#define CFG__PKG_FILE_EXT_L L".mochipkg"
+#define CFG__ERR_BAD_FILE_HEADER "File header bytes are invalid"
+#define CFG__ERR_BAD_FILE_HEADER_L L"File header bytes are invalid"
+#define CFG__ERR_BAD_FILE_EXT "File extension is invalid"
+#define CFG__ERR_BAD_FILE_EXT_L L"File extension is invalid"
+#define CFG__ERR_BAD_FILE_STREAM "Failed to open file (read)"
+#define CFG__ERR_BAD_FILE_STREAM_L L"Failed to open file (read)"
+#define CFG__ERR_BAD_CHECKSUM "Checksumming failed"
+#define CFG__ERR_BAD_CHECKSUM_L L"Checksumming failed"
+#define CFG__ERR_CANNOT_CLOSE_STREAM "Cannot close file stream"
+#define CFG__ERR_CANNOT_CLOSE_STREAM_L L"Cannot close file stream"
+
+#endif
 
 #else
 
@@ -49,7 +75,19 @@ constexpr auto badFileHeader_L{
 };
 constexpr auto badFileExt{ u8"File extension is invalid" };
 constexpr auto badFileExt_L{
-	reinterpret_cast<wchar_t*>(u8"File extension is invalid")
+	reinterpret_cast<wchar_t*>(u"File extension is invalid")
+};
+constexpr auto badFileStreamRead{ u8"Failed to open file (read)" };
+constexpr auto badFileStreamRead_L{
+	reinterpret_cast<wchar_t*>(u"Failed to open file (read)")
+};
+constexpr auto badChecksum{ u8"Checksumming failed" };
+constexpr auto badChecksum_L{
+	reinterpret_cast<wchar_t*>(u"Checksumming failed")
+};
+constexpr auto cannotCloseStream{ u8"Cannot close file stream" };
+constexpr auto cannotCloseStream_L{
+	reinterpret_cast<wchar_t*>(u"Cannot close file stream")
 };
 
 }
