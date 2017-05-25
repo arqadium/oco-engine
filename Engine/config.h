@@ -1,4 +1,4 @@
-/// -*- coding: utf-8; mode: C++; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+/** -*- coding: utf-8; mode: C; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /*****************************************************************************\
  *                        PROJECT MOCHI - C++ ENGINE                         *
  *                                                                           *
