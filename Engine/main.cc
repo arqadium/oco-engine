@@ -5,6 +5,12 @@
  *         COPYRIGHT (C) 2017 TRINITY SOFTWARE. ALL RIGHTS RESERVED          *
 \*****************************************************************************/
 
+extern "C"
+{
+#include <io.h>
+#include <fcntl.h>
+}
+
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -13,16 +19,20 @@
 #include <string>
 #include <vector>
 
-extern "C"
-{
-#include <io.h>
-#include <fcntl.h>
-}
+#include <boost/locale.hpp>
 
 #include "mainloop.hh"
+#include "except.hh"
+#include "helpers.hh"
+#include "win32.hh"
 
 
 
+using boost::locale::conv::utf_to_utf;
+using Engine::Exception;
+using Engine::Helpers::ansiFormat;
+using Engine::Helpers::Error;
+using Engine::Helpers::Log;
 using std::array;
 using std::endl;
 using std::exception;
@@ -61,7 +71,7 @@ namespace
 	}
 }
 
-int main(int ac, char* av[])
+int main( int ac, char* av[] )
 {
 	try
 	{
@@ -71,22 +81,35 @@ int main(int ac, char* av[])
 		_setmode( _fileno( stdin ), _O_U16TEXT );
 		_setmode( _fileno( stdout ), _O_U16TEXT );
 
+		Engine::EnableANSIConsole( );
+
 		for(auto& line : kStartupText)
 		{
-			wcout << line << endl;
+			Log( line );
 		}
 
 		Engine::MainLoop( parseArgs( ac, av ) );
 	}
+	catch(Exception& ex)
+	{
+		Error( L"Engine exception thrown, code ", false );
+		Error( ansiFormat( std::to_wstring( ex.code ),
+			Engine::Helpers::ANSI::Bold ), false );
+		Error( ": ", false );
+		Error( ex.msg );
+
+		return ex.code < 4 ? 3 : ex.code;
+	}
 	catch(exception& ex)
 	{
-		wcerr << "!!! Exception thrown: " << ex.what( ) << endl;
+		Error( L"Standard exception thrown: ", false );
+		Error( ex.what( ) );
 
 		return 2;
 	}
 	catch(...)
 	{
-		wcerr << "!!! ROGUE EXCEPTION THROWN! EXITING..." << endl;
+		Error( L"ROGUE EXCEPTION THROWN! EXITING..." );
 
 		return 1;
 	}
