@@ -19,6 +19,7 @@
 
 #include "config.h"
 
+#include "except.hh"
 #include "helpers.hh"
 
 
@@ -26,6 +27,7 @@
 using boost::crc_32_type;
 using boost::filesystem::ifstream;
 using boost::filesystem::path;
+using Engine::Exception;
 using Engine::Helpers::charArrToU16;
 using Engine::Helpers::charArrToU32;
 using std::array;
@@ -44,14 +46,13 @@ namespace
 {
 
 // Imported from config.h
-const wstring pkgExt{ Config::pkgFileExt_L };
 constexpr size_t magicBytesSz{ 0x1C };
 constexpr uint8_t curVersion{ 0 };
 constexpr size_t headerSize{ 0x30 };
 constexpr size_t fileCountOffset{ 0x10 };
 constexpr size_t crcTableCrcOffset{ 0x14 };
 
-bool hasEnding( wstring const& fullString, wstring const& ending )
+bool endsWith( wstring const& fullString, wstring const& ending )
 {
 	if(fullString.length( ) >= ending.length( ))
 	{
@@ -79,9 +80,9 @@ bool headerMismatch( vector<uint8_t> data )
 Engine::Package::Package( path filePath, bool check )
 {
 	// Ensure path name ends in our format's file extension
-	if(!hasEnding( filePath.wstring( ), pkgExt ))
+	if(!endsWith( filePath.wstring( ), wstring{ Config::pkgFileExt_L } ))
 	{
-		throw runtime_error{ Config::Err::badFileExt };
+		throw Exception{ Config::Err::badFileExt };
 	}
 
 	// Ensure stream is open and seek to beginning
@@ -98,13 +99,13 @@ Engine::Package::Package( path filePath, bool check )
 	// Abort if the header doesn't match
 	if(headerMismatch( headerRaw ))
 	{
-		throw runtime_error{ Config::Err::badFileHeader };
+		throw Exception{ Config::Err::badFileHeader };
 	}
 
 	// Check our checksum table's checksum
 	if(check && this->ChecksumsInvalid( ))
 	{
-		throw runtime_error{ Config::Err::badChecksum };
+		throw Exception{ Config::Err::badChecksum };
 	}
 
 	this->checked = check;
@@ -128,16 +129,17 @@ void Engine::Package::IndexFiles( )
 bool Engine::Package::ChecksumsInvalid( )
 {
 	// Read in and format the file count, to size up the checksum table
-	array<char, 2> fileCountBytes;
+	array<char, sizeof( uint16_t )> fileCountBytes;
 	uint16_t fileCount;
 
 	this->stream.seekg( fileCountOffset );
-	this->stream.read( fileCountBytes.data( ), 2 );
+	this->stream.read( fileCountBytes.data( ), sizeof( uint16_t ) );
 
 	fileCount = charArrToU16( fileCountBytes );
 
 	// Read in the checksum table
-	const size_t crcTableSz{ static_cast<size_t>(fileCount * 4) };
+	const size_t crcTableSz{ static_cast<size_t>(fileCount *
+		sizeof( uint32_t )) };
 	vector<uint8_t> crcTable{ };
 
 	crcTable.resize( crcTableSz );
@@ -146,9 +148,9 @@ bool Engine::Package::ChecksumsInvalid( )
 		crcTableSz );
 
 	// Retrieve our expected checksum
-	array<char, 4> expectedBytes;
+	array<char, sizeof( uint32_t )> expectedBytes;
 	this->stream.seekg( crcTableCrcOffset );
-	this->stream.read( expectedBytes.data( ), 4 );
+	this->stream.read( expectedBytes.data( ), sizeof( uint32_t ) );
 
 	// We're done with the stream, so close it
 	this->EnsureClosedStream( );
@@ -175,7 +177,7 @@ void Engine::Package::EnsureOpenStream( )
 		// Ensure it opened
 		if(!this->stream.is_open( ))
 		{
-			throw runtime_error{ Config::Err::badFileStreamRead };
+			throw Exception{ Config::Err::badFileStreamRead };
 		}
 	}
 }
@@ -188,7 +190,7 @@ void Engine::Package::EnsureClosedStream( )
 
 		if(this->stream.is_open( ))
 		{
-			throw runtime_error( Config::Err::cannotCloseStream );
+			throw Exception{ Config::Err::cannotCloseStream };
 		}
 	}
 }
