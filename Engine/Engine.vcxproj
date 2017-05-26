@@ -115,7 +115,7 @@
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>boost_filesystem-vc141-mt-gd-1_64.lib;boost_system-vc141-mt-gd-1_64.lib;FLAC.lib;FreeType.lib;JPEG.lib;OGG.lib;OpenAL32.lib;SFMLAudio.lib;SFMLGraphics.lib;SFMLMain.lib;SFMLNetwork.lib;SFMLSystem.lib;SFMLWindow.lib;Vorbis.lib;VorbisEnc.lib;VorbisFile.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>boost_filesystem-vc141-mt-gd-1_64.lib;boost_locale-vc141-mt-gd-1_64.lib;boost_system-vc141-mt-gd-1_64.lib;FLAC.lib;FreeType.lib;JPEG.lib;OGG.lib;OpenAL32.lib;SFMLAudio.lib;SFMLGraphics.lib;SFMLMain.lib;SFMLNetwork.lib;SFMLSystem.lib;SFMLWindow.lib;Vorbis.lib;VorbisEnc.lib;VorbisFile.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LinkStatus>true</LinkStatus>
       <SubSystem>Console</SubSystem>
@@ -160,7 +160,7 @@
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>boost_filesystem-vc141-mt-gd-1_64.lib;boost_system-vc141-mt-gd-1_64.lib;FLAC.lib;FreeType.lib;JPEG.lib;OGG.lib;OpenAL32.lib;SFMLAudio.lib;SFMLGraphics.lib;SFMLMain.lib;SFMLNetwork.lib;SFMLSystem.lib;SFMLWindow.lib;Vorbis.lib;VorbisEnc.lib;VorbisFile.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>boost_filesystem-vc141-mt-gd-1_64.lib;boost_locale-vc141-mt-gd-1_64.lib;boost_system-vc141-mt-gd-1_64.lib;FLAC.lib;FreeType.lib;JPEG.lib;OGG.lib;OpenAL32.lib;SFMLAudio.lib;SFMLGraphics.lib;SFMLMain.lib;SFMLNetwork.lib;SFMLSystem.lib;SFMLWindow.lib;Vorbis.lib;VorbisEnc.lib;VorbisFile.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LinkStatus>true</LinkStatus>
       <SubSystem>Console</SubSystem>
@@ -208,7 +208,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>boost_filesystem-vc141-mt-1_64.lib;boost_system-vc141-mt-1_64.lib;FLAC.lib;FreeType.lib;JPEG.lib;OGG.lib;OpenAL32.lib;SFMLAudio.lib;SFMLGraphics.lib;SFMLMain.lib;SFMLNetwork.lib;SFMLSystem.lib;SFMLWindow.lib;Vorbis.lib;VorbisEnc.lib;VorbisFile.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>boost_filesystem-vc141-mt-1_64.lib;boost_locale-vc141-mt-1_64.lib;boost_system-vc141-mt-1_64.lib;FLAC.lib;FreeType.lib;JPEG.lib;OGG.lib;OpenAL32.lib;SFMLAudio.lib;SFMLGraphics.lib;SFMLMain.lib;SFMLNetwork.lib;SFMLSystem.lib;SFMLWindow.lib;Vorbis.lib;VorbisEnc.lib;VorbisFile.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LinkStatus>true</LinkStatus>
       <SubSystem>Windows</SubSystem>
@@ -250,7 +250,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>boost_filesystem-vc141-mt-1_64.lib;boost_system-vc141-mt-1_64.lib;FLAC.lib;FreeType.lib;JPEG.lib;OGG.lib;OpenAL32.lib;SFMLAudio.lib;SFMLGraphics.lib;SFMLMain.lib;SFMLNetwork.lib;SFMLSystem.lib;SFMLWindow.lib;Vorbis.lib;VorbisEnc.lib;VorbisFile.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>boost_filesystem-vc141-mt-1_64.lib;boost_locale-vc141-mt-1_64.lib;boost_system-vc141-mt-1_64.lib;FLAC.lib;FreeType.lib;JPEG.lib;OGG.lib;OpenAL32.lib;SFMLAudio.lib;SFMLGraphics.lib;SFMLMain.lib;SFMLNetwork.lib;SFMLSystem.lib;SFMLWindow.lib;Vorbis.lib;VorbisEnc.lib;VorbisFile.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LinkStatus>true</LinkStatus>
       <SubSystem>Windows</SubSystem>
@@ -278,15 +278,19 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="helpers.cc" />
     <ClCompile Include="main.cc" />
     <ClCompile Include="mainloop.cc" />
     <ClCompile Include="package.cc" />
+    <ClCompile Include="win32.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
+    <ClInclude Include="except.hh" />
     <ClInclude Include="helpers.hh" />
     <ClInclude Include="mainloop.hh" />
     <ClInclude Include="package.hh" />
+    <ClInclude Include="win32.hh" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
