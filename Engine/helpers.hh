@@ -10,6 +10,8 @@
 
 #include <array>
 #include <cstdint>
+#include <string>
+#include <vector>
 
 
 
@@ -17,6 +19,80 @@ namespace Engine
 {
 namespace Helpers
 {
+
+namespace ANSI
+{
+
+enum Codes : std::uint32_t
+{
+	None = 0x0,
+	Bold = 0x1,
+	Underline = 0x2,
+	Blink = 0x4,
+	Reverse = 0x8,
+	Invisible = 0x10,
+	BlackFG = 0x20,
+	WhiteFG = 0x40,
+	RedFG = 0x80,
+	GreenFG = 0x100,
+	BlueFG = 0x200,
+	CyanFG = 0x400,
+	YellowFG = 0x800,
+	MagentaFG = 0x1000,
+	BlackBG = 0x2000,
+	WhiteBG = 0x4000,
+	RedBG = 0x8000,
+	GreenBG = 0x10000,
+	BlueBG = 0x20000,
+	CyanBG = 0x40000,
+	YellowBG = 0x80000,
+	MagentaBG = 0x100000,
+};
+
+}
+
+constexpr std::uint32_t singleBit( std::uint8_t which )
+{
+	if(which > 31)
+	{
+		return 0;
+	}
+
+	return 1 << which;
+}
+
+void Log( std::string str, bool newline = true );
+void Log( const char* str, bool newline = true );
+void Log( std::wstring str, bool newline = true );
+void Log( const wchar_t* str, bool newline = true );
+void Log( std::vector<std::string> str, bool newline = true );
+void Log( std::vector<std::wstring> str, bool newline = true );
+
+void Info( std::string str, bool newline = true );
+void Info( const char* str, bool newline = true );
+void Info( std::wstring str, bool newline = true );
+void Info( const wchar_t* str, bool newline = true );
+void Info( std::vector<std::string> str, bool newline = true );
+void Info( std::vector<std::wstring> str, bool newline = true );
+
+void Warn( std::string str, bool newline = true );
+void Warn( const char* str, bool newline = true );
+void Warn( std::wstring str, bool newline = true );
+void Warn( const wchar_t* str, bool newline = true );
+void Warn( std::vector<std::string> str, bool newline = true );
+void Warn( std::vector<std::wstring> str, bool newline = true );
+
+void Error( std::string str, bool newline = true );
+void Error( const char* str, bool newline = true );
+void Error( std::wstring str, bool newline = true );
+void Error( const wchar_t* str, bool newline = true );
+void Error( std::vector<std::string> str, bool newline = true );
+void Error( std::vector<std::wstring> str, bool newline = true );
+
+std::string ansiFormat( std::string str, std::uint32_t opts );
+std::string ansiFormat( const char* str, std::uint32_t opts );
+std::wstring ansiFormat( std::wstring str, std::uint32_t opts );
+std::wstring ansiFormat( const wchar_t* str, std::uint32_t opts );
 
 inline std::uint16_t charArrToU16( std::array<char, 2> bytes )
 {
