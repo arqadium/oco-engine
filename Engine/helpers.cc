@@ -17,6 +17,7 @@
 #include <boost/locale.hpp>
 
 #include "except.hh"
+#include "win32.hh"
 
 
 
@@ -44,39 +45,89 @@ constexpr auto logPrefixNeutral_L{ L"\033[1;33m[ÔÇô]\033[0m " };
 constexpr auto logPrefixBad{ u8"\033[1;31m[ÔÇô]\033[0m " };
 constexpr auto logPrefixBad_L{ L"\033[1;31m[ÔÇô]\033[0m " };
 
+constexpr auto logPrefixNoANSI{ u8"[ÔÇô] " };
+constexpr auto logPrefixNoANSI_L{ L"[ÔÇô] " };
+
 void Engine::Helpers::Log( string str, bool newline )
 {
-	wcout << logPrefix_L << utf_to_utf<wchar_t>( str );
+	if(Engine::SupportsANSI( ))
+	{
+		wcout << logPrefix_L;
+	}
+	else
+	{
+		wcout << logPrefixNoANSI_L;
+	}
+
+	wcout << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcout << endl; }
 }
 
 void Engine::Helpers::Log( const char* str, bool newline )
 {
-	wcout << logPrefix_L << utf_to_utf<wchar_t>( str );
+	if(Engine::SupportsANSI( ))
+	{
+		wcout << logPrefix_L;
+	}
+	else
+	{
+		wcout << logPrefixNoANSI_L;
+	}
+
+	wcout << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcout << endl; }
 }
 
 void Engine::Helpers::Log( wstring str, bool newline )
 {
-	wcout << logPrefix_L << str;
+	if(Engine::SupportsANSI( ))
+	{
+		wcout << logPrefix_L;
+	}
+	else
+	{
+		wcout << logPrefixNoANSI_L;
+	}
+
+	wcout << str;
 
 	if(newline) { wcout << endl; }
 }
 
 void Engine::Helpers::Log( const wchar_t* str, bool newline )
 {
-	wcout << logPrefix_L << str;
+	if(Engine::SupportsANSI( ))
+	{
+		wcout << logPrefix_L;
+	}
+	else
+	{
+		wcout << logPrefixNoANSI_L;
+	}
+
+	wcout << str;
 
 	if(newline) { wcout << endl; }
 }
 
 void Engine::Helpers::Log( vector<string> str, bool newline )
 {
+	const bool ansiSupport = Engine::SupportsANSI( );
+
 	for(auto& line : str)
 	{
-		wcout << logPrefix_L << utf_to_utf<wchar_t>( line );
+		if(ansiSupport)
+		{
+			wcout << logPrefix_L;
+		}
+		else
+		{
+			wcout << logPrefixNoANSI_L;
+		}
+
+		wcout << utf_to_utf<wchar_t>( line );
 
 		if(newline) { wcout << endl; }
 	}
@@ -84,8 +135,19 @@ void Engine::Helpers::Log( vector<string> str, bool newline )
 
 void Engine::Helpers::Log( vector<wstring> str, bool newline )
 {
+	const bool ansiSupport = Engine::SupportsANSI( );
+
 	for(auto& line : str)
 	{
+		if(ansiSupport)
+		{
+			wcout << logPrefix_L;
+		}
+		else
+		{
+			wcout << logPrefixNoANSI_L;
+		}
+
 		wcout << logPrefix_L << line;
 
 		if(newline) { wcout << endl; }
@@ -94,36 +156,83 @@ void Engine::Helpers::Log( vector<wstring> str, bool newline )
 
 void Engine::Helpers::Info( string str, bool newline )
 {
-	wcout << logPrefixGood_L << utf_to_utf<wchar_t>( str );
+	if(Engine::SupportsANSI( ))
+	{
+		wcout << logPrefixGood_L;
+	}
+	else
+	{
+		wcout << logPrefixNoANSI_L;
+	}
+
+	wcout << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcout << endl; }
 }
 
 void Engine::Helpers::Info( const char* str, bool newline )
 {
-	wcout << logPrefixGood_L << utf_to_utf<wchar_t>( str );
+	if(Engine::SupportsANSI( ))
+	{
+		wcout << logPrefixGood_L;
+	}
+	else
+	{
+		wcout << logPrefixNoANSI_L;
+	}
+
+	wcout << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcout << endl; }
 }
 
 void Engine::Helpers::Info( wstring str, bool newline )
 {
-	wcout << logPrefixGood_L << str;
+	if(Engine::SupportsANSI( ))
+	{
+		wcout << logPrefixGood_L;
+	}
+	else
+	{
+		wcout << logPrefixNoANSI_L;
+	}
+
+	wcout << str;
 
 	if(newline) { wcout << endl; }
 }
 
 void Engine::Helpers::Info( const wchar_t* str, bool newline )
 {
-	wcout << logPrefixGood_L << str;
+	if(Engine::SupportsANSI( ))
+	{
+		wcout << logPrefixGood_L;
+	}
+	else
+	{
+		wcout << logPrefixNoANSI_L;
+	}
+
+	wcout << str;
 
 	if(newline) { wcout << endl; }
 }
 
 void Engine::Helpers::Info( vector<string> str, bool newline )
 {
+	const bool ansiSupport = Engine::SupportsANSI( );
+
 	for(auto& line : str)
 	{
+		if(ansiSupport)
+		{
+			wcout << logPrefixGood_L;
+		}
+		else
+		{
+			wcout << logPrefixNoANSI_L;
+		}
+
 		wcout << logPrefixGood_L << utf_to_utf<wchar_t>( line );
 
 		if(newline) { wcout << endl; }
@@ -132,9 +241,20 @@ void Engine::Helpers::Info( vector<string> str, bool newline )
 
 void Engine::Helpers::Info( vector<wstring> str, bool newline )
 {
+	const bool ansiSupport = Engine::SupportsANSI( );
+	
 	for(auto& line : str)
 	{
-		wcout << logPrefixGood_L << line;
+		if(ansiSupport)
+		{
+			wcout << logPrefixGood_L;
+		}
+		else
+		{
+			wcout << logPrefixNoANSI_L;
+		}
+
+		wcout << line;
 
 		if(newline) { ::wcout << endl; }
 	}
@@ -142,36 +262,83 @@ void Engine::Helpers::Info( vector<wstring> str, bool newline )
 
 void Engine::Helpers::Warn( string str, bool newline )
 {
-	wcout << logPrefixNeutral_L << utf_to_utf<wchar_t>( str );
+	if(Engine::SupportsANSI( ))
+	{
+		wcout << logPrefixNeutral_L;
+	}
+	else
+	{
+		wcout << logPrefixNoANSI_L;
+	}
+
+	wcout << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcout << endl; }
 }
 
 void Engine::Helpers::Warn( const char* str, bool newline )
 {
-	wcout << logPrefixNeutral_L << utf_to_utf<wchar_t>( str );
+	if(Engine::SupportsANSI( ))
+	{
+		wcout << logPrefixNeutral_L;
+	}
+	else
+	{
+		wcout << logPrefixNoANSI_L;
+	}
+
+	wcout << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcout << endl; }
 }
 
 void Engine::Helpers::Warn( wstring str, bool newline )
 {
-	wcout << logPrefixNeutral_L << str;
+	if(Engine::SupportsANSI( ))
+	{
+		wcout << logPrefixNeutral_L;
+	}
+	else
+	{
+		wcout << logPrefixNoANSI_L;
+	}
+
+	wcout << str;
 
 	if(newline) { wcout << endl; }
 }
 
 void Engine::Helpers::Warn( const wchar_t* str, bool newline )
 {
-	wcout << logPrefixNeutral_L << str;
+	if(Engine::SupportsANSI( ))
+	{
+		wcout << logPrefixNeutral_L;
+	}
+	else
+	{
+		wcout << logPrefixNoANSI_L;
+	}
+
+	wcout << str;
 
 	if(newline) { wcout << endl; }
 }
 
 void Engine::Helpers::Warn( vector<string> str, bool newline )
 {
+	const bool ansiSupport = Engine::SupportsANSI( );
+
 	for(auto& line : str)
 	{
+		if(ansiSupport)
+		{
+			wcout << logPrefixNeutral_L;
+		}
+		else
+		{
+			wcout << logPrefixNoANSI_L;
+		}
+
 		wcout << logPrefixNeutral_L << utf_to_utf<wchar_t>( line );
 
 		if(newline) { wcout << endl; }
@@ -180,9 +347,20 @@ void Engine::Helpers::Warn( vector<string> str, bool newline )
 
 void Engine::Helpers::Warn( vector<wstring> str, bool newline )
 {
+	const bool ansiSupport = Engine::SupportsANSI( );
+
 	for(auto& line : str)
 	{
-		wcout << logPrefixNeutral_L << line;
+		if(ansiSupport)
+		{
+			wcout << logPrefixNeutral_L;
+		}
+		else
+		{
+			wcout << logPrefixNoANSI_L;
+		}
+
+		wcout << line;
 
 		if(newline) { wcout << endl; }
 	}
@@ -190,14 +368,32 @@ void Engine::Helpers::Warn( vector<wstring> str, bool newline )
 
 void Engine::Helpers::Error( string str, bool newline )
 {
-	wcerr << logPrefixBad_L << utf_to_utf<wchar_t>( str );
+	if(Engine::SupportsANSI( ))
+	{
+		wcerr << logPrefixBad_L;
+	}
+	else
+	{
+		wcerr << logPrefixNoANSI_L;
+	}
+
+	wcerr << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcerr << endl; }
 }
 
 void Engine::Helpers::Error( const char* str, bool newline )
 {
-	wcerr << logPrefixBad_L << utf_to_utf<wchar_t>( str );
+	if(Engine::SupportsANSI( ))
+	{
+		wcerr << logPrefixBad_L;
+	}
+	else
+	{
+		wcerr << logPrefixNoANSI_L;
+	}
+
+	wcerr << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcerr << endl; }
 }
@@ -211,16 +407,36 @@ void Engine::Helpers::Error( wstring str, bool newline )
 
 void Engine::Helpers::Error( const wchar_t* str, bool newline )
 {
-	wcerr << logPrefixBad_L << str;
+	if(Engine::SupportsANSI( ))
+	{
+		wcerr << logPrefixBad_L;
+	}
+	else
+	{
+		wcerr << logPrefixNoANSI_L;
+	}
+
+	wcerr << str;
 
 	if(newline) { wcerr << endl; }
 }
 
 void Engine::Helpers::Error( vector<string> str, bool newline )
 {
+	const bool ansiSupport = Engine::SupportsANSI( );
+	
 	for(auto& line : str)
 	{
-		wcerr << logPrefixBad_L << utf_to_utf<wchar_t>( line );
+		if(ansiSupport)
+		{
+			wcerr << logPrefixBad_L;
+		}
+		else
+		{
+			wcerr << logPrefixNoANSI_L;
+		}
+
+		wcerr << utf_to_utf<wchar_t>( line );
 
 		if(newline) { wcerr << endl; }
 	}
@@ -228,9 +444,20 @@ void Engine::Helpers::Error( vector<string> str, bool newline )
 
 void Engine::Helpers::Error( vector<wstring> str, bool newline )
 {
+	const bool ansiSupport = Engine::SupportsANSI( );
+
 	for(auto& line : str)
 	{
-		wcerr << logPrefixBad_L << line;
+		if(ansiSupport)
+		{
+			wcerr << logPrefixBad_L;
+		}
+		else
+		{
+			wcerr << logPrefixNoANSI_L;
+		}
+
+		wcerr << line;
 
 		if(newline) { wcerr << endl; }
 	}
