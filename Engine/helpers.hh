@@ -89,10 +89,10 @@ void Error( const wchar_t* str, bool newline = true );
 void Error( std::vector<std::string> str, bool newline = true );
 void Error( std::vector<std::wstring> str, bool newline = true );
 
-std::string ansiFormat( std::string str, std::uint32_t opts );
-std::string ansiFormat( const char* str, std::uint32_t opts );
-std::wstring ansiFormat( std::wstring str, std::uint32_t opts );
-std::wstring ansiFormat( const wchar_t* str, std::uint32_t opts );
+std::string ANSIFormat( std::string str, std::uint32_t opts );
+std::string ANSIFormat( const char* str, std::uint32_t opts );
+std::wstring ANSIFormat( std::wstring str, std::uint32_t opts );
+std::wstring ANSIFormat( const wchar_t* str, std::uint32_t opts );
 
 inline std::uint16_t charArrToU16( std::array<char, 2> bytes )
 {

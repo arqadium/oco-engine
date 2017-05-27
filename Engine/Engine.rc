@@ -14,12 +14,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName",      "Trinity Software, LLC\000"
             VALUE "FileDescription",  "The game engine for Project Mochi.\000"
-            VALUE "FileVersion",      "0.0.0-33\000"
+            VALUE "FileVersion",      "0.0.0-35\000"
             VALUE "InternalName",     "mochi\000"
             VALUE "LegalCopyright",   "Copyright \251 2017 Trinity Software, LLC\000"
             VALUE "OriginalFilename", "mochi.exe\000"
             VALUE "ProductName",      "Mochi Engine\000"
-            VALUE "ProductVersion",   "0.0.0-33\000"
+            VALUE "ProductVersion",   "0.0.0-35\000"
         END
     END
 

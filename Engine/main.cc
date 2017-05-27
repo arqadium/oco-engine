@@ -30,45 +30,49 @@ extern "C"
 
 using boost::locale::conv::utf_to_utf;
 using Engine::Exception;
-using Engine::Helpers::ansiFormat;
+using Engine::Helpers::ANSIFormat;
 using Engine::Helpers::Error;
 using Engine::Helpers::Log;
 using std::array;
 using std::endl;
 using std::exception;
 using std::intmax_t;
-using std::runtime_error;
 using std::size_t;
 using std::string;
 using std::uintmax_t;
 using std::vector;
-using std::wcerr;
-using std::wcin;
-using std::wclog;
-using std::wcout;
 using std::wstring;
 
 namespace
 {
-	const vector<wstring> kStartupText{
-		reinterpret_cast<wchar_t*>(u""),
-		reinterpret_cast<wchar_t*>(u"Project Mochi – ÔÇô Game Engine"),
-		reinterpret_cast<wchar_t*>(
-			u"Copyright © 2017 Trinity Software. All rights reserved"),
-		reinterpret_cast<wchar_t*>(u"")
-	};
-	
-	vector<string> parseArgs( int ac, char* av[] )
+
+#ifdef _WIN32
+const vector<wstring> kStartupText{
+	L"",
+	L"Project Mochi \u2013 \u00D4\u00C7\u00F4 Game Engine",
+	L"Copyright \u00A9 2017 Trinity Software. All rights reserved",
+	L""
+};
+#else
+const vector<string> kStartupText{
+	u8"",
+	u8"Project Mochi \u2013 \u00D4\u00C7\u00F4 Game Engine",
+	u8"Copyright \u00A9 2017 Trinity Software. All rights reserved",
+	u8""
+}
+#endif
+
+vector<string> parseArgs( int ac, char* av[] )
+{
+	vector<string> ret( ac );
+
+	for(intmax_t i = 0; i < ac; ++i)
 	{
-		vector<string> ret( ac );
-
-		for(intmax_t i = 0; i < ac; ++i)
-		{
-			ret.at( i ) = av[i];
-		}
-
-		return ret;
+		ret.at( i ) = av[i];
 	}
+	return ret;
+}
+
 }
 
 int main( int ac, char* av[] )
@@ -76,12 +80,12 @@ int main( int ac, char* av[] )
 	try
 	{
 		const size_t kStartupTextSz = kStartupText.size( );
-
+#ifdef _WIN32
 		_setmode( _fileno( stderr ), _O_U16TEXT );
 		_setmode( _fileno( stdin ), _O_U16TEXT );
 		_setmode( _fileno( stdout ), _O_U16TEXT );
-
 		Engine::EnableANSIConsole( );
+#endif
 
 		for(auto& line : kStartupText)
 		{
@@ -90,26 +94,26 @@ int main( int ac, char* av[] )
 
 		Engine::MainLoop( parseArgs( ac, av ) );
 	}
-	catch(Exception& ex)
+	catch(Exception& ex) // Enhanced exception object
 	{
-		Error( L"Engine exception thrown, code ", false );
-		Error( ansiFormat( std::to_wstring( ex.code ),
+		Error( u8"Engine exception thrown, code ", false );
+		Error( ANSIFormat( std::to_string( ex.code ),
 			Engine::Helpers::ANSI::Bold ), false );
-		Error( ": ", false );
+		Error( u8": ", false );
 		Error( ex.msg );
 
 		return ex.code < 4 ? 3 : ex.code;
 	}
-	catch(exception& ex)
+	catch(exception& ex) // STL exception object
 	{
-		Error( L"Standard exception thrown: ", false );
+		Error( u8"Standard exception thrown: ", false );
 		Error( ex.what( ) );
 
 		return 2;
 	}
 	catch(...)
 	{
-		Error( L"ROGUE EXCEPTION THROWN! EXITING..." );
+		Error( u8"ROGUE EXCEPTION THROWN! EXITING..." );
 
 		return 1;
 	}

@@ -22,12 +22,12 @@ using std::vector;
 
 namespace
 {
-	constexpr auto kSampleImagePath{ "SampleImage.png" };
+	constexpr auto kSampleImagePath{ u8"SampleImage.png" };
 }
 
 void Engine::MainLoop( vector<string> args )
 {
-	RenderWindow window{ VideoMode{ 640, 360 }, "Project Mochi!" };
+	RenderWindow window{ VideoMode{ 640, 360 }, u8"Project Mochi!" };
 	sf::Texture img;
 
 	img.loadFromFile( kSampleImagePath );

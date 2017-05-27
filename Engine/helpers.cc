@@ -26,455 +26,638 @@ using Engine::Exception;
 using Engine::Helpers::singleBit;
 using std::endl;
 using std::string;
-using std::stringstream;
 using std::uint32_t;
 using std::uint8_t;
 using std::vector;
+using std::wstring;
+
+#ifndef _WIN32
+using std::cerr;
+using std::cout;
+using std::tringstream;
+#else
 using std::wcerr;
 using std::wcout;
-using std::wstring;
 using std::wstringstream;
+#endif
 
-constexpr auto logPrefix{ u8"\033[1;37m[‘«Ù]\033[0m " };
-constexpr auto logPrefix_L{ L"\033[1;37m[‘«Ù]\033[0m " };
+#ifdef _WIN32
 
-constexpr auto logPrefixGood{ u8"\033[1;32m[‘«Ù]\033[0m " };
-constexpr auto logPrefixGood_L{ L"\033[1;32m[‘«Ù]\033[0m " };
-constexpr auto logPrefixNeutral{ u8"\033[1;33m[‘«Ù]\033[0m " };
-constexpr auto logPrefixNeutral_L{ L"\033[1;33m[‘«Ù]\033[0m " };
-constexpr auto logPrefixBad{ u8"\033[1;31m[‘«Ù]\033[0m " };
-constexpr auto logPrefixBad_L{ L"\033[1;31m[‘«Ù]\033[0m " };
+constexpr auto logPrefix{ L"\033[1;37m[\u00D4\u00C7\u00F4]\033[0m " };
+constexpr auto logPrefixGood{ L"\033[1;32m[\u00D4\u00C7\u00F4]\033[0m " };
+constexpr auto logPrefixNeutral{ L"\033[1;33m[\u00D4\u00C7\u00F4]\033[0m " };
+constexpr auto logPrefixBad{ L"\033[1;31m[\u00D4\u00C7\u00F4]\033[0m " };
+constexpr auto logPrefixNoANSI{ L"[\u00D4\u00C7\u00F4] " };
 
-constexpr auto logPrefixNoANSI{ u8"[‘«Ù] " };
-constexpr auto logPrefixNoANSI_L{ L"[‘«Ù] " };
+#else
+
+constexpr auto logPrefix{ u8"\033[1;37m[\u00D4\u00C7\u00F4]\033[0m " };
+constexpr auto logPrefixGood{ u8"\033[1;32m[\u00D4\u00C7\u00F4]\033[0m " };
+constexpr auto logPrefixNeutral{ u8"\033[1;33m[\u00D4\u00C7\u00F4]\033[0m " };
+constexpr auto logPrefixBad{ u8"\033[1;31m[\u00D4\u00C7\u00F4]\033[0m " };
+
+#endif
 
 void Engine::Helpers::Log( string str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcout << logPrefix_L;
+		wcout << logPrefix;
 	}
 	else
 	{
-		wcout << logPrefixNoANSI_L;
+		wcout << logPrefixNoANSI;
 	}
 
 	wcout << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcout << endl; }
+#else
+	cout << logPrefix << str;
+
+	if(newline) { cout << endl; }
+#endif
 }
 
 void Engine::Helpers::Log( const char* str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcout << logPrefix_L;
+		wcout << logPrefix;
 	}
 	else
 	{
-		wcout << logPrefixNoANSI_L;
+		wcout << logPrefixNoANSI;
 	}
 
 	wcout << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcout << endl; }
+#else
+	cout << logPrefix << str;
+
+	if(newline) { cout << endl; }
+#endif
 }
 
 void Engine::Helpers::Log( wstring str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcout << logPrefix_L;
+		wcout << logPrefix;
 	}
 	else
 	{
-		wcout << logPrefixNoANSI_L;
+		wcout << logPrefixNoANSI;
 	}
 
 	wcout << str;
 
 	if(newline) { wcout << endl; }
+#else
+	cout << logPrefix << utf_to_utf<char>( str );
+
+	if(newline) { cout << endl; }
+#endif
 }
 
 void Engine::Helpers::Log( const wchar_t* str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcout << logPrefix_L;
+		wcout << logPrefix;
 	}
 	else
 	{
-		wcout << logPrefixNoANSI_L;
+		wcout << logPrefixNoANSI;
 	}
 
 	wcout << str;
 
 	if(newline) { wcout << endl; }
+#else
+	cout << logPrefix << utf_to_utf<char>( str );
+
+	if(newline) { cout << endl; }
+#endif
 }
 
 void Engine::Helpers::Log( vector<string> str, bool newline )
 {
+#ifdef _WIN32
 	const bool ansiSupport = Engine::SupportsANSI( );
+#endif
 
 	for(auto& line : str)
 	{
+#ifdef _WIN32
 		if(ansiSupport)
 		{
-			wcout << logPrefix_L;
+			wcout << logPrefix;
 		}
 		else
 		{
-			wcout << logPrefixNoANSI_L;
+			wcout << logPrefixNoANSI;
 		}
 
 		wcout << utf_to_utf<wchar_t>( line );
 
 		if(newline) { wcout << endl; }
+#else
+		cout << logPrefix << line;
+
+		if(newline) { cout << endl; }
+#endif
 	}
 }
 
 void Engine::Helpers::Log( vector<wstring> str, bool newline )
 {
+#ifdef _WIN32
 	const bool ansiSupport = Engine::SupportsANSI( );
+#endif
 
 	for(auto& line : str)
 	{
+#ifdef _WIN32
 		if(ansiSupport)
 		{
-			wcout << logPrefix_L;
+			wcout << logPrefix;
 		}
 		else
 		{
-			wcout << logPrefixNoANSI_L;
+			wcout << logPrefixNoANSI;
 		}
 
-		wcout << logPrefix_L << line;
+		wcout << line;
 
 		if(newline) { wcout << endl; }
+#else
+		cout << logPrefix << utf_to_utf<char>( line );
+
+		if(newline) { cout << endl; }
+#endif
 	}
 }
 
 void Engine::Helpers::Info( string str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcout << logPrefixGood_L;
+		wcout << logPrefixGood;
 	}
 	else
 	{
-		wcout << logPrefixNoANSI_L;
+		wcout << logPrefixNoANSI;
 	}
 
 	wcout << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcout << endl; }
+#else
+	cout << logPrefixGood << str;
+
+	if(newline) { cout << endl; }
+#endif
 }
 
 void Engine::Helpers::Info( const char* str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcout << logPrefixGood_L;
+		wcout << logPrefixGood;
 	}
 	else
 	{
-		wcout << logPrefixNoANSI_L;
+		wcout << logPrefixNoANSI;
 	}
 
 	wcout << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcout << endl; }
+#else
+	cout << logPrefixGood << str;
+
+	if(newline) { cout << endl; }
+#endif
 }
 
 void Engine::Helpers::Info( wstring str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcout << logPrefixGood_L;
+		wcout << logPrefixGood;
 	}
 	else
 	{
-		wcout << logPrefixNoANSI_L;
+		wcout << logPrefixNoANSI;
 	}
 
 	wcout << str;
 
 	if(newline) { wcout << endl; }
+#else
+	cout << logPrefixGood << utf_to_utf<char>( str );
+
+	if(newline) { cout << endl; }
+#endif
 }
 
 void Engine::Helpers::Info( const wchar_t* str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcout << logPrefixGood_L;
+		wcout << logPrefixGood;
 	}
 	else
 	{
-		wcout << logPrefixNoANSI_L;
+		wcout << logPrefixNoANSI;
 	}
 
 	wcout << str;
 
 	if(newline) { wcout << endl; }
+#else
+	cout << logPrefixGood << utf_to_utf<char>( str );
+
+	if(newline) { cout << endl; }
+#endif
 }
 
 void Engine::Helpers::Info( vector<string> str, bool newline )
 {
+#ifdef _WIN32
 	const bool ansiSupport = Engine::SupportsANSI( );
+#endif
 
 	for(auto& line : str)
 	{
+#ifdef _WIN32
 		if(ansiSupport)
 		{
-			wcout << logPrefixGood_L;
+			wcout << logPrefixGood;
 		}
 		else
 		{
-			wcout << logPrefixNoANSI_L;
+			wcout << logPrefixNoANSI;
 		}
 
-		wcout << logPrefixGood_L << utf_to_utf<wchar_t>( line );
+		wcout << utf_to_utf<wchar_t>( line );
 
 		if(newline) { wcout << endl; }
+#else
+		cout << logPrefixGood << line;
+
+		if(newline) { cout << endl; }
+#endif
 	}
 }
 
 void Engine::Helpers::Info( vector<wstring> str, bool newline )
 {
+#ifdef _WIN32
 	const bool ansiSupport = Engine::SupportsANSI( );
-	
+#endif
+
 	for(auto& line : str)
 	{
+#ifdef _WIN32
 		if(ansiSupport)
 		{
-			wcout << logPrefixGood_L;
+			wcout << logPrefixGood;
 		}
 		else
 		{
-			wcout << logPrefixNoANSI_L;
+			wcout << logPrefixNoANSI;
 		}
 
 		wcout << line;
 
-		if(newline) { ::wcout << endl; }
+		if(newline) { wcout << endl; }
+#else
+		cout << logPrefixGood << utf_to_utf<char>( line );
+
+		if(newline) { cout << endl; }
+#endif
 	}
 }
 
 void Engine::Helpers::Warn( string str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcout << logPrefixNeutral_L;
+		wcout << logPrefixNeutral;
 	}
 	else
 	{
-		wcout << logPrefixNoANSI_L;
+		wcout << logPrefixNoANSI;
 	}
 
 	wcout << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcout << endl; }
+#else
+	cout << logPrefixNeutral << str;
+
+	if(newline) { cout << endl; }
+#endif
 }
 
 void Engine::Helpers::Warn( const char* str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcout << logPrefixNeutral_L;
+		wcout << logPrefixNeutral;
 	}
 	else
 	{
-		wcout << logPrefixNoANSI_L;
+		wcout << logPrefixNoANSI;
 	}
 
 	wcout << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcout << endl; }
+#else
+	cout << logPrefixNeutral << str;
+
+	if(newline) { cout << endl; }
+#endif
 }
 
 void Engine::Helpers::Warn( wstring str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcout << logPrefixNeutral_L;
+		wcout << logPrefixNeutral;
 	}
 	else
 	{
-		wcout << logPrefixNoANSI_L;
+		wcout << logPrefixNoANSI;
 	}
 
 	wcout << str;
 
 	if(newline) { wcout << endl; }
+#else
+	cout << logPrefixNeutral << utf_to_utf<char>( str );
+
+	if(newline) { cout << endl; }
+#endif
 }
 
 void Engine::Helpers::Warn( const wchar_t* str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcout << logPrefixNeutral_L;
+		wcout << logPrefixNeutral;
 	}
 	else
 	{
-		wcout << logPrefixNoANSI_L;
+		wcout << logPrefixNoANSI;
 	}
 
 	wcout << str;
 
 	if(newline) { wcout << endl; }
+#else
+	cout << logPrefixNeutral << utf_to_utf<char>( str );
+
+	if(newline) { cout << endl; }
+#endif
 }
 
 void Engine::Helpers::Warn( vector<string> str, bool newline )
 {
+#ifdef _WIN32
 	const bool ansiSupport = Engine::SupportsANSI( );
+#endif
 
 	for(auto& line : str)
 	{
+#ifdef _WIN32
 		if(ansiSupport)
 		{
-			wcout << logPrefixNeutral_L;
+			wcout << logPrefixNeutral;
 		}
 		else
 		{
-			wcout << logPrefixNoANSI_L;
+			wcout << logPrefixNoANSI;
 		}
 
-		wcout << logPrefixNeutral_L << utf_to_utf<wchar_t>( line );
+		wcout << utf_to_utf<wchar_t>( line );
 
 		if(newline) { wcout << endl; }
+#else
+		cout << logPrefixNeutral << line;
+
+		if(newline) { cout << endl; }
+#endif
 	}
 }
 
 void Engine::Helpers::Warn( vector<wstring> str, bool newline )
 {
+#ifdef _WIN32
 	const bool ansiSupport = Engine::SupportsANSI( );
+#endif
 
 	for(auto& line : str)
 	{
+#ifdef _WIN32
 		if(ansiSupport)
 		{
-			wcout << logPrefixNeutral_L;
+			wcout << logPrefixNeutral;
 		}
 		else
 		{
-			wcout << logPrefixNoANSI_L;
+			wcout << logPrefixNoANSI;
 		}
 
 		wcout << line;
 
 		if(newline) { wcout << endl; }
+#else
+		cout << logPrefixNeutral << utf_to_utf<wchar_t>( line );
+
+		if(newline) { cout << endl; }
+#endif
 	}
 }
 
 void Engine::Helpers::Error( string str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcerr << logPrefixBad_L;
+		wcerr << logPrefixBad;
 	}
 	else
 	{
-		wcerr << logPrefixNoANSI_L;
+		wcerr << logPrefixNoANSI;
 	}
 
 	wcerr << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcerr << endl; }
+#else
+	cerr << logPrefixBad << str;
+
+	if(newline) { cerr << endl; }
+#endif
 }
 
 void Engine::Helpers::Error( const char* str, bool newline )
 {
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcerr << logPrefixBad_L;
+		wcerr << logPrefixBad;
 	}
 	else
 	{
-		wcerr << logPrefixNoANSI_L;
+		wcerr << logPrefixNoANSI;
 	}
 
 	wcerr << utf_to_utf<wchar_t>( str );
 
 	if(newline) { wcerr << endl; }
+#else
+	cerr << logPrefixBad << str;
+
+	if(newline) { cerr << endl; }
+#endif
 }
 
 void Engine::Helpers::Error( wstring str, bool newline )
 {
-	wcerr << logPrefixBad_L << str;
-
-	if(newline) { wcerr << endl; }
-}
-
-void Engine::Helpers::Error( const wchar_t* str, bool newline )
-{
+#ifdef _WIN32
 	if(Engine::SupportsANSI( ))
 	{
-		wcerr << logPrefixBad_L;
+		wcerr << logPrefixBad;
 	}
 	else
 	{
-		wcerr << logPrefixNoANSI_L;
+		wcerr << logPrefixNoANSI;
 	}
 
 	wcerr << str;
 
 	if(newline) { wcerr << endl; }
+#else
+	cerr << logPrefixBad << utf_to_utf<char>( str );
+
+	if(newline) { cerr << endl; }
+#endif
+}
+
+void Engine::Helpers::Error( const wchar_t* str, bool newline )
+{
+#ifdef _WIN32
+	if(Engine::SupportsANSI( ))
+	{
+		wcerr << logPrefixBad;
+	}
+	else
+	{
+		wcerr << logPrefixNoANSI;
+	}
+
+	wcerr << str;
+
+	if(newline) { wcerr << endl; }
+#else
+	cerr << logPrefixBad << utf_to_utf<char>( str );
+
+	if(newline) { cerr << endl; }
+#endif
 }
 
 void Engine::Helpers::Error( vector<string> str, bool newline )
 {
+#ifdef _WIN32
 	const bool ansiSupport = Engine::SupportsANSI( );
-	
+#endif
+
 	for(auto& line : str)
 	{
+#ifdef _WIN32
 		if(ansiSupport)
 		{
-			wcerr << logPrefixBad_L;
+			wcerr << logPrefixBad;
 		}
 		else
 		{
-			wcerr << logPrefixNoANSI_L;
+			wcerr << logPrefixNoANSI;
 		}
 
 		wcerr << utf_to_utf<wchar_t>( line );
 
 		if(newline) { wcerr << endl; }
+#else
+		cerr << logPrefixBad << line;
+
+		if(newline) { cerr << endl; }
+#endif
 	}
 }
 
 void Engine::Helpers::Error( vector<wstring> str, bool newline )
 {
+#ifdef _WIN32
 	const bool ansiSupport = Engine::SupportsANSI( );
+#endif
 
 	for(auto& line : str)
 	{
+#ifdef _WIN32
 		if(ansiSupport)
 		{
-			wcerr << logPrefixBad_L;
+			wcerr << logPrefixBad;
 		}
 		else
 		{
-			wcerr << logPrefixNoANSI_L;
+			wcerr << logPrefixNoANSI;
 		}
 
 		wcerr << line;
 
 		if(newline) { wcerr << endl; }
+#else
+		cerr << logPrefixBad << utf_to_utf<char>( line );
+
+		if(newline) { cerr << endl; }
+#endif
 	}
 }
 
-string Engine::Helpers::ansiFormat( string str, uint32_t opts )
+string Engine::Helpers::ANSIFormat( string str, uint32_t opts )
 {
-	stringstream ret{ };
+#ifdef _WIN32
+	return string{ utf_to_utf<char>( Engine::Helpers::ANSIFormat(
+		wstring{ utf_to_utf<wchar_t>( str ) }, opts ) ) };
+#else
+	stringstream ret;
 
 	if(opts == 0)
 	{
-		ret << L"\033[0m" << str;
+		ret << u8"\033[0m" << str;
 
 		return ret.str( );
 	}
 
-	ret << "\033[";
+	ret << u8"\033[";
 
 	for(uint8_t i = 0; i < 32; ++i)
 	{
@@ -565,25 +748,27 @@ string Engine::Helpers::ansiFormat( string str, uint32_t opts )
 
 			break;
 		default:
-			throw Exception{ "Invalid ANSI escape code provided" };
+			throw Exception{ u8"Invalid ANSI escape code provided" };
 		}
 	}
 
 	ret << 'm' << str;
 
 	return ret.str( );
+#endif
 }
 
-string Engine::Helpers::ansiFormat( const char* str, uint32_t opts )
+string Engine::Helpers::ANSIFormat( const char* str, uint32_t opts )
 {
 	string tmp{ str };
 
-	return ansiFormat( tmp, opts );
+	return ANSIFormat( tmp, opts );
 }
 
-wstring Engine::Helpers::ansiFormat( wstring str, uint32_t opts )
+wstring Engine::Helpers::ANSIFormat( wstring str, uint32_t opts )
 {
-	wstringstream ret{ };
+#ifdef _WIN32
+	wstringstream ret;
 
 	if(opts == 0)
 	{
@@ -685,18 +870,22 @@ wstring Engine::Helpers::ansiFormat( wstring str, uint32_t opts )
 
 			break;
 		default:
-			throw Exception{ "Invalid ANSI escape code provided" };
+			throw Exception{ u8"Invalid ANSI escape code provided" };
 		}
 	}
 
 	ret << L'm' << str;
 
 	return ret.str( );
+#else
+    return wstring{ utf_to_utf<wchar_t>( Engine::Helpers::ANSIFormat(
+	    string{ utf_to_utf<char>( str ) }, opts ) ) };
+#endif
 }
 
-wstring Engine::Helpers::ansiFormat( const wchar_t* str, uint32_t opts )
+wstring Engine::Helpers::ANSIFormat( const wchar_t* str, uint32_t opts )
 {
 	wstring tmp{ str };
 
-	return ansiFormat( tmp, opts );
+	return ANSIFormat( tmp, opts );
 }
