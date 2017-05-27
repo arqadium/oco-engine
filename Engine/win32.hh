@@ -14,6 +14,7 @@ namespace Engine
 {
 
 void EnableANSIConsole( );
+bool SupportsANSI( );
 
 }
 
