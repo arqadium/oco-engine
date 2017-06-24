@@ -11,56 +11,51 @@
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cc">
+    <ClCompile Include="src\lz4frame.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="mainloop.cc">
+    <ClCompile Include="src\lz4hc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="package.cc">
+    <ClCompile Include="src\xxhash.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="helpers.cc">
+    <ClCompile Include="src\lz4.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="win32.cc">
+    <ClCompile Include="src\lz4mm.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="mainloop.hh">
+    <ClInclude Include="src\lz4frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="package.hh">
+    <ClInclude Include="src\lz4frame_static.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="config.h">
+    <ClInclude Include="src\lz4hc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="helpers.hh">
+    <ClInclude Include="src\lz4opt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="except.hh">
+    <ClInclude Include="src\xxhash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="win32.hh">
+    <ClInclude Include="src\lz4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lz4mm.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Dependencies\Assets\Release\mochi.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Dependencies\Assets\Release\SampleImage.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Engine.rc">
+    <ResourceCompile Include="src\LZ4.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

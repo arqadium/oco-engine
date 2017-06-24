@@ -1,5 +1,7 @@
 // Engine Resource Control file
 
+#include "config.h"
+
 1 VERSIONINFO
 FILEFLAGSMASK 0x3FL
 FILEFLAGS     0L
@@ -35,8 +37,11 @@ BEGIN
     END
 END
 
+#define Q(x) #x
+#define QUOTE(x) Q(x)
+
 #ifdef NDEBUG
-0 ICON "Dependencies\\Assets\\Release\\mochi.ico"
+0 ICON QUOTE( ICONPATH )
 #else
-0 ICON "Dependencies\\Assets\\Debug\\mochi.ico"
+0 ICON QUOTE( ICONPATH )
 #endif

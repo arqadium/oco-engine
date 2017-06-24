@@ -22,7 +22,9 @@ using std::vector;
 
 namespace
 {
-	constexpr auto kSampleImagePath{ u8"SampleImage.png" };
+
+constexpr auto kSampleImagePath{ u8"SampleImage.png" };
+
 }
 
 void Engine::MainLoop( vector<string> args )

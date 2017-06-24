@@ -3,6 +3,8 @@
 
 # Ignore binary dependency collections
 Dependencies
+deps
+build
 
 # User-specific files
 *.suo
