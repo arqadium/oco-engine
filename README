@@ -1,5 +1,6 @@
 
 
+
 ******************************************************************************
 **                      ,,                                                  **
 **                    ,d88b,                                                **
@@ -36,10 +37,10 @@
 US-based software development company. While there are several closed-source
 game development suites that can do what OCo does (perhaps even doing it
 better), we do not subscribe to the philosophy of commoditising software by
-itself... this is for several reasons. We have also found wonderful
-competitors to those suites such as the Godot Engine, but due to a multitude
-of concerns (explained below), we wish to develop our own engine in-house
-under a somewhat more copyleft licence than Godot's "Expat Licence".
+itself, for several reasons. We have also found wonderful competitors to
+those suites such as the Godot Engine, but due to a multitude of concerns
+(explained below), we wish to develop our own engine in-house under a
+somewhat more copyleft licence than Godot's "Expat Licence".
 
 
 
@@ -75,7 +76,7 @@ apply just as well.
 
 While it's true that Godot meets more of our needs than any other engine,
 proving to be relatively stable, well-engineered, in active development, and
-licenced as Free Software... it can't do it all. Here are some reasons why we
+licenced as Free Software, it can't do it all. Here are some reasons why we
 chose to forego using Godot and instead build our own engine:
 
  1. Godot is general-purpose to a fault: this makes porting its functionality
