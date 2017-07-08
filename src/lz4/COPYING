@@ -2,19 +2,14 @@
 LZ4 Library for the OCo Engine
 Copyright (C) 2017 Trinity Software.
 
-This repository contains proprietary information of TRINITY SOFTWARE and/or its
-licenced developers and are protected by national and international copyright
-laws. They may not be disclosed to third parties or copied or duplicated in any
-form, in whole or in part, without the prior written consent of
-Trinity Software, LLC.
-
 All source files, including but not limited to build files, scripts, and other
 code/data - except for the files "lz4.c", "lz4.h", "lz4frame.c", "lz4frame.h",
 "lz4frame_static.h", "lz4hc.c", "lz4hc.h", "lz4opt.h", "xxhash.c", and
 "xxhash.h" located inside the "src" directory in the current folder - are
-copyrighted and confidential materials of Trinity Software. For the files
-listed as exceptions, they are covered under the "LZ4 Library" licence terms
-detailed below.
+released under the Mozilla Public License 2.0. For the files listed as
+exceptions, they are covered under the "LZ4 Library" licence terms detailed
+below. You can read the full terms of the MPL 2.0 in the COPYING file located
+in the repository's root, or online at <http://mozilla.org/MPL/2.0/>.
 
 -----
 
