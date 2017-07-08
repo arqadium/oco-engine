@@ -1,0 +1,141 @@
+
+
+******************************************************************************
+**                      ,,                                                  **
+**                    ,d88b,                                                **
+**                  ,d8P'`Y8b,                                              **
+**                 I8"      "8I                                             **
+**                  ,ad8888ba,      ,ad8888ba,        ,                     **
+**                 d8"'    `"8b    d8"'    `"8b     ,d8b,                   **
+**                d8'        `8b  d8'             ,8'   `8,                 **
+**                88          88  88              ,adPPYba,                 **
+**                88          88  88             a8"     "8a                **
+**                Y8,        ,8P  Y8,            8b       d8                **
+**                 Y8a.    .a8P    Y8a.    .a8P  "8a,   ,a8"                **
+**                  `"Y8888Y"'      `"Y8888Y"'    `"YbbdP"'                 **
+**                                      `8,                                 **
+**                                     ,ad'                                 **
+**                                                                          **
+**    Arqadium's "OCo Engine": a multiplatform game engine made of FOSS.    **
+**                                                                          **
+**            Copyright (C) 2017 Arqadium.  All rights reserved.            **
+**       Most sources released under the  Mozilla Public Licence 2.0;       **
+**   See all COPYING notices and source files for details and exceptions.   **
+**                                                                          **
+******************************************************************************
+
+
+
+-----
+
+
+
+1. INTRODUCTION
+
+    The "OCo Engine" is a new game engine under development at Arqadium, a
+US-based software development company. While there are several closed-source
+game development suites that can do what OCo does (perhaps even doing it
+better), we do not subscribe to the philosophy of commodotising software by
+itself... this is for several reasons. We have also found wonderful
+competitors to those suites such as the Godot Engine, but due to a multitude
+of concerns (explained below), we wish to develop our own engine in-house
+under a somewhat more copyleft licence than Godot's "Expat Licence".
+
+
+
+2. "WHAT THE HECK IS 'OCo'?"
+
+    It's a happy accident that the team decided to roll with very early on in
+the engine's development - thank Microsoft Windows and its nonexistent Unicode
+support for corrupting an "En dash" into the accented letters "OCo". We have
+tried to reproduce this error many times, and have failed ever since then!
+But it is good enough for us - we'd rather focus our naming efforts on more
+relevant kinds of branding in our company.
+
+
+
+3. PURPOSE AND SCOPE OF THIS PROJECT
+
+    The purpose of this project is to put together a barebones game engine for
+a Genesis-style 2D platformer codenamed "Project Mochi", currently targeting
+Microsoft Windows (non-UWP), GNU/Linux (Arch + Debian), and Android 4+. We are
+considering supporting the PlayStation 4 and Nintendo Switch, however any
+production for these consoles will not be crowd-sourced. No plans are being
+made to target the Xbox family, macOS, iOS, Nintendo 3DS, or Microsoft's UWP.
+
+    Eventually, we wish to expand the capabilities of the OCo Engine to
+shoulder our larger project in preproduction, Project Trinity. This will
+require much more investment on our part for things like real-time combat, 3D
+graphics and other luxury features, but nonetheless the same philosophy should
+apply just as well.
+
+
+
+4. "WHY NOT JUST USE GODOT?"
+
+While it's true that Godot meets more of our needs than any other engine,
+proving to be relatively stable, well-engineered, in active development, and
+licenced as Free Software... it can't do it all. Here are some reasons why we
+chose to forego using Godot and instead build our own engine:
+
+ 1. Godot is general-purpose to a fault: this makes porting its functionality
+    privately to closed platforms (e.g. Nintendo Switch) a massive undertaking
+    for a company of our size. Some things we would leave out of the porting
+    process would break the experience of using Godot due to our differing
+    approaches to engine design; our approach is deliberately minimal so as to
+    save money.
+ 2. Godot cannot publicly support NDA-stricken platforms by itself. It
+    probably isn't wise to wishfully wait for Nintendo or Sony to come to
+    their senses about software copyrights, so we aren't going to.
+ 3. The major roadblocks to rolling our own engine (up-front cost, mostly) are
+    at least mitigated if not alleviated by our unique approach to making it
+    happen. Godot may be free, but on the flipside our software isn't insanely
+    expensive either thanks to compromise. Once we have more capital, private
+    ports become a realistic proposition.
+
+
+
+5. HOW WE ARE PROFITABLE AND UNRELIANT
+
+    Something that confuses many people at first glance of our operations is
+this: How on Earth is Arqadium able to make money selling FOSS video games?
+It's surprisingly simple, actually. What we do is finance a very small core
+team of software developers to keep cadence for progress, and invite in the
+general public to contribute and help build the software behind our games. The
+key difference between our modus operandum and that of many "Open Source
+Games" is this: we privately produce all of our game's assets, and get our
+return-on-investment through their copyright. Our programs are built to handle
+the assets we make, but the engine shall be compilable without anything but
+dummy assets for the sake of licence compliance. Lastly, our use of the
+Mozilla Public Licence enables us to privately finance extensions to our FOSS
+projects for platforms under NDA, such as the Nintendo Switch, if we want to
+later on.
+
+
+
+6. "WHY SHOULD I CONTRIBUTE?"
+
+    The incentives to contribute to our projects may not be immediately
+obvious to a developer. Indeed, there are even potential drawbacks to donating
+your time and skill to the OCo Engine or any of our projects in general. For
+the sake of clarity, we have put together a list of pros and cons regarding
+public contributing:
+
+Cons:-
+ 1. The obvious: you will not be compensated for your time/effort. This is
+    usually the norm with FOSS.
+ 2. Your contributions will need to adhere to our plan and vision for the
+    project; these may be highly arbitrary or debatable, but are nonetheless
+    part and partial if you wish to have your changes merged into master.
+ 3. You are required to licence all of your code contributions under the
+    Mozilla Public Licence 2.0; also see #1 in the list of pros.
+
+Pros:-
+
+ 1. You are not required to relinquish ownership of your work to Arqadium.
+    We think this is in the best interests of the freedom in Free Software.
+ 2. Since we operate on GitHub, your contributions can show up publicly on
+    your profile. This may be useful as portfolio cred for career-building.
+ 3. Contributing to our FOSS projects lends you the ability to interact with
+    a paid core of developers working for a for-profit company; this can lend
+    much-needed "real world" credibility to an otherwise more basic portfolio.
