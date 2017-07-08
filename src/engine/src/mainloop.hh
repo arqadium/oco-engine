@@ -6,18 +6,14 @@
 \*****************************************************************************/
 
 #ifndef INC__MOCHI_ENGINE_MAINLOOP_HH
-#define INC__MOCHI_ENGINE_MAINLOOP_HH (1)
+#define INC__MOCHI_ENGINE_MAINLOOP_HH ( 1 )
 
 #include <string>
 #include <vector>
 
-
-
 namespace Engine
 {
-	void MainLoop( std::vector<std::string> args );
+void MainLoop( std::vector<std::string> args );
 }
-
-
 
 #endif // INC__MOCHI_ENGINE_MAINLOOP_HH

@@ -22,8 +22,6 @@
 #include "except.hh"
 #include "helpers.hh"
 
-
-
 using boost::crc_32_type;
 using boost::filesystem::ifstream;
 using boost::filesystem::path;
@@ -46,151 +44,150 @@ namespace
 {
 
 // Imported from config.h
-constexpr size_t magicBytesSz{ 0x1C };
-constexpr uint8_t curVersion{ 0 };
-constexpr size_t headerSize{ 0x30 };
-constexpr size_t fileCountOffset{ 0x10 };
-constexpr size_t crcTableCrcOffset{ 0x14 };
+constexpr size_t magicBytesSz{0x1C};
+constexpr uint8_t curVersion{0};
+constexpr size_t headerSize{0x30};
+constexpr size_t fileCountOffset{0x10};
+constexpr size_t crcTableCrcOffset{0x14};
 
 bool endsWith( wstring const& fullString, wstring const& ending )
 {
-	if(fullString.length( ) >= ending.length( ))
-	{
-		return (0 == fullString.compare( fullString.length( ) -
-			ending.length( ), ending.length( ), ending ));
-	}
-	
-	return false;
+    if( fullString.length( ) >= ending.length( ) )
+    {
+        return ( 0 ==
+            fullString.compare( fullString.length( ) - ending.length( ),
+                ending.length( ),
+                ending ) );
+    }
+
+    return false;
 }
 
 bool headerMismatch( vector<uint8_t> data )
 {
-	for(uintmax_t i = 0; i < Config::magicBytesSz; ++i)
-	{
-		if(data.at( i ) != Config::magicBytes[i])
-		{
-			return true;
-		}
-	}
-	return false;
+    for( uintmax_t i = 0; i < Config::magicBytesSz; ++i )
+    {
+        if( data.at( i ) != Config::magicBytes[i] )
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 } // namespace
 
 Engine::Package::Package( path filePath, bool check )
 {
-	// Ensure path name ends in our format's file extension
-	if(!endsWith( filePath.wstring( ), wstring{ Config::pkgFileExt_L } ))
-	{
-		throw Exception{ Config::Err::badFileExt };
-	}
+    // Ensure path name ends in our format's file extension
+    if( !endsWith( filePath.wstring( ), wstring{Config::pkgFileExt_L} ) )
+    {
+        throw Exception{Config::Err::badFileExt};
+    }
 
-	// Ensure stream is open and seek to beginning
-	this->EnsureOpenStream( );
-	this->stream.seekg( ios::beg );
+    // Ensure stream is open and seek to beginning
+    this->EnsureOpenStream( );
+    this->stream.seekg( ios::beg );
 
-	// Read the file header into a byte vector
-	vector<uint8_t> headerRaw;
+    // Read the file header into a byte vector
+    vector<uint8_t> headerRaw;
 
-	headerRaw.resize( magicBytesSz );
-	this->stream.read( reinterpret_cast<char*>(headerRaw.data( )),
-		magicBytesSz );
+    headerRaw.resize( magicBytesSz );
+    this->stream.read(
+        reinterpret_cast<char*>( headerRaw.data( ) ), magicBytesSz );
 
-	// Abort if the header doesn't match
-	if(headerMismatch( headerRaw ))
-	{
-		throw Exception{ Config::Err::badFileHeader };
-	}
+    // Abort if the header doesn't match
+    if( headerMismatch( headerRaw ) )
+    {
+        throw Exception{Config::Err::badFileHeader};
+    }
 
-	// Check our checksum table's checksum
-	if(check && this->ChecksumsInvalid( ))
-	{
-		throw Exception{ Config::Err::badChecksum };
-	}
+    // Check our checksum table's checksum
+    if( check && this->ChecksumsInvalid( ) )
+    {
+        throw Exception{Config::Err::badChecksum};
+    }
 
-	this->checked = check;
-	// Index the FAT
-	this->IndexFiles( );
+    this->checked = check;
+    // Index the FAT
+    this->IndexFiles( );
 }
 
 Engine::Package::~Package( )
 {
-	if(this->stream.is_open( ))
-	{
-		this->stream.close( );
-	}
+    if( this->stream.is_open( ) )
+    {
+        this->stream.close( );
+    }
 }
 
-void Engine::Package::IndexFiles( )
-{
-	
-}
+void Engine::Package::IndexFiles( ) {}
 
 bool Engine::Package::ChecksumsInvalid( )
 {
-	// Read in and format the file count, to size up the checksum table
-	array<char, sizeof( uint16_t )> fileCountBytes;
-	uint16_t fileCount;
+    // Read in and format the file count, to size up the checksum table
+    array<char, sizeof( uint16_t )> fileCountBytes;
+    uint16_t fileCount;
 
-	this->stream.seekg( fileCountOffset );
-	this->stream.read( fileCountBytes.data( ), sizeof( uint16_t ) );
+    this->stream.seekg( fileCountOffset );
+    this->stream.read( fileCountBytes.data( ), sizeof( uint16_t ) );
 
-	fileCount = charArrToU16( fileCountBytes );
+    fileCount = charArrToU16( fileCountBytes );
 
-	// Read in the checksum table
-	const size_t crcTableSz{ static_cast<size_t>(fileCount *
-		sizeof( uint32_t )) };
-	vector<uint8_t> crcTable{ };
+    // Read in the checksum table
+    const size_t crcTableSz{
+        static_cast<size_t>( fileCount * sizeof( uint32_t ) )};
+    vector<uint8_t> crcTable{};
 
-	crcTable.resize( crcTableSz );
-	this->stream.seekg( headerSize );
-	this->stream.read( reinterpret_cast<char*>(crcTable.data( )),
-		crcTableSz );
+    crcTable.resize( crcTableSz );
+    this->stream.seekg( headerSize );
+    this->stream.read(
+        reinterpret_cast<char*>( crcTable.data( ) ), crcTableSz );
 
-	// Retrieve our expected checksum
-	array<char, sizeof( uint32_t )> expectedBytes;
-	this->stream.seekg( crcTableCrcOffset );
-	this->stream.read( expectedBytes.data( ), sizeof( uint32_t ) );
+    // Retrieve our expected checksum
+    array<char, sizeof( uint32_t )> expectedBytes;
+    this->stream.seekg( crcTableCrcOffset );
+    this->stream.read( expectedBytes.data( ), sizeof( uint32_t ) );
 
-	// We're done with the stream, so close it
-	this->EnsureClosedStream( );
+    // We're done with the stream, so close it
+    this->EnsureClosedStream( );
 
-	uint32_t expected{ charArrToU32( expectedBytes ) };
-	crc_32_type tableChecksum;
+    uint32_t expected{charArrToU32( expectedBytes )};
+    crc_32_type tableChecksum;
 
-	// Retrieve our actual checksum
-	tableChecksum.process_bytes( reinterpret_cast<void*>(crcTable.data( )),
-		crcTableSz );
+    // Retrieve our actual checksum
+    tableChecksum.process_bytes(
+        reinterpret_cast<void*>( crcTable.data( ) ), crcTableSz );
 
-	uint32_t actual{ tableChecksum.checksum( ) };
+    uint32_t actual{tableChecksum.checksum( )};
 
-	return expected != actual;
+    return expected != actual;
 }
 
 void Engine::Package::EnsureOpenStream( )
 {
-	if(!this->stream.is_open( ))
-	{
-		// Open our stream as binary input at the beginning
-		this->stream.open( this->filePath, ifstream::in | ifstream::binary );
+    if( !this->stream.is_open( ) )
+    {
+        // Open our stream as binary input at the beginning
+        this->stream.open( this->filePath, ifstream::in | ifstream::binary );
 
-		// Ensure it opened
-		if(!this->stream.is_open( ))
-		{
-			throw Exception{ Config::Err::badFileStreamRead };
-		}
-	}
+        // Ensure it opened
+        if( !this->stream.is_open( ) )
+        {
+            throw Exception{Config::Err::badFileStreamRead};
+        }
+    }
 }
 
 void Engine::Package::EnsureClosedStream( )
 {
-	if(this->stream.is_open( ))
-	{
-		this->stream.close( );
+    if( this->stream.is_open( ) )
+    {
+        this->stream.close( );
 
-		if(this->stream.is_open( ))
-		{
-			throw Exception{ Config::Err::cannotCloseStream };
-		}
-	}
+        if( this->stream.is_open( ) )
+        {
+            throw Exception{Config::Err::cannotCloseStream};
+        }
+    }
 }

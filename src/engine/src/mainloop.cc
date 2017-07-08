@@ -7,13 +7,11 @@
 
 #include "mainloop.hh"
 
-#include <string>
 #include <sstream>
+#include <string>
 #include <vector>
 
 #include <SFML/Graphics.hpp>
-
-
 
 using sf::RenderWindow;
 using sf::VideoMode;
@@ -23,33 +21,32 @@ using std::vector;
 namespace
 {
 
-constexpr auto kSampleImagePath{ u8"SampleImage.png" };
-
+constexpr auto kSampleImagePath{u8"SampleImage.png"};
 }
 
 void Engine::MainLoop( vector<string> args )
 {
-	RenderWindow window{ VideoMode{ 640, 360 }, u8"Project Mochi!" };
-	sf::Texture img;
+    RenderWindow window{VideoMode{640, 360}, u8"Project Mochi!"};
+    sf::Texture img;
 
-	img.loadFromFile( kSampleImagePath );
+    img.loadFromFile( kSampleImagePath );
 
-	sf::Sprite spr{ img };
+    sf::Sprite spr{img};
 
-	while(window.isOpen( ))
-	{
-		sf::Event event;
+    while( window.isOpen( ) )
+    {
+        sf::Event event;
 
-		while(window.pollEvent( event ))
-		{
-			if(event.type == sf::Event::Closed)
-			{
-				window.close( );
-			}
-		}
+        while( window.pollEvent( event ) )
+        {
+            if( event.type == sf::Event::Closed )
+            {
+                window.close( );
+            }
+        }
 
-		window.clear( );
-		window.draw( spr );
-		window.display( );
-	}
+        window.clear( );
+        window.draw( spr );
+        window.display( );
+    }
 }

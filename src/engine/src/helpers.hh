@@ -6,14 +6,12 @@
 \*****************************************************************************/
 
 #ifndef INC__MOCHI_ENGINE_HELPERS_HH
-#define INC__MOCHI_ENGINE_HELPERS_HH (1)
+#define INC__MOCHI_ENGINE_HELPERS_HH ( 1 )
 
 #include <array>
 #include <cstdint>
 #include <string>
 #include <vector>
-
-
 
 namespace Engine
 {
@@ -25,40 +23,39 @@ namespace ANSI
 
 enum Codes : std::uint32_t
 {
-	None = 0x0,
-	Bold = 0x1,
-	Underline = 0x2,
-	Blink = 0x4,
-	Reverse = 0x8,
-	Invisible = 0x10,
-	BlackFG = 0x20,
-	WhiteFG = 0x40,
-	RedFG = 0x80,
-	GreenFG = 0x100,
-	BlueFG = 0x200,
-	CyanFG = 0x400,
-	YellowFG = 0x800,
-	MagentaFG = 0x1000,
-	BlackBG = 0x2000,
-	WhiteBG = 0x4000,
-	RedBG = 0x8000,
-	GreenBG = 0x10000,
-	BlueBG = 0x20000,
-	CyanBG = 0x40000,
-	YellowBG = 0x80000,
-	MagentaBG = 0x100000,
+    None      = 0x0,
+    Bold      = 0x1,
+    Underline = 0x2,
+    Blink     = 0x4,
+    Reverse   = 0x8,
+    Invisible = 0x10,
+    BlackFG   = 0x20,
+    WhiteFG   = 0x40,
+    RedFG     = 0x80,
+    GreenFG   = 0x100,
+    BlueFG    = 0x200,
+    CyanFG    = 0x400,
+    YellowFG  = 0x800,
+    MagentaFG = 0x1000,
+    BlackBG   = 0x2000,
+    WhiteBG   = 0x4000,
+    RedBG     = 0x8000,
+    GreenBG   = 0x10000,
+    BlueBG    = 0x20000,
+    CyanBG    = 0x40000,
+    YellowBG  = 0x80000,
+    MagentaBG = 0x100000,
 };
-
 }
 
 constexpr std::uint32_t singleBit( std::uint8_t which )
 {
-	if(which > 31)
-	{
-		return 0;
-	}
+    if( which > 31 )
+    {
+        return 0;
+    }
 
-	return 1 << which;
+    return 1 << which;
 }
 
 void Log( std::string str, bool newline = true );
@@ -96,45 +93,42 @@ std::wstring ANSIFormat( const wchar_t* str, std::uint32_t opts );
 
 inline std::uint16_t charArrToU16( std::array<char, 2> bytes )
 {
-	uint16_t ret{ 0 };
+    uint16_t ret{0};
 
-	ret |= static_cast<uint16_t>(bytes[0]) << 8;
-	ret |= static_cast<uint16_t>(bytes[1]);
+    ret |= static_cast<uint16_t>( bytes[0] ) << 8;
+    ret |= static_cast<uint16_t>( bytes[1] );
 
-	return ret;
+    return ret;
 }
 
 inline std::uint32_t charArrToU32( std::array<char, 4> bytes )
 {
-	std::uint32_t ret{ 0 };
+    std::uint32_t ret{0};
 
-	ret |= static_cast<std::uint32_t>(bytes[0]) << 24;
-	ret |= static_cast<std::uint32_t>(bytes[1]) << 16;
-	ret |= static_cast<std::uint32_t>(bytes[2]) << 8;
-	ret |= static_cast<std::uint32_t>(bytes[3]);
+    ret |= static_cast<std::uint32_t>( bytes[0] ) << 24;
+    ret |= static_cast<std::uint32_t>( bytes[1] ) << 16;
+    ret |= static_cast<std::uint32_t>( bytes[2] ) << 8;
+    ret |= static_cast<std::uint32_t>( bytes[3] );
 
-	return ret;
+    return ret;
 }
 
 inline std::uint64_t charArrToU64( std::array<char, 8> bytes )
 {
-	std::uint64_t ret{ 0 };
+    std::uint64_t ret{0};
 
-	ret |= static_cast<std::uint64_t>(bytes[0]) << 56;
-	ret |= static_cast<std::uint64_t>(bytes[1]) << 48;
-	ret |= static_cast<std::uint64_t>(bytes[2]) << 40;
-	ret |= static_cast<std::uint64_t>(bytes[3]) << 32;
-	ret |= static_cast<std::uint64_t>(bytes[4]) << 24;
-	ret |= static_cast<std::uint64_t>(bytes[5]) << 16;
-	ret |= static_cast<std::uint64_t>(bytes[6]) << 8;
-	ret |= static_cast<std::uint64_t>(bytes[7]);
+    ret |= static_cast<std::uint64_t>( bytes[0] ) << 56;
+    ret |= static_cast<std::uint64_t>( bytes[1] ) << 48;
+    ret |= static_cast<std::uint64_t>( bytes[2] ) << 40;
+    ret |= static_cast<std::uint64_t>( bytes[3] ) << 32;
+    ret |= static_cast<std::uint64_t>( bytes[4] ) << 24;
+    ret |= static_cast<std::uint64_t>( bytes[5] ) << 16;
+    ret |= static_cast<std::uint64_t>( bytes[6] ) << 8;
+    ret |= static_cast<std::uint64_t>( bytes[7] );
 
-	return ret;
-}
-
+    return ret;
 }
 }
-
-
+}
 
 #endif // INC__MOCHI_ENGINE_HELPERS_HH

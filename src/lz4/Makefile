@@ -10,10 +10,8 @@
 # Trinity Software, LLC.
 #
 
-.SILENT
-
-ifndef $(SLNDIR)
-$(error This Makefile cannot be called directly.)
+ifeq ($(strip $(SLNDIR)),)
+	$(error This Makefile cannot be called directly)
 endif
 
 PROJECT := lz4
@@ -22,111 +20,132 @@ OUTNAME := lib$(PROJECT).so
 PRJDIR := $(SLNDIR)/src/$(PROJECT)
 
 PLATFORM := $(shell uname -s)
-TARGET   := debug
-#TARGET   := release
 
 ifeq ($(strip $(PLATFORM)),Linux)
-PLTFLAGS := -DLINUX=1
-else ($(strip $(PLATFORM)),Darwin)
-PLTFLAGS := -DDARWIN=1
+	PLTFLAGS := -DLINUX=1
 else
-$(error Unsupported platform.)
+	ifeq ($(strip $(PLATFORM)),Darwin)
+		PLTFLAGS := -DDARWIN=1
+	else
+		$(error Unsupported platform)
+	endif
 endif
 
 ifeq ($(strip $(TARGET)),debug)
-TGTFLAGS := -UNDEBUG
-else ($(strip $(TARGET)),release)
-TGTFLAGS := -DNDEBUG=1
+	TGTFLAGS := -UNDEBUG
 else
-$(error Unsupported target, check Makefile.)
+	ifeq ($(strip $(TARGET)),release)
+		TGTFLAGS := -DNDEBUG=1
+	else
+		$(error Unsupported target, check Makefile)
+	endif
 endif
 
 LONG_BIT := $(shell getconf LONG_BIT)
 ifeq ($(strip $(LONG_BIT)),32)
-ARCHFLAGS := -m32 -mcpu=pentium4 -DARCH=32
-ARCHNAME  := i386
-else ($(strip $(LONG_BIT)),64)
-ARCHFLAGS := -m64 -mcpu=sandybridge -mavx -mavx2 -DARCH=64
-ARCHNAME  := x86_64
+	ARCHFLAGS := -m32 -march=pentium4 -DARCH=32
+	ARCHNAME  := i386
 else
-$(error Your platform is neither 32-bit nor 64-bit.)
+	ifeq ($(strip $(LONG_BIT)),64)
+		ARCHFLAGS := -m64 -march=sandybridge -mavx -mavx2 -DARCH=64
+		ARCHNAME  := x86_64
+	else
+		$(error Your platform is neither 32-bit nor 64-bit)
+	endif
 endif
 
 OUTDIR := $(SLNDIR)/build/$(ARCHNAME)/$(TARGET)
 BUILD     := $(OUTDIR)/$(PROJECT)
 
-SFILES   := $(shell cd $(PRJDIR)/src && find -type f -name '*.s')
-CFILES   := $(shell cd $(PRJDIR)/src && find -type f -name '*.c')
-CPPFILES := $(shell cd $(PRJDIR)/src && find -type f -name '*.cc')
+SFILES   := $(shell cd "$(PRJDIR)/src" && find -type f -name '*.s' | sed -e 's:./::')
+CFILES   := $(shell cd "$(PRJDIR)/src" && find -type f -name '*.c' | sed -e 's:./::')
+CPPFILES := $(shell cd "$(PRJDIR)/src" && find -type f -name '*.cc' | sed -e 's:./::')
+HFILES   := $(shell cd "$(PRJDIR)/src" && find -type f -name '*.h' | sed -e 's:./::')
+HPPFILES := $(shell cd "$(PRJDIR)/src" && find -type f -name '*.hh' | sed -e 's:./::')
 
-if ($(strip $(SFILES) $(CFILES) $(CPPFILES)),)
-$(error No source files were found.)
+ifeq ($(strip $(SFILES) $(CFILES) $(CPPFILES)),)
+	$(error No source files were found)
 endif
 
 ifeq ($(strip $(shell which gcc)),)
-$(error The gcc binary was not found in your PATH.)
+	$(error The gcc binary was not found in your PATH)
 endif
 CC := gcc
 ifeq ($(strip $(shell which g++)),)
-$(error The g++ binary was not found in your PATH.)
+	$(error The g++ binary was not found in your PATH)
 endif
 CXX := g++
-ifeq ($(strip $(shell which gold)),)
-$(warning GNU gold linker was not found. Falling back to ld...)
-ifeq ($(strip $(shell which ld)),)
-$(error The gold/ld binaries were not found in your PATH.)
-endif
-LD := ld
+ifeq ($(strip $(shell which ld.gold)),)
+	$(warning GNU gold linker was not found. Falling back to ld..)
+	ifeq ($(strip $(shell which ld)),)
+		$(error The gold/ld binaries were not found in your PATH)
+	endif
+	LD := g++
 else
-LD := gold
+	LD := g++ -fuse-ld=gold
 endif
 ifeq ($(strip $(shell which python3)),)
-$(error The python3 binary was not found in your PATH.)
+	$(error The python3 binary was not found in your PATH)
 endif
 PY := python3
+ifeq ($(strip $(shell which clang-format)),)
+	$(error The clang-format linter was not found in your PATH)
+endif
+LINT := clang-format
 
 SFLAGS :=
 CFLAGS := $(ARCHFLAGS) -mtune=generic -O2 -mfpmath=sse -c -x c -std=c11 -Wall \
-	$(PLTFLAGS) $(TGTFLAGS)
-CXXFLAGS := $(ARCHFLAGS) -mtune=generic -O2 -mfpmath=sse -c -x c++ -std=c++11 \
-	-Wall $(PLTFLAGS) $(TGTFLAGS)
-LDFLAGS := -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc \
-	-L$(SLNDIR)/deps/lib$(LONG_BIT)/$(TARGET) -llz4 -lsfml -lboost_locale \
-	-lboost_filesystem -lboost_system -shared
-INCLUDES := -I $(SLNDIR)/deps/include -iquote $(PRJDIR)/src
+	$(PLTFLAGS) $(TGTFLAGS) -fPIC
+CXXFLAGS := $(ARCHFLAGS) -mtune=generic -O2 -mfpmath=sse -c -x c++ -std=c++14 \
+	-Wall $(PLTFLAGS) $(TGTFLAGS) -fPIC
+LDFLAGS := -L"$(SLNDIR)/deps/lib$(LONG_BIT)/$(TARGET)" -shared
+INCLUDES := -I "$(SLNDIR)/deps/include" -iquote "$(PRJDIR)/src"
 
-.PHONY: all assemble compilec compilecxx link clean distclean
+.PHONY: all lint assemble compilec compilecxx link clean distclean
 
-all: assemble compilec compilecxx link
+all: lint assemble compilec compilecxx link
+
+lint:
+	@mkdir -p "$(BUILD)"
+	@for CPPFILE in $(CPPFILES) ; do \
+		$(LINT) --style=file "src/$$CPPFILE" > "$(BUILD)/templint" ; \
+		mv -f "$(BUILD)/templint" "src/$$CPPFILE" ; \
+	done
+	@for HPPFILE in $(HPPFILES) ; do \
+		$(LINT) --style=file "src/$$HPPFILE" > "$(BUILD)/templint" ; \
+		mv -f "$(BUILD)/templint" "src/$$HPPFILE" ; \
+	done
+	@rm -f "$(BUILD)/templint"
 
 assemble:
-	@mkdir -p $(BUILD)/code
+	@mkdir -p "$(BUILD)/code"
 	@for SFILE in $(SFILES) ; do \
-		OUTFILE=$$(echo $$SFILE | sed -e 's:/:+:')
-		$(AS) $(SFLAGS) src/$$SFILE -o $(BUILD)/code/$$OUTFILE.o ; \
+		OUTFILE=$$(echo "$$SFILE" | sed -e 's:/:+:') ; \
+		$(AS) $(SFLAGS) "src/$$SFILE" -o "$(BUILD)/code/$$OUTFILE.o" ; \
 	done
 
 compilec:
-	@mkdir -p $(BUILD)/code
+	@mkdir -p "$(BUILD)/code"
 	@for CFILE in $(CFILES) ; do \
-		OUTFILE=$$(echo $$CFILE | sed -e 's:/:+:')
-		$(CC) $(CFLAGS) $(INCLUDES) src/$$CFILE $(BUILD)/code/$$OUTFILE.o ; \
+		OUTFILE=$$(echo "$$CFILE" | sed -e 's:/:+:') ; \
+		$(CC) $(CFLAGS) $(INCLUDES) "src/$$CFILE" -o \
+			"$(BUILD)/code/$$OUTFILE.o" ; \
 	done
 
 compilecxx:
-	@mkdir -p $(BUILD)/code
+	@mkdir -p "$(BUILD)/code"
 	@for CPPFILE in $(CPPFILES) ; do \
-		OUTFILE=$$(echo $CPPFILE | sed -e 's:/:+:')
-		$(CXX) $(CXXFLAGS) $(INCLUDES) src/$$CPPFILE \
-		$(BUILD)/code/$$OUTFILE.o ; \
+		OUTFILE=$$(echo "$$CPPFILE" | sed -e 's:/:+:') ; \
+		$(CXX) $(CXXFLAGS) $(INCLUDES) "src/$$CPPFILE" -o \
+			"$(BUILD)/code/$$OUTFILE.o" ; \
 	done
 
 link:
-	@$(LD) $(LDFLAGS) -o $(OUTDIR)/$(OUTNAME) \
-		$$(find $(BUILD)/code -type f -name '*.o')
+	@$(LD) $(LDFLAGS) -o "$(OUTDIR)/$(OUTNAME)" \
+		$$(find "$(BUILD)/code" -type f -name '*.o')
 
 clean:
-	@rm -rf $(BUILD)
+	@rm -rf "$(BUILD)"
 
 distclean:
-	@rm -rf $(SLNDIR)/build
+	@rm -rf "$(SLNDIR)/build"

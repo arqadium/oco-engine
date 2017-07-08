@@ -8,44 +8,45 @@
 #include "win32.hh"
 
 #ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN (1)
+#define WIN32_LEAN_AND_MEAN ( 1 )
 #include <Windows.h>
 #endif
-
-
 
 namespace
 {
 
 #ifdef _WIN32
-bool ansiConsoleEnabled{ false };
+bool ansiConsoleEnabled{false};
 #else
-bool ansiConsoleEnabled{ true };
+bool ansiConsoleEnabled{true};
 #endif
-
 }
 
 void Engine::EnableANSIConsole( )
 {
 #ifdef _WIN32
-	// Set output mode to handle virtual terminal sequences
-	HANDLE hOut = GetStdHandle( STD_OUTPUT_HANDLE );
-	DWORD dwMode = 0;
+    // Set output mode to handle virtual terminal sequences
+    HANDLE hOut  = GetStdHandle( STD_OUTPUT_HANDLE );
+    DWORD dwMode = 0;
 
-	if(hOut == INVALID_HANDLE_VALUE) { return; }
-	if(!GetConsoleMode( hOut, &dwMode )) { return; }
+    if( hOut == INVALID_HANDLE_VALUE )
+    {
+        return;
+    }
+    if( !GetConsoleMode( hOut, &dwMode ) )
+    {
+        return;
+    }
 
-	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 
-	if(!SetConsoleMode( hOut, dwMode )) { return; }
+    if( !SetConsoleMode( hOut, dwMode ) )
+    {
+        return;
+    }
 
-	ansiConsoleEnabled = true;
+    ansiConsoleEnabled = true;
 #endif
 }
 
-
-
-bool Engine::SupportsANSI( )
-{
-	return ansiConsoleEnabled;
-}
+bool Engine::SupportsANSI( ) { return ansiConsoleEnabled; }
