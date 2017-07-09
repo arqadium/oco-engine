@@ -1,0 +1,32 @@
+
+Policies for Outside Contributions to Arqadium FOSS Projects
+
+
+
+-----
+
+
+
+1. ISSUE POLICY
+
+- Before opening an issue, ensure it has not already been dealt with by
+  searching the issues list on GitHub.
+- Each issue must correspond to a single bug or feature request; do not stack
+  issues in the GitHub repository.
+- If possible, specify the platform(s) in question using labels.
+- If the platform in question is PC-based and the issue is for a bug, note the
+  specs of the PC in question.
+- If filing for a bug, specify the steps involved in reproducing it.
+- If filing for a bug, a simple code snippet that reproduces it is preferred.
+
+
+
+2. PULL REQUEST POLICY
+
+- Communicate with the developer core about the PR to prevent wasted effort
+  on undesired contributions. Arqadium offers a Discord guild to this end, at
+  <https://discord.gg/VbJAsHX>. There is also a company IRC server at
+  "irc.arqadium.com:666{0-9}" (port 6697 for SSL), and a free webchat modal at
+  <https://chat.arqadium.com/>.
+- If the PR mitigates or solves an issue, reference that issue by number in
+  the commit log.
