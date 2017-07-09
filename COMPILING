@@ -1,0 +1,23 @@
+
+Compiling the OCo Engine from Source
+
+-----
+
+
+
+1. MICROSOFT WINDOWS
+
+Open "OCo Engine.sln" in Visual Studio 2017, select your target, and build.
+
+
+
+2. GNU/LINUX
+
+Change directory to the repository root, and run `make`.
+
+
+
+3. ANDROID
+
+Android is currently unsupported, however support will arrive at a later date
+(to be decided).
