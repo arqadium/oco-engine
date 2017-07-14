@@ -76,7 +76,7 @@
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)build\</OutDir>
     <IntDir>build\</IntDir>
-    <TargetName>xconf</TargetName>
+    <TargetName>JSON</TargetName>
     <EnableManagedIncrementalBuild>true</EnableManagedIncrementalBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -86,19 +86,19 @@
     <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)build\</OutDir>
     <IntDir>build\</IntDir>
-    <TargetName>xconf</TargetName>
+    <TargetName>JSON</TargetName>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)build\</OutDir>
     <IntDir>build\</IntDir>
-    <TargetName>xconf</TargetName>
+    <TargetName>JSON</TargetName>
     <EnableManagedIncrementalBuild>true</EnableManagedIncrementalBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)build\</OutDir>
     <IntDir>build\</IntDir>
-    <TargetName>xconf</TargetName>
+    <TargetName>JSON</TargetName>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -269,13 +269,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\xconf.cc" />
+    <ClCompile Include="src\json.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\xconf.hh" />
+    <ClInclude Include="src\json.hh" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="src\xconf.rc" />
+    <ResourceCompile Include="src\json.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

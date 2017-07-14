@@ -15,17 +15,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\xconf.cc">
+    <ClCompile Include="src\json.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\xconf.hh">
+    <ClInclude Include="src\json.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="src\xconf.rc">
+    <ResourceCompile Include="src\json.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
