@@ -12,7 +12,7 @@ ifeq ($(strip $(SLNDIR)),)
 	$(error This Makefile cannot be called directly)
 endif
 
-PROJECT := xconf
+PROJECT := json
 OUTNAME := lib$(PROJECT).so
 
 PRJDIR := $(SLNDIR)/src/$(PROJECT)
