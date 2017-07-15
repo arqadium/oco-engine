@@ -12,13 +12,13 @@ export SLNDIR := $(PWD)
 export TARGET := debug
 #export TARGET := release
 
-.PHONY: all lint engine lz4 xconf clean distclean
+.PHONY: all lint engine lz4 json clean distclean
 
-all: lz4 xconf engine
+all: lz4 json engine
 
 lint:
 	@make -C src/lz4 lint
-	@make -C src/xconf lint
+	@make -C src/json lint
 	@make -C src/engine lint
 
 engine:
@@ -27,15 +27,15 @@ engine:
 lz4:
 	@make -C src/lz4 all
 
-xconf:
-	@make -C src/xconf all
+json:
+	@make -C src/json all
 
 clean:
 	@make -C src/lz4 clean
-	@make -C src/xconf clean
+	@make -C src/json clean
 	@make -C src/engine clean
 
 distclean:
 	@make -C src/lz4 distclean
-	@make -C src/xconf distclean
+	@make -C src/json distclean
 	@make -C src/engine distclean
