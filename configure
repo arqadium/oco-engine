@@ -1,0 +1,75 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8; mode: Python; indent-tabs-mode: nil; indent-width: 4; -*-
+#
+# OCO ENGINE
+# Copyright (C) 2017 Arqadium. All rights reserved.
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License,
+# version 2.0.  If a copy of the MPL was not distributed with this file, then
+# you can obtain one at <http://mozilla.org/MPL/2.0/>.
+#
+
+import os, zipfile
+
+try:
+    from urllib.request import urlretrieve
+except ImportError:
+    from urllib import urlretrieve
+
+
+
+## ============================ F U N C T I O N ============================ #
+## void main(string[])
+##
+## TITLE:       Main
+## DESCRIPTION: Application entry point
+##
+## PARAMETER: list of command-line arguments, starting with the script name.
+##
+## RETURNS: Integer exit code; handed back to the operating system.
+def main(args):
+    buildDir = os.path.join(os.getcwd(), 'build')
+    btoolDir = os.path.join(buildDir, 'tools')
+    btoolOName = os.path.join(btoolDir, 'buildtool.py')
+    if not os.path.exists(btoolDir):
+        os.makedirs(btoolDir)
+        urlretrieve(
+            'https://github.com/arqadium/oco-toolchain/archive/v0.0.0.zip',
+            btoolDir + '.zip')
+        arc = zipfile.ZipFile(btoolDir + '.zip')
+        pyfiles = ['buildtool.py', 'colour.py', 'ini.py']
+        for pyfile in pyfiles:
+            btoolIn = arc.open(os.path.join('oco-toolchain-0.0.0', 'src',
+                pyfile))
+            btoolOut = open(os.path.join(btoolDir, pyfile), 'wb')
+            btoolOut.write(btoolIn.read())
+            btoolOut.close()
+            btoolIn.close()
+        arc.close()
+    if os.name == 'nt':
+        with open('make.bat', 'w') as out:
+            out.write('python3 ' + btoolOName + ' main.ini "%1"\n')
+            out.close()
+    else:
+        with open('Makefile', 'w') as out:
+            out.write('.PHONY: debug release clean\ndebug:\n\t@python3 ' +
+                btoolOName + ' main.ini debug\n\nrelease:\n\t@python3 ' +
+                btoolOName + 'main.ini release\n\nclean:\n\t@rm -rf ' +
+                buildDir + '/code\n\t@rm -f $$(find ' + buildDir +
+                ' -exec file {} \; | grep -i elf | sed -e \'s/:.*//\')' +
+                '\n\ndistclean:\n\t@rm -rf ' + buildDir +
+                '\n\t@rm -f Makefile\n')
+            out.close()
+
+
+
+## =========================== B O O T S T R A P =========================== #
+## Application bootstrapper, guarding against code execution upon import.
+if __name__ == '__main__':
+    try:
+        from sys import argv, exit
+        main(argv)
+    except Exception as ex:
+        raise ex
+    except:
+        print('Rogue exception:', sys.exc_info()[0])

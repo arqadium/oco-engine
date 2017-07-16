@@ -14,7 +14,9 @@
 # Ignore binary dependency collections
 Dependencies
 deps
-build
+build/
+/Makefile
+/make.bat
 
 # User-specific files
 *.suo
