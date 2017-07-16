@@ -33,9 +33,13 @@ def main(args):
     btoolOName = os.path.join(btoolDir, 'buildtool.py')
     if not os.path.exists(btoolDir):
         os.makedirs(btoolDir)
-        urlretrieve(
+        try:
+            urlretrieve(
             'https://github.com/arqadium/oco-toolchain/archive/v0.0.0.zip',
             btoolDir + '.zip')
+        except Exception as ex:
+            print('Exception thrown while retrieving URL; check connection')
+            return
         arc = zipfile.ZipFile(btoolDir + '.zip')
         pyfiles = ['buildtool.py', 'colour.py', 'ini.py']
         for pyfile in pyfiles:
