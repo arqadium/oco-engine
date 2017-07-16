@@ -7,13 +7,16 @@ Compiling the OCo Engine from Source
 
 1. MICROSOFT WINDOWS
 
-Open "OCo Engine.sln" in Visual Studio 2017, select your target, and build.
+Currently unsupported; see <https://github.com/arqadium/oco-toolchain> for
+details on support.
 
 
 
 2. GNU/LINUX
 
-Change directory to the repository root, and run `make`.
+Two-step build:
+  $ ./configure
+  $ make [release]
 
 
 
