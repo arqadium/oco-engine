@@ -20,11 +20,11 @@ BEGIN
     BEGIN
         BLOCK "040904E4"
         BEGIN
-            VALUE "CompanyName",      "Trinity Software, LLC\000"
-            VALUE "FileDescription",  "An MIT-licenced implementation of libJSON.\000"
+            VALUE "CompanyName",      "Arqadium\000"
+            VALUE "FileDescription",  "An MIT-licenced tarball unpacker API.\000"
             VALUE "FileVersion",      "0.0.0\000"
             VALUE "InternalName",     "untar\000"
-            VALUE "LegalCopyright",   "Copyright \251 2017 Trinity Software, LLC\000"
+            VALUE "LegalCopyright",   "Copyright \251 2017 Arqadium\000"
             VALUE "OriginalFilename", "untar.dll\000"
             VALUE "ProductName",      "Tarball Unpacking Library\000"
             VALUE "ProductVersion",   "0.0.0\000"
