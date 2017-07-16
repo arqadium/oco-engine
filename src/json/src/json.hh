@@ -633,7 +633,7 @@ class JSON_API Value
     typedef Json::ArrayIndex ArrayIndex;
 
     static const Value& null; ///< We regret this reference to a global
-                              ///instance; prefer the simpler Value().
+    /// instance; prefer the simpler Value().
     static const Value&
         nullRef; ///< just a kludge for binary-compatibility; same as null
     static Value const& nullSingleton( ); ///< Prefer this to null or nullRef.
@@ -1076,7 +1076,7 @@ class JSON_API Value
         double real_;
         bool bool_;
         char* string_; // actually ptr to unsigned, followed by str, unless
-                       // !allocated_
+        // !allocated_
         ObjectValues* map_;
     } value_;
     ValueType type_ : 8;

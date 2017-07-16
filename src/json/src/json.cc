@@ -3019,8 +3019,8 @@ Value::CZString::~CZString( )
     {
         releaseStringValue( const_cast<char*>( cstr_ ),
             storage_.length_ + 1u ); //+1 for null terminating character for
-                                     //sake of completeness but not actually
-                                     //necessary
+        // sake of completeness but not actually
+        // necessary
     }
 }
 
@@ -3858,8 +3858,9 @@ const Value& Value::operator[]( ArrayIndex index ) const
 
 const Value& Value::operator[]( int index ) const
 {
-    JSON_ASSERT_MESSAGE( index >= 0, "in Json::Value::operator[](int index) "
-                                     "const: index cannot be negative" );
+    JSON_ASSERT_MESSAGE( index >= 0,
+        "in Json::Value::operator[](int index) "
+        "const: index cannot be negative" );
     return ( *this )[ArrayIndex( index )];
 }
 
@@ -5574,7 +5575,7 @@ struct CommentStyle
     {
         None, ///< Drop all comments.
         Most, ///< Recover odd behavior of previous versions (not implemented
-              ///yet).
+        /// yet).
         All ///< Keep all comments.
     };
 };
