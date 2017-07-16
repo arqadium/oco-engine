@@ -1,0 +1,44 @@
+/** -*- coding: utf-8; mode: C; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/*****************************************************************************\
+ *                        PROJECT MOCHI - OCO ENGINE                         *
+ *             Copyright (C) 2017 Arqadium. All rights reserved.             *
+ *                                                                           *
+ *    This Source Code Form is subject to the terms of the Mozilla Public    *
+ * License, version 2.0.  If a copy of the MPL was not distributed with this *
+ *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
+\*****************************************************************************/
+
+1 VERSIONINFO
+FILEFLAGSMASK 0x3FL
+FILEFLAGS     0L
+FILEOS        0x40004L
+FILETYPE      2L
+FILESUBTYPE   0L
+
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName",      "Trinity Software, LLC\000"
+            VALUE "FileDescription",  "An MIT-licenced implementation of libJSON.\000"
+            VALUE "FileVersion",      "0.0.0\000"
+            VALUE "InternalName",     "untar\000"
+            VALUE "LegalCopyright",   "Copyright \251 2017 Trinity Software, LLC\000"
+            VALUE "OriginalFilename", "untar.dll\000"
+            VALUE "ProductName",      "Tarball Unpacking Library\000"
+            VALUE "ProductVersion",   "0.0.0\000"
+        END
+    END
+
+    BLOCK "VarFileInfo"
+    BEGIN
+        /* The following line should only be modified for localized versions.     */
+        /* It consists of any number of WORD,WORD pairs, with each pair           */
+        /* describing a language,codepage combination supported by the file.      */
+        /*                                                                        */
+        /* For example, a file might have values "0x409,1252" indicating that it  */
+        /* supports English language (0x409) in the Windows ANSI codepage (1252). */
+        VALUE "Translation", 0x409, 1252
+    END
+END
