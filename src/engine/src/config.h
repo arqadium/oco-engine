@@ -67,24 +67,25 @@
 namespace Config
 {
 
-constexpr auto magicBytes{
+constexpr auto kPkgMagicBytes{
     "\x89" // High bit set to avoid 7-bit transmissions [1 byte]
-    "MOCHIPKG" // File type identifier [8 bytes]
+    "OAMPKG" // File type identifier [8 bytes]
     "\r\n" // DOS-style line ending [2 bytes]
     "\x1A" // DOS End-of-file character [1 byte]
     "\n" // UNIX-style line ending [1 byte]
+    "\0\0\0\0"
     // NOTE: there is a null terminator ('\0') character at the end here!
     // Total size: 14 (0xE) bytes
 };
-constexpr std::size_t magicBytesSz{0xE};
+constexpr std::size_t kPkgMagicBytesSz{16};
 
 #ifndef _WIN32
 
-constexpr auto pkgFileExt{u8".oampkg.tar.lz4"};
+constexpr auto kPkgFileExt{u8".oampkg.tar.lz4"};
 
 #else // _WIN32
 
-constexpr auto pkgFileExt{L".oampkg.tar.lz4"};
+constexpr auto kPkgFileExt{L".oampkg.tar.lz4"};
 
 #endif // _WIN32
 
@@ -93,19 +94,19 @@ namespace Err
 
 #ifndef _WIN32
 
-constexpr auto badFileHeader{u8"File header bytes are invalid"};
-constexpr auto badFileExt{u8"File extension is invalid"};
-constexpr auto badFileStreamRead{u8"Failed to open file (read)"};
-constexpr auto badChecksum{u8"Checksumming failed"};
-constexpr auto cannotCloseStream{u8"Cannot close file stream"};
+constexpr auto kBadFileHeader{u8"File header bytes are invalid"};
+constexpr auto kBadFileExt{u8"File extension is invalid"};
+constexpr auto kBadFileStreamRead{u8"Failed to open file (read)"};
+constexpr auto kBadChecksum{u8"Checksumming failed"};
+constexpr auto kCannotCloseStream{u8"Cannot close file stream"};
 
 #else // _WIN32
 
-constexpr auto badFileHeader{L"File header bytes are invalid"};
-constexpr auto badFileExt{L"File extension is invalid"};
-constexpr auto badFileStreamRead{L"Failed to open file (read)"};
-constexpr auto badChecksum{L"Checksumming failed"};
-constexpr auto cannotCloseStream{L"Cannot close file stream"};
+constexpr auto kBadFileHeader{L"File header bytes are invalid"};
+constexpr auto kBadFileExt{L"File extension is invalid"};
+constexpr auto kBadFileStreamRead{L"Failed to open file (read)"};
+constexpr auto kBadChecksum{L"Checksumming failed"};
+constexpr auto kCannotCloseStream{L"Cannot close file stream"};
 
 #endif // _WIN32
 }

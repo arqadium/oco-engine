@@ -18,7 +18,7 @@ immutable ubyte[16] kPkgMagicBytes = [
     0x1A,                               // DOS EOF character
     0x0A,                               // "\n"
     0x00,                               // NULL terminator
-    0, 0, 0                             // padding to make header length 16
+    0, 0, 0, 0                          // padding to make header length 16
 ];
 
 immutable string kPkgFileExt = ".oampkg.tar.lz4";
