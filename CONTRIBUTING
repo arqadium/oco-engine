@@ -1,7 +1,14 @@
 
-Policies for Outside Contributions to Arqadium FOSS Projects
+Outside Contributor's Guide to Arqadium FOSS Projects
 
 -----
+
+    We'd like to go over the technical aspects of the OCo Engine to cover the
+things that may not be immediately obvious, including things like language
+support, programming vs. scripting, and designer's provisions... among other
+things. But before we get into that, it's best that we cover our policies for
+issues and pull requests (PRs) on GitHub. Be sure to read those two sections
+if nothing else!
 
 
 
@@ -28,3 +35,74 @@ Policies for Outside Contributions to Arqadium FOSS Projects
   <https://chat.arqadium.com/>.
 - If the PR mitigates or solves an issue, reference that issue by number in
   the commit log.
+
+
+
+3. SCRIPTING? OR PROGRAMMING?
+
+    In the world of game development, there is quite a lot of confusion about
+the meaning of these terms - the muddy waters in popular game engines such as
+Unity or Unreal certainly don't help. Technically, scripting languages are
+almost always Turing-complete, so it's tough to say they're not programming
+languages... but at the same time, these terms still exist, and developers
+have a rough idea of what the difference is in their minds. That idea varies
+quite a lot from person to person.
+
+    Rather than fill the debate halls or online chatrooms with noise, we have
+decided to make it easy to tell one from the other with the OCo Engine. This
+is accomplished by having a clear separation of the domain between "scripting"
+and "programming", where the latter has full access to the Engine in its
+entirety, and the former provides a more amicable, watered-down subset of
+functionality of the Engine in a language that is easy enough for designers to
+digest, yet flexible enough for software engineers to extend as needed. Long
+story short: designers do scripting, and engineers do programming.
+
+    We have good reason to separate programming from scripting, and it's much
+more than a semantical obsession. While you may find many promotionals and
+popular media regarding game dev exclaiming the importance of "gameplay above
+all", that idea neglects to mention that gameplay isn't possible without
+relatively stable software to make it function. That means good code is not "optional". And on that note, our leadership has decided to do something
+different with the kind of code that matters most: instead of following
+Unreal's pattern and masking over a mangled-up rendition of C++, or mandating
+C# across the board as Unity does, we're going to have scripting be distinct
+from programming altogether.
+
+
+
+4. LANGUAGE SUPPORT
+
+    The astute among you may already know that we aren't the first game engine
+to take this approach. Indeed, the Godot Engine provides an easy-to-use
+scripting language called GDScript, and gives developers the option to extend
+the engine using modules written in C++. Since version 3.0, Godot has provided
+a C interface known as GDNative, which allows developers to create bindings to
+their engine in any language that can talk to C code.
+
+    While this system works, we don't think it's necessarily the best way for
+the OCo Engine to be built. Debates between Godot's philosophy and ours aside,
+the OCo Engine is natively built in three languages: C, C++, and D. Where
+Godot would provide C++ module extensibility, OCo provides this set of
+language interfaces for most everything worth exposing as an API. This enables
+users to extend OCo by writing modules in a bigger set of languages, and
+allows Engine functionality to be implemented in the language it fits best in
+while exposing its interface in all three languages regardless.
+
+    As for scripting languages, it is still too early in OCo's development to
+say how it will work when implemented. That said, we are planning to write an
+interpreter for an unnamed subset of JavaScript, using it as an analogue to
+GDScript for our purposes. Of course, there is always the possibility for
+anyone to write a different interpreter, or create their own JIT compiler for
+our language or another if they so choose. That is the power of Free Software,
+after all!
+
+
+
+5. DESIGNER'S PROVISIONS
+
+    Most major engines provide a single, unified interface for building and
+designing games. Godot takes this a step further by using itself as its own
+GUI toolkit for the packaged Godot editor, even! This is in contrast to our
+split approach, which completely separates the engine (what you deploy) from
+the designer (what you utilise). We aim to have various design tools that run
+on Microsoft Windows and GNU/Linux, which will export the necessary metadata
+and asset payloads to the formats handled best by the Engine.
