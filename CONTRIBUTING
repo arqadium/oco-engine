@@ -61,7 +61,8 @@ story short: designers do scripting, and engineers do programming.
 more than a semantical obsession. While you may find many promotionals and
 popular media regarding game dev exclaiming the importance of "gameplay above
 all", that idea neglects to mention that gameplay isn't possible without
-relatively stable software to make it function. That means good code is not "optional". And on that note, our leadership has decided to do something
+relatively stable software to make it function. That means good code is not
+"optional". And on that note, our leadership has decided to do something
 different with the kind of code that matters most: instead of following
 Unreal's pattern and masking over a mangled-up rendition of C++, or mandating
 C# across the board as Unity does, we're going to have scripting be distinct
