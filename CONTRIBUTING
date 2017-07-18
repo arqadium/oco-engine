@@ -86,7 +86,12 @@ Godot would provide C++ module extensibility, OCo provides this set of
 language interfaces for most everything worth exposing as an API. This enables
 users to extend OCo by writing modules in a bigger set of languages, and
 allows Engine functionality to be implemented in the language it fits best in
-while exposing its interface in all three languages regardless.
+while exposing its interface in all three languages regardless. Lastly, having
+the complexity of data restricted to the lowest common denominator, C, does
+well to promote "data-oriented design", and gives developers a hefty incentive
+to "Keep It Simple Stupid" when creating multilingual interfaces. This can
+bring about massive improvement in both runtime performance for users and ease
+of understanding for developers.
 
     As for scripting languages, it is still too early in OCo's development to
 say how it will work when implemented. That said, we are planning to write an
