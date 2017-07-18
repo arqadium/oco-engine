@@ -17,7 +17,7 @@
 
 #ifndef __cplusplus
 
-#define CFG__MAGIC_BYTES "\x89MOCHIPKG\r\n\x1A\n" // See notes below
+#define CFG__MAGIC_BYTES "\x89OAMPKG\r\n\x1A\n\0\0\0\0" // See notes below
 
 #ifndef _WIN32
 
