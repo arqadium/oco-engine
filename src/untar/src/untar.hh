@@ -26,15 +26,18 @@ constexpr uint_least8_t kMagicBytesLen{6};
 constexpr auto kVersion = {'0', '0'};
 constexpr uint_least8_t kVersionLen{2};
 
+/** ============================== C L A S S ============================== **
+ *
+ * TITLE:       Tarball Object
+ * DESCRIPTION: Represents a read-only tarball object.
+ */
 class Tarball
 {
-    /** ============================= S T R U C T =============================
-     * **
+    /** =========================== S T R U C T =========================== **
      *
      * TITLE:       Tarball Header Block
      * DESCRIPTION: Specifies the header structure for POSIX 1003.1-1990
-     * compliant
-     *              tar archives (a.k.a. tarballs).
+     *              compliant tar archives (a.k.a. tarballs).
      */
     struct Header
     {
@@ -57,6 +60,11 @@ class Tarball
         uint8_t _padding[12]; // 500
     };
 
+    /** =========================== S T R U C T =========================== **
+     *
+     * TITLE:       Tarball Entry Object
+     * DESCRIPTION: Represents a single entry in a Tarball object.
+     */
     struct TarEntry
     {
         TarEntry( Header& _header, std::uint_least64_t _offset )
