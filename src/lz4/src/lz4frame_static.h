@@ -53,14 +53,13 @@ extern "C" {
     ITEM( OK_NoError )                                                         \
     ITEM( ERROR_GENERIC )                                                      \
     ITEM( ERROR_maxBlockSize_invalid )                                         \
-    ITEM( ERROR_blockMode_invalid ) ITEM( ERROR_contentChecksumFlag_invalid )  \
-        ITEM( ERROR_compressionLevel_invalid ) ITEM(                           \
-            ERROR_headerVersion_wrong )                                        \
-            ITEM( ERROR_blockChecksum_unsupported ) ITEM(                      \
-                ERROR_reservedFlag_set ) ITEM( ERROR_allocation_failed )       \
-                ITEM( ERROR_srcSize_tooLarge )                                 \
-                    ITEM( ERROR_dstMaxSize_tooSmall ) ITEM(                    \
-                        ERROR_frameHeader_incomplete )                         \
+    ITEM( ERROR_blockMode_invalid )                                            \
+    ITEM( ERROR_contentChecksumFlag_invalid )                                  \
+    ITEM( ERROR_compressionLevel_invalid ) ITEM( ERROR_headerVersion_wrong )   \
+        ITEM( ERROR_blockChecksum_unsupported ) ITEM( ERROR_reservedFlag_set ) \
+            ITEM( ERROR_allocation_failed ) ITEM( ERROR_srcSize_tooLarge )     \
+                ITEM( ERROR_dstMaxSize_tooSmall )                              \
+                    ITEM( ERROR_frameHeader_incomplete )                       \
                         ITEM( ERROR_frameType_unknown ) ITEM(                  \
                             ERROR_frameSize_wrong ) ITEM( ERROR_srcPtr_wrong ) \
                             ITEM( ERROR_decompressionFailed )                  \
