@@ -9,7 +9,7 @@
 \*****************************************************************************/
 
 #ifndef INC__MOCHI_ENGINE_CONFIG_HH
-#define INC__MOCHI_ENGINE_CONFIG_HH (1)
+#define INC__MOCHI_ENGINE_CONFIG_HH ( 1 )
 
 #ifndef __cplusplus
 
@@ -51,43 +51,37 @@
 
 #include <cstddef>
 
-
-
 namespace Config
 {
 
 constexpr auto magicBytes{
-	"\x89" // High bit set to avoid 7-bit transmissions [1 byte]
-	"MOCHIPKG" // File type identifier [8 bytes]
-	"\r\n" // DOS-style line ending [2 bytes]
-	"\x1A" // DOS End-of-file character [1 byte]
-	"\n" // UNIX-style line ending [1 byte]
-	// NOTE: there is a null terminator ('\0') character at the end here!
-	// Total size: 14 (0xE) bytes
+    "\x89" // High bit set to avoid 7-bit transmissions [1 byte]
+    "MOCHIPKG" // File type identifier [8 bytes]
+    "\r\n" // DOS-style line ending [2 bytes]
+    "\x1A" // DOS End-of-file character [1 byte]
+    "\n" // UNIX-style line ending [1 byte]
+    // NOTE: there is a null terminator ('\0') character at the end here!
+    // Total size: 14 (0xE) bytes
 };
-constexpr std::size_t magicBytesSz{ 0xE };
-constexpr auto pkgFileExt{ ".mochipkg" };
-constexpr auto pkgFileExt_L{ L".mochipkg" };
+constexpr std::size_t magicBytesSz{0xE};
+constexpr auto pkgFileExt{".mochipkg"};
+constexpr auto pkgFileExt_L{L".mochipkg"};
 
 namespace Err
 {
 
-constexpr auto badFileHeader{ "File header bytes are invalid" };
-constexpr auto badFileHeader_L{ L"File header bytes are invalid" };
-constexpr auto badFileExt{ "File extension is invalid" };
-constexpr auto badFileExt_L{ L"File extension is invalid" };
-constexpr auto badFileStreamRead{ "Failed to open file (read)" };
-constexpr auto badFileStreamRead_L{ L"Failed to open file (read)" };
-constexpr auto badChecksum{ "Checksumming failed" };
-constexpr auto badChecksum_L{ L"Checksumming failed" };
-constexpr auto cannotCloseStream{ "Cannot close file stream" };
-constexpr auto cannotCloseStream_L{ L"Cannot close file stream" };
-
+constexpr auto badFileHeader{"File header bytes are invalid"};
+constexpr auto badFileHeader_L{L"File header bytes are invalid"};
+constexpr auto badFileExt{"File extension is invalid"};
+constexpr auto badFileExt_L{L"File extension is invalid"};
+constexpr auto badFileStreamRead{"Failed to open file (read)"};
+constexpr auto badFileStreamRead_L{L"Failed to open file (read)"};
+constexpr auto badChecksum{"Checksumming failed"};
+constexpr auto badChecksum_L{L"Checksumming failed"};
+constexpr auto cannotCloseStream{"Cannot close file stream"};
+constexpr auto cannotCloseStream_L{L"Cannot close file stream"};
 }
-
 }
-
-
 
 #endif // __cplusplus
 
