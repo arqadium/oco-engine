@@ -23,7 +23,7 @@
 #include "config.h"
 
 #include "except.hh"
-#include "helpers.hh"
+#include "helpers.h"
 
 using boost::crc_32_type;
 using boost::filesystem::ifstream;
@@ -34,6 +34,9 @@ using Engine::Helpers::charArrToU32;
 using std::array;
 using std::runtime_error;
 using std::ios;
+#ifndef _WIN32
+using std::string;
+#endif
 using std::size_t;
 using std::uint16_t;
 using std::uint32_t;
@@ -41,7 +44,9 @@ using std::uint64_t;
 using std::uint8_t;
 using std::uintmax_t;
 using std::vector;
+#ifdef _WIN32
 using std::wstring;
+#endif
 
 namespace
 {
@@ -53,7 +58,11 @@ constexpr size_t headerSize{0x30};
 constexpr size_t fileCountOffset{0x10};
 constexpr size_t crcTableCrcOffset{0x14};
 
+#ifdef _WIN32
 bool endsWith( wstring const& fullString, wstring const& ending )
+#else // _WIN32
+bool endsWith( string const& fullString, string const& ending )
+#endif
 {
     if( fullString.length( ) >= ending.length( ) )
     {
@@ -68,9 +77,9 @@ bool endsWith( wstring const& fullString, wstring const& ending )
 
 bool headerMismatch( vector<uint8_t> data )
 {
-    for( uintmax_t i = 0; i < Config::magicBytesSz; ++i )
+    for( uintmax_t i = 0; i < Config::kPkgMagicBytesSz; ++i )
     {
-        if( data.at( i ) != Config::magicBytes[i] )
+        if( data.at( i ) != Config::kPkgMagicBytes[i] )
         {
             return true;
         }
@@ -83,9 +92,9 @@ bool headerMismatch( vector<uint8_t> data )
 Engine::Package::Package( path filePath, bool check )
 {
     // Ensure path name ends in our format's file extension
-    if( !endsWith( filePath.wstring( ), wstring{Config::pkgFileExt_L} ) )
+    if( !endsWith( filePath.string( ), Config::kPkgFileExt ) )
     {
-        throw Exception{Config::Err::badFileExt};
+        throw Exception{Config::Err::kBadFileExt};
     }
 
     // Ensure stream is open and seek to beginning
@@ -95,20 +104,20 @@ Engine::Package::Package( path filePath, bool check )
     // Read the file header into a byte vector
     vector<uint8_t> headerRaw;
 
-    headerRaw.resize( magicBytesSz );
-    this->stream.read(
-        reinterpret_cast<char*>( headerRaw.data( ) ), magicBytesSz );
+    headerRaw.resize( Config::kPkgMagicBytesSz );
+    this->stream.read( reinterpret_cast<char*>( headerRaw.data( ) ),
+        Config::kPkgMagicBytesSz );
 
     // Abort if the header doesn't match
     if( headerMismatch( headerRaw ) )
     {
-        throw Exception{Config::Err::badFileHeader};
+        throw Exception{Config::Err::kBadFileHeader};
     }
 
     // Check our checksum table's checksum
     if( check && this->ChecksumsInvalid( ) )
     {
-        throw Exception{Config::Err::badChecksum};
+        throw Exception{Config::Err::kBadChecksum};
     }
 
     this->checked = check;
@@ -177,7 +186,7 @@ void Engine::Package::EnsureOpenStream( )
         // Ensure it opened
         if( !this->stream.is_open( ) )
         {
-            throw Exception{Config::Err::badFileStreamRead};
+            throw Exception{Config::Err::kBadFileStreamRead};
         }
     }
 }
@@ -190,7 +199,7 @@ void Engine::Package::EnsureClosedStream( )
 
         if( this->stream.is_open( ) )
         {
-            throw Exception{Config::Err::cannotCloseStream};
+            throw Exception{Config::Err::kCannotCloseStream};
         }
     }
 }

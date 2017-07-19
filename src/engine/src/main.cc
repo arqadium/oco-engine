@@ -26,7 +26,7 @@ extern "C" {
 #include <boost/locale.hpp>
 
 #include "except.hh"
-#include "helpers.hh"
+#include "helpers.h"
 #include "mainloop.hh"
 #include "win32.hh"
 

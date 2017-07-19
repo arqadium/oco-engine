@@ -8,7 +8,7 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-#include "helpers.hh"
+#include "helpers.h"
 
 #include <array>
 #include <cstdint>
@@ -58,6 +58,62 @@ constexpr auto logPrefixNeutral{u8"\033[1;33m[\u00D4\u00C7\u00F4]\033[0m "};
 constexpr auto logPrefixBad{u8"\033[1;31m[\u00D4\u00C7\u00F4]\033[0m "};
 
 #endif
+
+bool ocoLog( const char* str )
+{
+    try
+    {
+        Engine::Helpers::Log( str, true );
+    }
+    catch( ... )
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool ocoInfo( const char* str )
+{
+    try
+    {
+        Engine::Helpers::Info( str, true );
+    }
+    catch( ... )
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool ocoWarn( const char* str )
+{
+    try
+    {
+        Engine::Helpers::Warn( str, true );
+    }
+    catch( ... )
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool ocoError( const char* str )
+{
+    try
+    {
+        Engine::Helpers::Error( str, true );
+    }
+    catch( ... )
+    {
+        return true;
+    }
+
+    return false;
+}
 
 void Engine::Helpers::Log( string str, bool newline )
 {

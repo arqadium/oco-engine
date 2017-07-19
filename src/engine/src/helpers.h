@@ -8,8 +8,10 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-#ifndef INC__MOCHI_ENGINE_HELPERS_HH
-#define INC__MOCHI_ENGINE_HELPERS_HH ( 1 )
+#ifndef INC__MOCHI_ENGINE_HELPERS_H
+#define INC__MOCHI_ENGINE_HELPERS_H ( 1 )
+
+#ifdef __cplusplus
 
 #include <array>
 #include <cstdint>
@@ -133,5 +135,19 @@ inline std::uint64_t charArrToU64( std::array<char, 8> bytes )
 }
 }
 }
+
+extern "C" bool ocoLog( const char* str );
+extern "C" bool ocoInfo( const char* str );
+extern "C" bool ocoWarn( const char* str );
+extern "C" bool ocoError( const char* str );
+
+#else // __cplusplus
+
+bool ocoLog( const char* str );
+bool ocoInfo( const char* str );
+bool ocoWarn( const char* str );
+bool ocoError( const char* str );
+
+#endif // __cplusplus
 
 #endif // INC__MOCHI_ENGINE_HELPERS_HH
