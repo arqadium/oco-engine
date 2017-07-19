@@ -25,15 +25,9 @@ bool ansiConsoleEnabled{true};
 #endif
 }
 
-void ocoEnableANSIConsole( )
-{
-    Engine::EnableANSIConsole( );
-}
+void ocoEnableANSIConsole( ) { Engine::EnableANSIConsole( ); }
 
-bool ocoSupportsANSI( )
-{
-    return Engine::SupportsANSI( );
-}
+bool ocoSupportsANSI( ) { return Engine::SupportsANSI( ); }
 
 void Engine::EnableANSIConsole( )
 {
