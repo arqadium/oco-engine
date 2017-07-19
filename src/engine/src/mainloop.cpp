@@ -8,7 +8,7 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-#include "mainloop.hh"
+#include "mainloop.hpp"
 
 #include <sstream>
 #include <string>

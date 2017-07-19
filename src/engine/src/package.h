@@ -11,6 +11,8 @@
 #ifndef INC__MOCHI_ENGINE_PACKAGE_HH
 #define INC__MOCHI_ENGINE_PACKAGE_HH ( 1 )
 
+#ifdef __cplusplus
+
 #include <cstdint>
 #include <fstream>
 #include <map>
@@ -42,5 +44,7 @@ class Package
     void EnsureClosedStream( );
 };
 }
+
+#endif // __cplusplus
 
 #endif // INC__MOCHI_ENGINE_PACKAGE_HH

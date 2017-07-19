@@ -8,7 +8,7 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-#include "win32.hh"
+#include "win32.h"
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN ( 1 )
@@ -23,6 +23,16 @@ bool ansiConsoleEnabled{false};
 #else
 bool ansiConsoleEnabled{true};
 #endif
+}
+
+void ocoEnableANSIConsole( )
+{
+    Engine::EnableANSIConsole( );
+}
+
+bool ocoSupportsANSI( )
+{
+    return Engine::SupportsANSI( );
 }
 
 void Engine::EnableANSIConsole( )

@@ -8,7 +8,7 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-#include "package.hh"
+#include "package.h"
 
 #include <array>
 #include <cstddef>
@@ -22,7 +22,7 @@
 
 #include "config.h"
 
-#include "except.hh"
+#include "except.hpp"
 #include "helpers.h"
 
 using boost::crc_32_type;

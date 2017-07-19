@@ -25,10 +25,10 @@ extern "C" {
 
 #include <boost/locale.hpp>
 
-#include "except.hh"
+#include "except.hpp"
 #include "helpers.h"
-#include "mainloop.hh"
-#include "win32.hh"
+#include "mainloop.hpp"
+#include "win32.h"
 
 using boost::locale::conv::utf_to_utf;
 using Engine::Exception;

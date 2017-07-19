@@ -19,8 +19,8 @@
 
 #include <boost/locale.hpp>
 
-#include "except.hh"
-#include "win32.hh"
+#include "except.hpp"
+#include "win32.h"
 
 using boost::locale::conv::utf_to_utf;
 using Engine::Exception;
