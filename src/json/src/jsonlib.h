@@ -19,7 +19,7 @@ namespace JSON
 namespace _internal
 {
 
-#include "json.hh"
+#include "json.h"
 }
 
 namespace Version
