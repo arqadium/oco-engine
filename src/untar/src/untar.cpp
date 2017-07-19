@@ -8,7 +8,7 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-#include "untar.hW"
+#include "untar.h"
 
 #include <cstdint>
 
