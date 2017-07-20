@@ -30,6 +30,8 @@ enum Level : uint
     Error
 }
 
+// NOTE: DMD doesn't think this is a constant expression, so we hack it using
+// static this( )
 immutable string[Error] kOCoErrorTexts;
 
 static this( )
