@@ -9,19 +9,23 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-module oco.helpers;
+module oco.error;
 
-immutable uint singleBit( ubyte which )
+enum Error : uint
 {
-    if( which > 31 )
-    {
-        return 0;
-    }
-
-    return 1 << which;
+    Success,
+    BadFileHeader,
+    BadFileExt,
+    BadFileStreamRead,
+    BadChecksum,
+    CannotCloseStream
 }
 
-bool Log( string str );
-bool Info( string str );
-bool Warn( string str );
-bool Error( string str );
+enum Level
+{
+    Info,
+    Warn,
+    Error
+}
+
+void DebugPrint( Error what, Level level );

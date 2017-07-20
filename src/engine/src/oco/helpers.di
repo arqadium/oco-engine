@@ -11,29 +11,17 @@
 
 module oco.helpers;
 
-import std.string : toStringz;
-
-extern (C) bool ocoLog( const char* str );
-extern (C) bool ocoInfo( const char* str );
-extern (C) bool ocoWarn( const char* str );
-extern (C) bool ocoError( const char* str );
-
-bool Log( string str )
+uint singleBit( ubyte which )
 {
-    return ocoLog( toStringz( str ) );
+    if( which > 31 )
+    {
+        return 0;
+    }
+
+    return 1 << which;
 }
 
-bool Info( string str )
-{
-    return ocoInfo( toStringz( str ) );
-}
-
-bool Warn( string str )
-{
-    return ocoWarn( toStringz( str ) );
-}
-
-bool Error( string str )
-{
-    return ocoError( toStringz( str ) );
-}
+bool Log( string str );
+bool Info( string str );
+bool Warn( string str );
+bool Error( string str );
