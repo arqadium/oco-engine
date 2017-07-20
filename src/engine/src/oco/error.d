@@ -55,7 +55,7 @@ static this( )
     
     tmp.rehash; // For faster lookups
     
-    kOCoErrorTexts = assumeUnique(tmp);
+    kOCoErrorTexts = assumeUnique( tmp );
 }
 
 extern (C) void ocoDebugPrint( Error what, Level level )
