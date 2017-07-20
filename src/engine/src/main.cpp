@@ -27,6 +27,7 @@ extern "C" {
 #include <boost/locale.hpp>
 
 #include "helpers.h"
+#include "ipsum.h"
 #include "win32.h"
 
 using OCo::EnableANSIConsole;
@@ -68,10 +69,11 @@ vector<string> parseArgs( int ac, char* av[] )
 {
     vector<string> ret( ac );
 
-    for( intmax_t i = 0; i < ac; ++i )
+    for( int i = 0; i < ac; ++i )
     {
         ret.at( i ) = av[i];
     }
+
     return ret;
 }
 
@@ -100,10 +102,13 @@ void MainLoop( vector<string> args )
         window.draw( spr );
         window.display( );
     }
+#if !defined( NDEBUG )
+    ocoIpsum( );
+#endif // !defined( NDEBUG )
 }
 }
 
-int main( int ac, char* av[] )
+extern "C" int ocoMain( int ac, char* av[] )
 {
     try
     {
