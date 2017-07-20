@@ -8,17 +8,53 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-#ifndef INC__MOCHI_ENGINE_HELPERS_H
-#define INC__MOCHI_ENGINE_HELPERS_H ( 1 )
+#if !defined( INC__OCO_ENGINE_HELPERS_H )
+#define INC__OCO_ENGINE_HELPERS_H ( 1 )
 
-#ifdef __cplusplus
+#if !defined( __cplusplus )
+
+///
+/// C INTERFACE
+///
+
+#if !defined( _WIN32 )
+void ocoLog( const char* str );
+void ocoInfo( const char* str );
+void ocoWarn( const char* str );
+void ocoError( const char* str );
+#else // defined( _WIN32 )
+void ocoLog( const wchar_t* str );
+void ocoInfo( const wchar_t* str );
+void ocoWarn( const wchar_t* str );
+void ocoError( const wchar_t* str );
+#endif // !defined( _WIN32 )
+
+#elif __cplusplus <= 199711L
+#error "The OCo Engine needs at least a C++11 compliant compiler"
+#else // defined( __cplusplus ) && __cplusplus > 199711L
+
+///
+/// C++11 INTERFACE
+///
 
 #include <array>
 #include <cstdint>
 #include <string>
 #include <vector>
 
-namespace Engine
+#if !defined( _WIN32 )
+extern "C" void ocoLog( const char* str );
+extern "C" void ocoInfo( const char* str );
+extern "C" void ocoWarn( const char* str );
+extern "C" void ocoError( const char* str );
+#else // defined( _WIN32 )
+extern "C" void ocoLog( const wchar_t* str );
+extern "C" void ocoInfo( const wchar_t* str );
+extern "C" void ocoWarn( const wchar_t* str );
+extern "C" void ocoError( const wchar_t* str );
+#endif // !defined( _WIN32 )
+
+namespace OCo
 {
 namespace Helpers
 {
@@ -51,7 +87,7 @@ enum Codes : std::uint32_t
     YellowBG  = 0x80000,
     MagentaBG = 0x100000,
 };
-}
+} // namespace ANSI
 
 constexpr std::uint32_t singleBit( std::uint8_t which )
 {
@@ -63,38 +99,45 @@ constexpr std::uint32_t singleBit( std::uint8_t which )
     return 1 << which;
 }
 
-void Log( std::string str, bool newline = true );
-void Log( const char* str, bool newline = true );
-void Log( std::wstring str, bool newline = true );
-void Log( const wchar_t* str, bool newline = true );
-void Log( std::vector<std::string> str, bool newline = true );
-void Log( std::vector<std::wstring> str, bool newline = true );
+#if !defined( _WIN32 )
+void Log( std::string str );
+void Log( const char* str );
+void Log( std::vector<std::string> str );
 
-void Info( std::string str, bool newline = true );
-void Info( const char* str, bool newline = true );
-void Info( std::wstring str, bool newline = true );
-void Info( const wchar_t* str, bool newline = true );
-void Info( std::vector<std::string> str, bool newline = true );
-void Info( std::vector<std::wstring> str, bool newline = true );
+void Info( std::string str );
+void Info( const char* str );
+void Info( std::vector<std::string> str );
 
-void Warn( std::string str, bool newline = true );
-void Warn( const char* str, bool newline = true );
-void Warn( std::wstring str, bool newline = true );
-void Warn( const wchar_t* str, bool newline = true );
-void Warn( std::vector<std::string> str, bool newline = true );
-void Warn( std::vector<std::wstring> str, bool newline = true );
+void Warn( std::string str );
+void Warn( const char* str );
+void Warn( std::vector<std::string> str );
 
-void Error( std::string str, bool newline = true );
-void Error( const char* str, bool newline = true );
-void Error( std::wstring str, bool newline = true );
-void Error( const wchar_t* str, bool newline = true );
-void Error( std::vector<std::string> str, bool newline = true );
-void Error( std::vector<std::wstring> str, bool newline = true );
+void Error( std::string str );
+void Error( const char* str );
+void Error( std::vector<std::string> str );
 
 std::string ANSIFormat( std::string str, std::uint32_t opts );
 std::string ANSIFormat( const char* str, std::uint32_t opts );
+#else // defined( _WIN32 )
+void Log( std::wstring str );
+void Log( const wchar_t* str );
+void Log( std::vector<std::wstring> str );
+
+void Info( std::wstring str );
+void Info( const wchar_t* str );
+void Info( std::vector<std::wstring> str );
+
+void Warn( std::wstring str );
+void Warn( const wchar_t* str );
+void Warn( std::vector<std::wstring> str );
+
+void Error( std::wstring str );
+void Error( const wchar_t* str );
+void Error( std::vector<std::wstring> str );
+
 std::wstring ANSIFormat( std::wstring str, std::uint32_t opts );
 std::wstring ANSIFormat( const wchar_t* str, std::uint32_t opts );
+#endif // !defined( _WIN32 )
 
 inline std::uint16_t charArrToU16( std::array<char, 2> bytes )
 {
@@ -133,21 +176,8 @@ inline std::uint64_t charArrToU64( std::array<char, 8> bytes )
 
     return ret;
 }
-}
-}
+} // namespace Helpers
+} // namespace OCo
 
-extern "C" bool ocoLog( const char* str );
-extern "C" bool ocoInfo( const char* str );
-extern "C" bool ocoWarn( const char* str );
-extern "C" bool ocoError( const char* str );
-
-#else // __cplusplus
-
-bool ocoLog( const char* str );
-bool ocoInfo( const char* str );
-bool ocoWarn( const char* str );
-bool ocoError( const char* str );
-
-#endif // __cplusplus
-
-#endif // INC__MOCHI_ENGINE_HELPERS_HH
+#endif // !defined( __cplusplus )
+#endif // !defined( INC__OCO_ENGINE_HELPERS_H )

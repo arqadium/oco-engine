@@ -19,31 +19,33 @@ extern "C" {
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
-#include <stdexcept>
+#include <sstream>
 #include <string>
 #include <vector>
 
+#include <SFML/Graphics.hpp>
 #include <boost/locale.hpp>
 
-#include "except.hpp"
 #include "helpers.h"
-#include "mainloop.hpp"
 #include "win32.h"
 
-using boost::locale::conv::utf_to_utf;
-using Engine::Exception;
-using Engine::Helpers::ANSIFormat;
-using Engine::Helpers::Error;
-using Engine::Helpers::Log;
+using OCo::EnableANSIConsole;
+using OCo::Helpers::Error;
+using OCo::Helpers::Log;
+using sf::RenderWindow;
+using sf::VideoMode;
 using std::array;
 using std::endl;
 using std::exception;
 using std::intmax_t;
 using std::size_t;
+#if !defined( _WIN32 )
 using std::string;
+#else // defined( _WIN32 )
+using std::wstring;
+#endif // !defined( _WIN32 )
 using std::uintmax_t;
 using std::vector;
-using std::wstring;
 
 namespace
 {
@@ -60,6 +62,8 @@ const vector<string> kStartupText{u8"",
     u8""};
 #endif
 
+constexpr auto kSampleImagePath{u8"sample.png"};
+
 vector<string> parseArgs( int ac, char* av[] )
 {
     vector<string> ret( ac );
@@ -69,6 +73,33 @@ vector<string> parseArgs( int ac, char* av[] )
         ret.at( i ) = av[i];
     }
     return ret;
+}
+
+void MainLoop( vector<string> args )
+{
+    RenderWindow window{VideoMode{640, 360}, u8"Project Mochi!"};
+    sf::Texture img;
+
+    img.loadFromFile( kSampleImagePath );
+
+    sf::Sprite spr{img};
+
+    while( window.isOpen( ) )
+    {
+        sf::Event event;
+
+        while( window.pollEvent( event ) )
+        {
+            if( event.type == sf::Event::Closed )
+            {
+                window.close( );
+            }
+        }
+
+        window.clear( );
+        window.draw( spr );
+        window.display( );
+    }
 }
 }
 
@@ -80,7 +111,7 @@ int main( int ac, char* av[] )
         _setmode( _fileno( stderr ), _O_U16TEXT );
         _setmode( _fileno( stdin ), _O_U16TEXT );
         _setmode( _fileno( stdout ), _O_U16TEXT );
-        Engine::EnableANSIConsole( );
+        EnableANSIConsole( );
 #endif
 
         for( auto& line : kStartupText )
@@ -88,29 +119,11 @@ int main( int ac, char* av[] )
             Log( line );
         }
 
-        Engine::MainLoop( parseArgs( ac, av ) );
-    }
-    catch( Exception& ex ) // Enhanced exception object
-    {
-        Error( u8"Engine exception thrown, code ", false );
-        Error( ANSIFormat(
-                   std::to_string( ex.code ), Engine::Helpers::ANSI::Bold ),
-            false );
-        Error( u8": ", false );
-        Error( ex.msg );
-
-        return ex.code < 4 ? 3 : ex.code;
-    }
-    catch( exception& ex ) // STL exception object
-    {
-        Error( u8"Standard exception thrown: ", false );
-        Error( ex.what( ) );
-
-        return 2;
+        MainLoop( parseArgs( ac, av ) );
     }
     catch( ... )
     {
-        Error( u8"ROGUE EXCEPTION THROWN! EXITING..." );
+        Error( u8"Exception thrown! Exiting..." );
 
         return 1;
     }

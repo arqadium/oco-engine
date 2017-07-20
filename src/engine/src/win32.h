@@ -8,12 +8,12 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-#ifndef INC__MOCHI_ENGINE_WIN32_H
-#define INC__MOCHI_ENGINE_WIN32_H ( 1 )
+#ifndef INC__OCO_ENGINE_WIN32_H
+#define INC__OCO_ENGINE_WIN32_H ( 1 )
 
-#ifdef __cplusplus
+#if defined( __cplusplus )
 
-namespace Engine
+namespace OCo
 {
 
 void EnableANSIConsole( );
@@ -23,13 +23,13 @@ bool SupportsANSI( );
 extern "C" void ocoEnableANSIConsole( );
 extern "C" bool ocoSupportsANSI( );
 
-#else // __cplusplus
+#else // !defined( __cplusplus )
 
 #include <stdbool.h>
 
 void ocoEnableANSIConsole( void );
 bool ocoSupportsANSI( void );
 
-#endif // __cplusplus
+#endif // defined( __cplusplus )
 
-#endif // INC__MOCHI_ENGINE_WIN32_HH
+#endif // INC__OCO_ENGINE_WIN32_H

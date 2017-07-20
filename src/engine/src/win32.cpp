@@ -25,11 +25,11 @@ bool ansiConsoleEnabled{true};
 #endif
 }
 
-void ocoEnableANSIConsole( ) { Engine::EnableANSIConsole( ); }
+void ocoEnableANSIConsole( ) { OCo::EnableANSIConsole( ); }
 
-bool ocoSupportsANSI( ) { return Engine::SupportsANSI( ); }
+bool ocoSupportsANSI( ) { return ansiConsoleEnabled; }
 
-void Engine::EnableANSIConsole( )
+void OCo::EnableANSIConsole( )
 {
 #ifdef _WIN32
     // Set output mode to handle virtual terminal sequences
@@ -56,4 +56,4 @@ void Engine::EnableANSIConsole( )
 #endif
 }
 
-bool Engine::SupportsANSI( ) { return ansiConsoleEnabled; }
+bool OCo::SupportsANSI( ) { return ansiConsoleEnabled; }
