@@ -8,10 +8,30 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-#ifndef INC__OCO_ENGINE_WIN32_H
+#if !defined( INC__OCO_ENGINE_WIN32_H )
 #define INC__OCO_ENGINE_WIN32_H ( 1 )
 
-#if defined( __cplusplus )
+#if !defined( __cplusplus )
+
+///
+/// C INTERFACE
+///
+
+#include <stdbool.h>
+
+void ocoEnableANSIConsole( void );
+bool ocoSupportsANSI( void );
+
+#elif __cplusplus <= 199711L
+#error "The OCo Engine needs at least a C++11 compliant compiler"
+#else // defined( __cplusplus ) && __cplusplus > 199711L
+
+///
+/// C++11 INTERFACE
+///
+
+extern "C" void ocoEnableANSIConsole( );
+extern "C" bool ocoSupportsANSI( );
 
 namespace OCo
 {
@@ -20,16 +40,5 @@ void EnableANSIConsole( );
 bool SupportsANSI( );
 }
 
-extern "C" void ocoEnableANSIConsole( );
-extern "C" bool ocoSupportsANSI( );
-
-#else // !defined( __cplusplus )
-
-#include <stdbool.h>
-
-void ocoEnableANSIConsole( void );
-bool ocoSupportsANSI( void );
-
-#endif // defined( __cplusplus )
-
-#endif // INC__OCO_ENGINE_WIN32_H
+#endif // !defined( __cplusplus )
+#endif // !defined( INC__OCO_ENGINE_WIN32_H )

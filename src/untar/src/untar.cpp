@@ -57,7 +57,7 @@ constexpr uint_least16_t setuid{singleBit( 13 )}, setgid{singleBit( 12 )},
 }
 }
 
-uint_least32_t Untar::Placeholder( )
+uint_least32_t OCo::Untar::Placeholder( )
 {
     volatile uint_least32_t foo{13};
 

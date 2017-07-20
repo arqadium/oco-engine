@@ -139,11 +139,11 @@ static bool ocoPrint_D( const char* str, const char* prefix )
         return true;
     }
 
-#else // !defined( _WIN32 )
-    const char* _str = str;
-
-#endif // defined( _WIN32 )
     ocoPrint( _str, prefix );
+
+#else // !defined( _WIN32 )
+    ocoPrint( str, prefix );
+#endif // defined( _WIN32 )
 
     return false;
 }

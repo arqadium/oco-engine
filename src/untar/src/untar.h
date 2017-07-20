@@ -8,8 +8,66 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-#ifndef INC__MOCHI_UNTAR_UNTAR_HH
-#define INC__MOCHI_UNTAR_UNTAR_HH ( 1 )
+#if !defined( INC__OCO_UNTAR_UNTAR_H )
+#define INC__OCO_UNTAR_UNTAR_H ( 1 )
+
+#if !defined( __cplusplus )
+
+///
+/// C INTERFACE
+///
+
+#if __STDC_VERSION__ >= 201112L
+
+#define OCO_UNTAR_MAGICBYTES u8"ustar"
+#define OCO_UNTAR_MAGICBYTES_LEN 6
+#define OCO_UNTAR_VERSION u8"00"
+#define OCO_UNTAR_VERSION_LEN 2
+
+#else // __STDC_VERSION__ < 201112L
+
+#define OCO_UNTAR_MAGICBYTES "ustar"
+#define OCO_UNTAR_MAGICBYTES_LEN 6
+#define OCO_UNTAR_VERSION "00"
+#define OCO_UNTAR_VERSION_LEN 2
+
+#endif // __STDC_VERSION__ >= 201112L
+
+/** ============================= S T R U C T ============================= **
+ *
+ * TITLE:       Tarball Header Block
+ * DESCRIPTION: Specifies the header structure for POSIX 1003.1-1990
+ *              compliant tar archives (a.k.a. tarballs).
+ */
+typedef struct
+{
+    uint8_t name[100]; // 0
+    uint8_t mode[8]; // 100
+    uint8_t uid[8]; // 108
+    uint8_t gid[8]; // 116
+    uint8_t size[12]; // 124
+    uint8_t mtime[12]; // 136
+    uint8_t checksum[8]; // 148
+    uint8_t typeflag; // 156
+    uint8_t linkname[100]; // 157
+    uint8_t magic[OCO_UNTAR_MAGICBYTES_LEN]; // 257
+    uint8_t version[OCO_UNTAR_VERSION_LEN]; // 263
+    uint8_t uname[32]; // 265
+    uint8_t gname[32]; // 297
+    uint8_t devMajor[8]; // 329
+    uint8_t devMinor[8]; // 337
+    uint8_t prefix[155]; // 345
+    uint8_t _padding[12]; // 500
+}
+OCoTarHeader;
+
+#elif __cplusplus <= 199711L
+#error "The OCo Engine needs at least a C++11 compliant compiler"
+#else // defined( __cplusplus ) && __cplusplus > 199711L
+
+///
+/// C++11 INTERFACE
+///
 
 #include <cstdint>
 #include <fstream>
@@ -18,93 +76,40 @@
 
 #include <boost/filesystem.hpp>
 
+namespace OCo
+{
 namespace Untar
 {
 
 constexpr auto kMagicBytes{"ustar"};
-constexpr uint_least8_t kMagicBytesLen{6};
+constexpr std::uint_least8_t kMagicBytesLen{6};
 constexpr auto kVersion = {'0', '0'};
-constexpr uint_least8_t kVersionLen{2};
+constexpr std::uint_least8_t kVersionLen{2};
 
-/** ============================== C L A S S ============================== **
- *
- * TITLE:       Tarball Object
- * DESCRIPTION: Represents a read-only tarball object.
- */
-class Tarball
+struct Header
 {
-    /** =========================== S T R U C T =========================== **
-     *
-     * TITLE:       Tarball Header Block
-     * DESCRIPTION: Specifies the header structure for POSIX 1003.1-1990
-     *              compliant tar archives (a.k.a. tarballs).
-     */
-    struct Header
-    {
-        uint8_t name[100]; // 0
-        uint8_t mode[8]; // 100
-        uint8_t uid[8]; // 108
-        uint8_t gid[8]; // 116
-        uint8_t size[12]; // 124
-        uint8_t mtime[12]; // 136
-        uint8_t checksum[8]; // 148
-        uint8_t typeflag; // 156
-        uint8_t linkname[100]; // 157
-        uint8_t magic[kMagicBytesLen]; // 257
-        uint8_t version[kVersionLen]; // 263
-        uint8_t uname[32]; // 265
-        uint8_t gname[32]; // 297
-        uint8_t devMajor[8]; // 329
-        uint8_t devMinor[8]; // 337
-        uint8_t prefix[155]; // 345
-        uint8_t _padding[12]; // 500
-    };
-
-    /** =========================== S T R U C T =========================== **
-     *
-     * TITLE:       Tarball Entry Object
-     * DESCRIPTION: Represents a single entry in a Tarball object.
-     */
-    struct TarEntry
-    {
-        TarEntry( Header& _header, std::uint_least64_t _offset )
-            : header( dupHeader( _header ) ), offset( _offset )
-        {
-        }
-        ~TarEntry( ) { delete header; }
-
-        const Header* header;
-        const std::uint_least64_t offset;
-
-      private:
-        Header* dupHeader( Header& _header )
-        {
-            auto head = reinterpret_cast<std::uint64_t*>( &_header );
-            auto ret  = new std::uint64_t[64];
-
-            for( uint_least8_t i = 0; i < 64; ++i )
-            {
-                ret[i] = head[i];
-            }
-
-            return reinterpret_cast<Header*>( ret );
-        }
-    };
-
-    std::vector<TarEntry> entries;
-
-  public:
-    Tarball( boost::filesystem::path filePath );
-    ~Tarball( );
-
-    std::vector<std::uint8_t> ReadFile( std::string entryPath );
-    std::vector<TarEntry> ListFiles( ) { return this->entries; }
-
-  private:
-    std::ifstream file;
+    std::uint8_t name[100]; // 0
+    std::uint8_t mode[8]; // 100
+    std::uint8_t uid[8]; // 108
+    std::uint8_t gid[8]; // 116
+    std::uint8_t size[12]; // 124
+    std::uint8_t mtime[12]; // 136
+    std::uint8_t checksum[8]; // 148
+    std::uint8_t typeflag; // 156
+    std::uint8_t linkname[100]; // 157
+    std::uint8_t magic[kMagicBytesLen]; // 257
+    std::uint8_t version[kVersionLen]; // 263
+    std::uint8_t uname[32]; // 265
+    std::uint8_t gname[32]; // 297
+    std::uint8_t devMajor[8]; // 329
+    std::uint8_t devMinor[8]; // 337
+    std::uint8_t prefix[155]; // 345
+    std::uint8_t _padding[12]; // 500
 };
 
 std::uint_least32_t Placeholder( );
-}
+} // namespace Untar
+} // namespace OCo
 
-#endif // INC__MOCHI_UNTAR_UNTAR_HH
+#endif // !defined( __cplusplus )
+#endif // !defined( INC__OCO_UNTAR_UNTAR_H )

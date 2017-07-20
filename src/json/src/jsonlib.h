@@ -8,11 +8,23 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-#ifndef INC__MOCHI_JSON_JSONLIB_HH
-#define INC__MOCHI_JSON_JSONLIB_HH ( 1 )
+#if !defined( INC__OCO_JSON_JSONLIB_H )
+#define INC__OCO_JSON_JSONLIB_H ( 1 )
+
+#if !defined( __cplusplus )
+#error "libJSON does not yet have a C interface."
+#elif __cplusplus <= 199711L
+#error "The OCo Engine needs at least a C++11 compliant compiler"
+#endif // !defined( __cplusplus )
+
+///
+/// C++11 INTERFACE
+///
 
 #include <cstdint>
 
+namespace OCo
+{
 namespace JSON
 {
 
@@ -54,6 +66,7 @@ using _internal::Json::Value;
 using _internal::Json::ValueIteratorBase;
 using _internal::Json::ValueIterator;
 using _internal::Json::ValueConstIterator;
-}
+} // namespace JSON
+} // namespace OCo
 
-#endif // INC__MOCHI_JSON_JSONLIB_HH
+#endif // !defined( INC__OCO_JSON_JSONLIB_H )
