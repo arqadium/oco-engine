@@ -11,20 +11,11 @@
 
 module oco.config;
 
-immutable ubyte[16] kPkgMagicBytes = [
-    0x89,                               // high bit set
-    0x4F, 0x41, 0x4D, 0x50, 0x4B, 0x47, // "OAMPKG"
-    0x0D, 0x0A,                         // "\r\n"
-    0x1A,                               // DOS EOF character
-    0x0A,                               // "\n"
-    0x00,                               // NULL terminator
-    0, 0, 0, 0                          // padding to make header length 16
-];
+/++ ============================= M O D U L E ============================= ++
+ +
+ + TITLE:       Application Configuration
+ + DESCRIPTION: This file is an analogue to the common "config.h" file; see
+ +              that file for more details.
+ +/
 
 immutable string kPkgFileExt = ".oampkg.tar.lz4";
-
-immutable string kBadFileHeader = "File header bytes are invalid";
-immutable string kBadFileExt = "File extension is invalid";
-immutable string kBadFileStreamRead = "Failed to open file (read)";
-immutable string kBadChecksum = "Checksumming failed";
-immutable string kCannotCloseStream = "Cannot close file stream";

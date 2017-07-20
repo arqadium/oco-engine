@@ -19,6 +19,7 @@
 #if !defined( _WIN32 )
 
 #if __STDC_VERSION__ >= 201112L
+// if using C11
 
 #define CFG__PKG_FILE_EXT u8".oampkg.tar.lz4"
 #define CFG__ERR_BAD_FILE_HEADER u8"File header bytes are invalid"
@@ -28,6 +29,7 @@
 #define CFG__ERR_CANNOT_CLOSE_STREAM u8"Cannot close file stream"
 
 #else // __STDC_VERSION__ >= 201112L
+// must be C89 then
 
 #define CFG__PKG_FILE_EXT ".oampkg.tar.lz4"
 #define CFG__ERR_BAD_FILE_HEADER "File header bytes are invalid"
@@ -59,6 +61,8 @@
 
 #include <cstddef>
 
+namespace OCo
+{
 namespace Config
 {
 
@@ -74,7 +78,6 @@ constexpr auto kPkgFileExt{L".oampkg.tar.lz4"};
 
 namespace Err
 {
-
 #if !defined( _WIN32 )
 
 constexpr auto kBadFileHeader{u8"File header bytes are invalid"};
@@ -92,9 +95,9 @@ constexpr auto kBadChecksum{L"Checksumming failed"};
 constexpr auto kCannotCloseStream{L"Cannot close file stream"};
 
 #endif // !defined( _WIN32 )
-}
-}
+} // namespace Err
+} // namespace Config
+} // namespace OCo
 
-#endif // __cplusplus
-
+#endif // !defined( __cplusplus )
 #endif // !defined( INC__OCO_ENGINE_CONFIG_H )

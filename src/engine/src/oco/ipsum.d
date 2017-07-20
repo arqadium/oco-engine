@@ -11,6 +11,18 @@
 
 module oco.ipsum;
 
+/++ ============================= M O D U L E ============================= ++
+ +
+ + TITLE:       Lorem Ipsum Logging Test
+ + DESCRIPTION: This exposes a C-linkable function that tests the D-exposed
+ +              C++ logging functions by sending the de facto Lorem Ipsum
+ +              text to it, stored in a D string array.
+ +
+ + FOOTNOTE: For some reason statically declaring + assigning kLoremIpsum
+ +           causes segmentation faults; we work around this by actually
+ +           assigning to it at program startup using D's "static this" code.
+ +/
+
 debug
 {
 static import oco.helpers;
@@ -19,8 +31,6 @@ string[] kLoremIpsum;
 
 static this( )
 {
-    import std.exception : assumeUnique;
-    
     string[] tmp = [
         "Lorem ipsum dolor sit amet,",
         "consectetur adipiscing elit,",
@@ -37,7 +47,7 @@ static this( )
     ];
     
     kLoremIpsum.length = tmp.length;
-    kLoremIpsum[] = tmp;
+    kLoremIpsum[] = tmp; // Copy by value, not reference
 }
 
 extern (C) void ocoIpsum( )

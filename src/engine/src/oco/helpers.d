@@ -11,8 +11,18 @@
 
 module oco.helpers;
 
+/++ ============================= M O D U L E ============================= ++
+ +
+ + TITLE:       Helper Functions
+ + DESCRIPTION: This provides functions for printing messages to standard
+ +              output, including specific functions for info-, warning-, and
+ +              error-level diagnostic messages.
+ +/
+
+// For making C-compatible strings
 import std.string : toStringz;
 
+// These are implemented in helpers.cpp
 extern (C) bool ocoLog_D( const char* str );
 extern (C) bool ocoInfo_D( const char* str );
 extern (C) bool ocoWarn_D( const char* str );

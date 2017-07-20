@@ -11,6 +11,17 @@
 
 module oco.helpers;
 
+/++ ============================= M O D U L E ============================= ++
+ +
+ + TITLE:       Helper Functions
+ + DESCRIPTION: This provides functions for printing messages to standard
+ +              output, including specific functions for info-, warning-, and
+ +              error-level diagnostic messages. Under the hood it interfaces
+ +              with C++ code that formats the message to be identifiable as
+ +              coming from OCo, and includes colouring for the different
+ +              diagnostic levels if supported.
+ +/
+
 uint singleBit( ubyte which )
 {
     if( which > 31 )

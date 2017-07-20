@@ -11,6 +11,14 @@
 
 module oco.error;
 
+/++ ============================= M O D U L E ============================= ++
+ +
+ + TITLE:       Error Functions
+ + DESCRIPTION: This provides functions for handling errors in D, the old-
+ +              fashioned way. We cannot use exceptions as they don't exist in
+ +              C, our common denominator for interlingual compatibility.
+ +/
+
 enum Error : uint
 {
     Success,

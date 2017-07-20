@@ -76,6 +76,7 @@ enum : std::uint32_t
     Error
 };
 } // namespace DiagMsgLevel
+} // namespace OCo
 
 #endif // !defined( __cplusplus )
 #endif // defined( INC__OCO_ENGINE_ERROR_H )

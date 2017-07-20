@@ -31,6 +31,7 @@ namespace JSON
 namespace _internal
 {
 
+// Minimise namespace pollution
 #include "json.h"
 }
 
