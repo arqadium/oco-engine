@@ -73,29 +73,38 @@ extern "C" {
 */
 
 /*^***************************************************************
-*  Export parameters
-*****************************************************************/
+ *  Export parameters
+ *****************************************************************/
 /*
-*  LZ4_DLL_EXPORT :
-*  Enable exporting of functions when building a Windows DLL
-*/
+ *  LZ4_DLL_EXPORT :
+ *  Enable exporting of functions when building a Windows DLL
+ */
 #if defined( LZ4_DLL_EXPORT ) && ( LZ4_DLL_EXPORT == 1 )
 #define LZ4LIB_API __declspec( dllexport )
 #elif defined( LZ4_DLL_IMPORT ) && ( LZ4_DLL_IMPORT == 1 )
-#define LZ4LIB_API                                                           \
-    __declspec(                                                              \
-        dllimport ) /* It isn't required but allows to generate better code, \
-                       saving a function pointer load from the IAT and an    \
-                       indirect jump.*/
+#define LZ4LIB_API                                                             \
+    __declspec( dllimport ) /* It isn't required but allows to generate better \
+                               \ \ \ \ \                                       \
+                               \ \ \ \ \ \ \ \ \ \                                                                     \
+                               \ \ \ \ \ \ \ \ \ \ \ \ \ \ \                                                                             \
+                               code, \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \                                                                             \
+                               saving a function pointer load from the IAT and \
+                               \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ an    \ \                                                 \
+                               indirect jump.*/
 #else
 #define LZ4LIB_API
 #endif
 
 /*========== Version =========== */
 #define LZ4_VERSION_MAJOR 1 /* for breaking interface changes  */
-#define LZ4_VERSION_MINOR                              \
-    7 /* for new (non-breaking) interface capabilities \
-         */
+#define LZ4_VERSION_MINOR                                                      \
+    7 /* for new (non-breaking) interface capabilities \ \ \ \ \ \ \ \ \ \ \ \ \
+       * \                                                                     \
+       * \ \                                                                             \
+       * \ \ \                                                                             \
+       * \ \ \ \                                                                             \
+       * \ \ \ \ \                                                                             \
+       */
 #define LZ4_VERSION_RELEASE 5 /* for tweaks, bug-fixes, or development */
 
 #define LZ4_VERSION_NUMBER                                      \
@@ -111,8 +120,8 @@ LZ4LIB_API int LZ4_versionNumber( void );
 LZ4LIB_API const char* LZ4_versionString( void );
 
 /*-************************************
-*  Tuning parameter
-**************************************/
+ *  Tuning parameter
+ **************************************/
 /*!
  * LZ4_MEMORY_USAGE :
  * Memory usage formula : N->2^N Bytes (examples : 10 -> 1KB; 12 -> 4KB ; 16 ->
@@ -124,8 +133,8 @@ LZ4LIB_API const char* LZ4_versionString( void );
 #define LZ4_MEMORY_USAGE 14
 
 /*-************************************
-*  Simple Functions
-**************************************/
+ *  Simple Functions
+ **************************************/
 /*! LZ4_compress_default() :
     Compresses 'sourceSize' bytes from buffer 'source'
     into already allocated 'dest' buffer of size 'maxDestSize'.
@@ -167,8 +176,8 @@ LZ4LIB_API int LZ4_decompress_safe( const char* source,
     int maxDecompressedSize );
 
 /*-************************************
-*  Advanced Functions
-**************************************/
+ *  Advanced Functions
+ **************************************/
 #define LZ4_MAX_INPUT_SIZE 0x7E000000 /* 2 113 929 216 bytes */
 #define LZ4_COMPRESSBOUND( isize )                       \
     ( (unsigned)( isize ) > (unsigned)LZ4_MAX_INPUT_SIZE \
@@ -289,8 +298,8 @@ LZ4LIB_API int LZ4_decompress_safe_partial( const char* source,
     int maxDecompressedSize );
 
 /*-*********************************************
-*  Streaming Compression Functions
-***********************************************/
+ *  Streaming Compression Functions
+ ***********************************************/
 typedef union LZ4_stream_u LZ4_stream_t; /* incomplete type (defined later) */
 
 /*! LZ4_createStream() and LZ4_freeStream() :
@@ -349,9 +358,9 @@ LZ4LIB_API int LZ4_saveDict(
     LZ4_stream_t* streamPtr, char* safeBuffer, int dictSize );
 
 /*-**********************************************
-*  Streaming Decompression Functions
-*  Bufferless synchronous API
-************************************************/
+ *  Streaming Decompression Functions
+ *  Bufferless synchronous API
+ ************************************************/
 typedef union LZ4_streamDecode_u
     LZ4_streamDecode_t; /* incomplete type (defined later) */
 
@@ -442,8 +451,9 @@ LZ4LIB_API int LZ4_decompress_fast_usingDict( const char* source,
 #define LZ4_HASH_SIZE_U32 \
     ( 1 << LZ4_HASHLOG ) /* required as macro for static allocation */
 
-#if defined( __cplusplus ) || ( defined( __STDC_VERSION__ ) && \
-                                  ( __STDC_VERSION__ >= 199901L ) /* C99 */ )
+#if defined( __cplusplus ) ||        \
+    ( defined( __STDC_VERSION__ ) && \
+        ( __STDC_VERSION__ >= 199901L ) /* C99 */ )
 #include <stdint.h>
 
 typedef struct
@@ -520,8 +530,8 @@ union LZ4_streamDecode_u
 }; /* previously typedef'd to LZ4_streamDecode_t */
 
 /*=************************************
-*  Obsolete Functions
-**************************************/
+ *  Obsolete Functions
+ **************************************/
 /* Deprecation warnings */
 /* Should these warnings be a problem,
    it is generally possible to disable them,

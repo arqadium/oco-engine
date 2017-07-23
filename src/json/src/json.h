@@ -1748,9 +1748,9 @@ class JSON_API CharReaderBuilder : public CharReader::Factory
 };
 
 /** Consume entire stream and use its begin/end.
-  * Someday we might have a real StreamReader, but for now this
-  * is convenient.
-  */
+ * Someday we might have a real StreamReader, but for now this
+ * is convenient.
+ */
 bool JSON_API parseFromStream( CharReader::Factory const&,
     JSONCPP_ISTREAM&,
     Value* root,

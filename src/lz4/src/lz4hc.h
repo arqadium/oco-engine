@@ -154,12 +154,12 @@ LZ4LIB_API int LZ4_saveDictHC(
  *******************************************/
 
 /*-*************************************
-* PRIVATE DEFINITIONS :
-* Do not use these definitions.
-* They are exposed to allow static allocation of `LZ4_streamHC_t`.
-* Using these definitions makes the code vulnerable to potential API break when
-*upgrading LZ4
-**************************************/
+ * PRIVATE DEFINITIONS :
+ * Do not use these definitions.
+ * They are exposed to allow static allocation of `LZ4_streamHC_t`.
+ * Using these definitions makes the code vulnerable to potential API break when
+ *upgrading LZ4
+ **************************************/
 #define LZ4HC_DICTIONARY_LOGSIZE 17
 #define LZ4HC_MAXD ( 1 << LZ4HC_DICTIONARY_LOGSIZE )
 #define LZ4HC_MAXD_MASK ( LZ4HC_MAXD - 1 )
@@ -168,8 +168,9 @@ LZ4LIB_API int LZ4_saveDictHC(
 #define LZ4HC_HASHTABLESIZE ( 1 << LZ4HC_HASH_LOG )
 #define LZ4HC_HASH_MASK ( LZ4HC_HASHTABLESIZE - 1 )
 
-#if defined( __cplusplus ) || ( defined( __STDC_VERSION__ ) && \
-                                  ( __STDC_VERSION__ >= 199901L ) /* C99 */ )
+#if defined( __cplusplus ) ||        \
+    ( defined( __STDC_VERSION__ ) && \
+        ( __STDC_VERSION__ >= 199901L ) /* C99 */ )
 #include <stdint.h>
 
 typedef struct
@@ -227,8 +228,8 @@ union LZ4_streamHC_u
 */
 
 /*-************************************
-*  Deprecated Functions
-**************************************/
+ *  Deprecated Functions
+ **************************************/
 /* see lz4.h LZ4_DISABLE_DEPRECATE_WARNINGS to turn off deprecation warnings */
 
 /* deprecated compression functions */

@@ -1,40 +1,40 @@
 /*
-*  xxHash - Fast Hash algorithm
-*  Copyright (C) 2012-2016, Yann Collet
-*
-*  BSD 2-Clause License (http://www.opensource.org/licenses/bsd-license.php)
-*
-*  Redistribution and use in source and binary forms, with or without
-*  modification, are permitted provided that the following conditions are
-*  met:
-*
-*  * Redistributions of source code must retain the above copyright
-*  notice, this list of conditions and the following disclaimer.
-*  * Redistributions in binary form must reproduce the above
-*  copyright notice, this list of conditions and the following disclaimer
-*  in the documentation and/or other materials provided with the
-*  distribution.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-*  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-*  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-*  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-*  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-*  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-*  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-*  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-*  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-*  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-*  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-*  You can contact the author at :
-*  - xxHash homepage: http://www.xxhash.com
-*  - xxHash source repository : https://github.com/Cyan4973/xxHash
-*/
+ *  xxHash - Fast Hash algorithm
+ *  Copyright (C) 2012-2016, Yann Collet
+ *
+ *  BSD 2-Clause License (http://www.opensource.org/licenses/bsd-license.php)
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions are
+ *  met:
+ *
+ *  * Redistributions of source code must retain the above copyright
+ *  notice, this list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above
+ *  copyright notice, this list of conditions and the following disclaimer
+ *  in the documentation and/or other materials provided with the
+ *  distribution.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  You can contact the author at :
+ *  - xxHash homepage: http://www.xxhash.com
+ *  - xxHash source repository : https://github.com/Cyan4973/xxHash
+ */
 
 /* *************************************
-*  Tuning parameters
-***************************************/
+ *  Tuning parameters
+ ***************************************/
 /*!XXH_FORCE_MEMORY_ACCESS :
  * By default, access to unaligned memory is controlled by `memcpy()`, which is
  * safe and portable.
@@ -57,7 +57,7 @@
  * Prefer these methods in priority order (0 > 1 > 2)
  */
 #ifndef XXH_FORCE_MEMORY_ACCESS /* can be defined externally, on command line \
-                                   for example */
+                                   \ \ \ \ \ \ \ \ \ \ \ for example */
 #if defined( __GNUC__ ) &&                                          \
     ( defined( __ARM_ARCH_6__ ) || defined( __ARM_ARCH_6J__ ) ||    \
         defined( __ARM_ARCH_6K__ ) || defined( __ARM_ARCH_6Z__ ) || \
@@ -112,11 +112,11 @@
 #endif
 
 /* *************************************
-*  Includes & Memory related functions
-***************************************/
+ *  Includes & Memory related functions
+ ***************************************/
 /*! Modify the local functions below should you wish to use some other memory
-* routines
-*   for malloc(), free() */
+ * routines
+ *   for malloc(), free() */
 #include <stdlib.h>
 static void* XXH_malloc( size_t s ) { return malloc( s ); }
 static void XXH_free( void* p ) { free( p ); }
@@ -131,8 +131,8 @@ static void* XXH_memcpy( void* dest, const void* src, size_t size )
 #include "xxhash.h"
 
 /* *************************************
-*  Compiler Specific Options
-***************************************/
+ *  Compiler Specific Options
+ ***************************************/
 #ifdef _MSC_VER /* Visual Studio */
 #pragma warning( \
     disable : 4127 ) /* disable: C4127: conditional expression is constant */
@@ -151,12 +151,13 @@ static void* XXH_memcpy( void* dest, const void* src, size_t size )
 #endif
 
 /* *************************************
-*  Basic Types
-***************************************/
+ *  Basic Types
+ ***************************************/
 #ifndef MEM_MODULE
-#if !defined( __VMS ) && ( defined( __cplusplus ) ||          \
-                             ( defined( __STDC_VERSION__ ) && \
-                                 ( __STDC_VERSION__ >= 199901L ) /* C99 */ ) )
+#if !defined( __VMS ) &&                 \
+    ( defined( __cplusplus ) ||          \
+        ( defined( __STDC_VERSION__ ) && \
+            ( __STDC_VERSION__ >= 199901L ) /* C99 */ ) )
 #include <stdint.h>
 typedef uint8_t BYTE;
 typedef uint16_t U16;
@@ -205,8 +206,8 @@ static U32 XXH_read32( const void* memPtr )
 #endif /* XXH_FORCE_DIRECT_MEMORY_ACCESS */
 
 /* ****************************************
-*  Compiler-specific Functions and Macros
-******************************************/
+ *  Compiler-specific Functions and Macros
+ ******************************************/
 #define XXH_GCC_VERSION ( __GNUC__ * 100 + __GNUC_MINOR__ )
 
 /* Note : although _rotl exists for minGW (GCC under windows), performance seems
@@ -232,8 +233,8 @@ static U32 XXH_swap32( U32 x )
 #endif
 
 /* *************************************
-*  Architecture Macros
-***************************************/
+ *  Architecture Macros
+ ***************************************/
 typedef enum { XXH_bigEndian = 0, XXH_littleEndian = 1 } XXH_endianess;
 
 /* XXH_CPU_LITTLE_ENDIAN can be defined externally, for example on the compiler
@@ -244,8 +245,8 @@ static const int g_one = 1;
 #endif
 
 /* ***************************
-*  Memory reads
-*****************************/
+ *  Memory reads
+ *****************************/
 typedef enum { XXH_aligned, XXH_unaligned } XXH_alignment;
 
 FORCE_INLINE U32 XXH_readLE32_align(
@@ -271,8 +272,8 @@ static U32 XXH_readBE32( const void* ptr )
 }
 
 /* *************************************
-*  Macros
-***************************************/
+ *  Macros
+ ***************************************/
 #define XXH_STATIC_ASSERT( c )                       \
     {                                                \
         enum                                         \
@@ -283,8 +284,8 @@ static U32 XXH_readBE32( const void* ptr )
 XXH_PUBLIC_API unsigned XXH_versionNumber( void ) { return XXH_VERSION_NUMBER; }
 
 /* *******************************************************************
-*  32-bits hash functions
-*********************************************************************/
+ *  32-bits hash functions
+ *********************************************************************/
 static const U32 PRIME32_1 = 2654435761U;
 static const U32 PRIME32_2 = 2246822519U;
 static const U32 PRIME32_3 = 3266489917U;
@@ -583,13 +584,13 @@ XXH_PUBLIC_API unsigned int XXH32_digest( const XXH32_state_t* state_in )
 /*======   Canonical representation   ======*/
 
 /*! Default XXH result types are basic unsigned 32 and 64 bits.
-*   The canonical representation follows human-readable write convention, aka
-* big-endian (large digits first).
-*   These functions allow transformation of hash result into and from its
-* canonical format.
-*   This way, hash values can be written into a file or buffer, and remain
-* comparable across different systems and programs.
-*/
+ *   The canonical representation follows human-readable write convention, aka
+ * big-endian (large digits first).
+ *   These functions allow transformation of hash result into and from its
+ * canonical format.
+ *   This way, hash values can be written into a file or buffer, and remain
+ * comparable across different systems and programs.
+ */
 
 XXH_PUBLIC_API void XXH32_canonicalFromHash(
     XXH32_canonical_t* dst, XXH32_hash_t hash )
@@ -609,16 +610,17 @@ XXH_PUBLIC_API XXH32_hash_t XXH32_hashFromCanonical(
 #ifndef XXH_NO_LONG_LONG
 
 /* *******************************************************************
-*  64-bits hash functions
-*********************************************************************/
+ *  64-bits hash functions
+ *********************************************************************/
 
 /*======   Memory access   ======*/
 
 #ifndef MEM_MODULE
 #define MEM_MODULE
-#if !defined( __VMS ) && ( defined( __cplusplus ) ||          \
-                             ( defined( __STDC_VERSION__ ) && \
-                                 ( __STDC_VERSION__ >= 199901L ) /* C99 */ ) )
+#if !defined( __VMS ) &&                 \
+    ( defined( __cplusplus ) ||          \
+        ( defined( __STDC_VERSION__ ) && \
+            ( __STDC_VERSION__ >= 199901L ) /* C99 */ ) )
 #include <stdint.h>
 typedef uint64_t U64;
 #else

@@ -35,8 +35,8 @@
  * compilation */
 
 /* *************************************
-*  Tuning Parameter
-***************************************/
+ *  Tuning Parameter
+ ***************************************/
 
 /*!
  * HEAPMODE :
@@ -49,13 +49,13 @@
 #endif
 
 /* *************************************
-*  Dependency
-***************************************/
+ *  Dependency
+ ***************************************/
 #include "lz4hc.h"
 
 /* *************************************
-*  Local Compiler Options
-***************************************/
+ *  Local Compiler Options
+ ***************************************/
 #if defined( __GNUC__ )
 #pragma GCC diagnostic ignored "-Wunused-function"
 #endif
@@ -65,19 +65,19 @@
 #endif
 
 /* *************************************
-*  Common LZ4 definition
-***************************************/
+ *  Common LZ4 definition
+ ***************************************/
 #define LZ4_COMMONDEFS_ONLY
 #include "lz4.c"
 
 /* *************************************
-*  Local Constants
-***************************************/
+ *  Local Constants
+ ***************************************/
 #define OPTIMAL_ML (int)( ( ML_MASK - 1 ) + MINMATCH )
 
 /**************************************
-*  Local Macros
-**************************************/
+ *  Local Macros
+ **************************************/
 #define HASH_FUNCTION( i ) \
     ( ( (i)*2654435761U ) >> ( ( MINMATCH * 8 ) - LZ4HC_HASH_LOG ) )
 #define DELTANEXTMAXD( p ) \
@@ -90,8 +90,8 @@ static U32 LZ4HC_hashPtr( const void* ptr )
 }
 
 /**************************************
-*  HC Compression
-**************************************/
+ *  HC Compression
+ **************************************/
 static void LZ4HC_init( LZ4HC_CCtx_internal* hc4, const BYTE* start )
 {
     MEM_INIT( (void*)hc4->hashTable, 0, sizeof( hc4->hashTable ) );
@@ -118,7 +118,7 @@ FORCE_INLINE void LZ4HC_Insert( LZ4HC_CCtx_internal* hc4, const BYTE* ip )
         U32 const h  = LZ4HC_hashPtr( base + idx );
         size_t delta = idx - hashTable[h];
         if( delta > MAX_DISTANCE )
-            delta           = MAX_DISTANCE;
+            delta = MAX_DISTANCE;
         DELTANEXTU16( idx ) = (U16)delta;
         hashTable[h]        = idx;
         idx++;
@@ -231,9 +231,9 @@ FORCE_INLINE int LZ4HC_InsertAndGetWiderMatch( LZ4HC_CCtx_internal* hc4,
             {
                 if( LZ4_read32( matchPtr ) == LZ4_read32( ip ) )
                 {
-                    int mlt = MINMATCH + LZ4_count( ip + MINMATCH,
-                                             matchPtr + MINMATCH,
-                                             iHighLimit );
+                    int mlt = MINMATCH +
+                        LZ4_count(
+                            ip + MINMATCH, matchPtr + MINMATCH, iHighLimit );
                     int back = 0;
 
                     while( ( ip + back > iLowLimit ) &&
@@ -314,8 +314,9 @@ FORCE_INLINE int LZ4HC_encodeSequence( const BYTE** ip,
     /* Encode Literal length */
     length = (int)( *ip - *anchor );
     token  = ( *op )++;
-    if( ( limitedOutputBuffer ) && ( ( *op + ( length >> 8 ) + length +
-                                         ( 2 + 1 + LASTLITERALS ) ) > oend ) )
+    if( ( limitedOutputBuffer ) &&
+        ( ( *op + ( length >> 8 ) + length + ( 2 + 1 + LASTLITERALS ) ) >
+            oend ) )
         return 1; /* Check output limit */
     if( length >= (int)RUN_MASK )
     {
@@ -324,7 +325,7 @@ FORCE_INLINE int LZ4HC_encodeSequence( const BYTE** ip,
         len    = length - RUN_MASK;
         for( ; len > 254; len -= 255 )
             *( *op )++ = 255;
-        *( *op )++     = (BYTE)len;
+        *( *op )++ = (BYTE)len;
     }
     else
         *token = ( BYTE )( length << ML_BITS );
@@ -461,10 +462,10 @@ static int LZ4HC_compress_hashChain( LZ4HC_CCtx_internal* const ctx,
 
     _Search3:
         /*
-        * Currently we have :
-        * ml2 > ml1, and
-        * ip1+3 <= ip2 (usually < ip1+ml1)
-        */
+         * Currently we have :
+         * ml2 > ml1, and
+         * ip1+3 <= ip2 (usually < ip1+ml1)
+         */
         if( ( start2 - ip ) < OPTIMAL_ML )
         {
             int correction;
@@ -551,10 +552,10 @@ static int LZ4HC_compress_hashChain( LZ4HC_CCtx_internal* const ctx,
         }
 
         /*
-        * OK, now we have 3 ascending matches; let's write at least the first
-        * one
-        * ip & ref are known; Now for ml
-        */
+         * OK, now we have 3 ascending matches; let's write at least the first
+         * one
+         * ip & ref are known; Now for ml
+         */
         if( start2 < ip + ml )
         {
             if( ( start2 - ip ) < (int)ML_MASK )
@@ -563,7 +564,7 @@ static int LZ4HC_compress_hashChain( LZ4HC_CCtx_internal* const ctx,
                 if( ml > OPTIMAL_ML )
                     ml = OPTIMAL_ML;
                 if( ip + ml > start2 + ml2 - MINMATCH )
-                    ml     = (int)( start2 - ip ) + ml2 - MINMATCH;
+                    ml = (int)( start2 - ip ) + ml2 - MINMATCH;
                 correction = ml - (int)( start2 - ip );
                 if( correction > 0 )
                 {
@@ -594,9 +595,10 @@ static int LZ4HC_compress_hashChain( LZ4HC_CCtx_internal* const ctx,
     /* Encode Last Literals */
     {
         int lastRun = (int)( iend - anchor );
-        if( ( limit ) && ( ( (char*)op - dest ) + lastRun + 1 +
-                                 ( ( lastRun + 255 - RUN_MASK ) / 255 ) >
-                             (U32)maxOutputSize ) )
+        if( ( limit ) &&
+            ( ( (char*)op - dest ) + lastRun + 1 +
+                    ( ( lastRun + 255 - RUN_MASK ) / 255 ) >
+                (U32)maxOutputSize ) )
             return 0; /* Check output limit */
         if( lastRun >= (int)RUN_MASK )
         {
@@ -604,7 +606,7 @@ static int LZ4HC_compress_hashChain( LZ4HC_CCtx_internal* const ctx,
             lastRun -= RUN_MASK;
             for( ; lastRun > 254; lastRun -= 255 )
                 *op++ = 255;
-            *op++     = (BYTE)lastRun;
+            *op++ = (BYTE)lastRun;
         }
         else
             *op++ = ( BYTE )( lastRun << ML_BITS );
@@ -689,7 +691,7 @@ int LZ4_compress_HC_extStateHC( void* state,
     LZ4HC_CCtx_internal* ctx = &( (LZ4_streamHC_t*)state )->internal_donotuse;
     if( ( ( size_t )( state ) & ( sizeof( void* ) - 1 ) ) != 0 )
         return 0; /* Error : state is not aligned for pointers (32 or 64 bits)
-                     */
+                   */
     LZ4HC_init( ctx, (const BYTE*)src );
     if( maxDstSize < LZ4_compressBound( srcSize ) )
         return LZ4HC_compress_generic( ctx,
@@ -726,8 +728,8 @@ int LZ4_compress_HC( const char* src,
 }
 
 /**************************************
-*  Streaming Functions
-**************************************/
+ *  Streaming Functions
+ **************************************/
 /* allocation */
 LZ4_streamHC_t* LZ4_createStreamHC( void )
 {
@@ -830,7 +832,7 @@ static int LZ4_compressHC_continue_generic( LZ4_streamHC_t* LZ4_streamHCPtr,
         if( ( sourceEnd > dictBegin ) && ( (const BYTE*)source < dictEnd ) )
         {
             if( sourceEnd > dictEnd )
-                sourceEnd    = dictEnd;
+                sourceEnd = dictEnd;
             ctxPtr->lowLimit = ( U32 )( sourceEnd - ctxPtr->dictBase );
             if( ctxPtr->dictLimit - ctxPtr->lowLimit < 4 )
                 ctxPtr->lowLimit = ctxPtr->dictLimit;
@@ -892,8 +894,8 @@ int LZ4_saveDictHC(
 }
 
 /***********************************
-*  Deprecated Functions
-***********************************/
+ *  Deprecated Functions
+ ***********************************/
 /* These functions currently generate deprecation warnings */
 /* Deprecated compression functions */
 int LZ4_compressHC( const char* src, char* dst, int srcSize )
@@ -967,7 +969,7 @@ int LZ4_resetStreamStateHC( void* state, char* inputBuffer )
     LZ4HC_CCtx_internal* ctx = &( (LZ4_streamHC_t*)state )->internal_donotuse;
     if( ( ( (size_t)state ) & ( sizeof( void* ) - 1 ) ) != 0 )
         return 1; /* Error : pointer is not aligned for pointer (32 or 64 bits)
-                     */
+                   */
     LZ4HC_init( ctx, (const BYTE*)inputBuffer );
     ctx->inputBuffer = (BYTE*)inputBuffer;
     return 0;

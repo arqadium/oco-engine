@@ -33,22 +33,22 @@ You can contact the author at :
 */
 
 /* LZ4F is a stand-alone API to create LZ4-compressed Frames
-*  in full conformance with specification v1.5.0
-*  All related operations, including memory management, are handled by the
-* library.
-* */
+ *  in full conformance with specification v1.5.0
+ *  All related operations, including memory management, are handled by the
+ * library.
+ * */
 
 /*-************************************
-*  Compiler Options
-**************************************/
+ *  Compiler Options
+ **************************************/
 #ifdef _MSC_VER /* Visual Studio */
 #pragma warning( \
     disable : 4127 ) /* disable: C4127: conditional expression is constant */
 #endif
 
 /*-************************************
-*  Memory routines
-**************************************/
+ *  Memory routines
+ **************************************/
 #include <stdlib.h> /* malloc, calloc, free */
 #define ALLOCATOR( s ) calloc( 1, s )
 #define FREEMEM free
@@ -56,8 +56,8 @@ You can contact the author at :
 #define MEM_INIT memset
 
 /*-************************************
-*  Includes
-**************************************/
+ *  Includes
+ **************************************/
 #include "lz4.h"
 #include "lz4frame_static.h"
 #include "lz4hc.h"
@@ -65,8 +65,8 @@ You can contact the author at :
 #include "xxhash.h"
 
 /*-************************************
-*  Common Utils
-**************************************/
+ *  Common Utils
+ **************************************/
 #define LZ4_STATIC_ASSERT( c )                       \
     {                                                \
         enum                                         \
@@ -76,11 +76,12 @@ You can contact the author at :
     } /* use only *after* variable declarations */
 
 /*-************************************
-*  Basic Types
-**************************************/
-#if !defined( __VMS ) && ( defined( __cplusplus ) ||          \
-                             ( defined( __STDC_VERSION__ ) && \
-                                 ( __STDC_VERSION__ >= 199901L ) /* C99 */ ) )
+ *  Basic Types
+ **************************************/
+#if !defined( __VMS ) &&                 \
+    ( defined( __cplusplus ) ||          \
+        ( defined( __STDC_VERSION__ ) && \
+            ( __STDC_VERSION__ >= 199901L ) /* C99 */ ) )
 #include <stdint.h>
 typedef uint8_t BYTE;
 typedef uint16_t U16;
@@ -143,8 +144,8 @@ static void LZ4F_writeLE64( void* dst, U64 value64 )
 }
 
 /*-************************************
-*  Constants
-**************************************/
+ *  Constants
+ **************************************/
 #define KB *( 1 << 10 )
 #define MB *( 1 << 20 )
 #define GB *( 1 << 30 )
@@ -165,8 +166,8 @@ static const size_t maxFHSize = LZ4F_HEADER_SIZE_MAX; /* 15 */
 static const size_t BHSize    = 4;
 
 /*-************************************
-*  Structures and local types
-**************************************/
+ *  Structures and local types
+ **************************************/
 typedef struct LZ4F_cctx_s
 {
     LZ4F_preferences_t prefs;
@@ -184,8 +185,8 @@ typedef struct LZ4F_cctx_s
 } LZ4F_cctx_t;
 
 /*-************************************
-*  Error management
-**************************************/
+ *  Error management
+ **************************************/
 #define LZ4F_GENERATE_STRING( STRING ) #STRING,
 static const char* LZ4F_errorStrings[] = {
     LZ4F_LIST_ERRORS( LZ4F_GENERATE_STRING )};
@@ -222,8 +223,8 @@ static LZ4F_errorCode_t err0r( LZ4F_errorCodes code )
 unsigned LZ4F_getVersion( void ) { return LZ4F_VERSION; }
 
 /*-************************************
-*  Private functions
-**************************************/
+ *  Private functions
+ **************************************/
 #define MIN( a, b ) ( ( a ) < ( b ) ? ( a ) : ( b ) )
 
 static size_t LZ4F_getBlockSize( unsigned blockSizeID )
@@ -245,8 +246,8 @@ static BYTE LZ4F_headerChecksum( const void* header, size_t length )
 }
 
 /*-************************************
-*  Simple-pass compression functions
-**************************************/
+ *  Simple-pass compression functions
+ **************************************/
 static LZ4F_blockSizeID_t LZ4F_optimalBSID(
     const LZ4F_blockSizeID_t requestedBSID, const size_t srcSize )
 {
@@ -325,19 +326,17 @@ size_t LZ4F_compressFrameBound(
 }
 
 /*! LZ4F_compressFrame() :
-* Compress an entire srcBuffer into a valid LZ4 frame, as defined by
-* specification v1.5.0, in a single step.
-* The most important rule is that dstBuffer MUST be large enough (dstMaxSize) to
-* ensure compression completion even in worst case.
-* You can get the minimum value of dstMaxSize by using LZ4F_compressFrameBound()
-* If this condition is not respected, LZ4F_compressFrame() will fail (result is
-* an errorCode)
-* The LZ4F_preferences_t structure is optional : you can provide NULL as
-* argument. All preferences will then be set to default.
-* The result of the function is the number of bytes written into dstBuffer.
-* The function outputs an error code if it fails (can be tested using
-* LZ4F_isError())
-*/
+ * Compress an entire srcBuffer into a valid LZ4 frame, as defined by
+ * specification v1.5.0, in a single step.
+ * The most important rule is that dstBuffer MUST be large enough (dstMaxSize)
+ * to ensure compression completion even in worst case. You can get the minimum
+ * value of dstMaxSize by using LZ4F_compressFrameBound() If this condition is
+ * not respected, LZ4F_compressFrame() will fail (result is an errorCode) The
+ * LZ4F_preferences_t structure is optional : you can provide NULL as argument.
+ * All preferences will then be set to default. The result of the function is
+ * the number of bytes written into dstBuffer. The function outputs an error
+ * code if it fails (can be tested using LZ4F_isError())
+ */
 size_t LZ4F_compressFrame( void* dstBuffer,
     size_t dstCapacity,
     const void* srcBuffer,
@@ -420,8 +419,8 @@ size_t LZ4F_compressFrame( void* dstBuffer,
 }
 
 /*-*********************************
-*  Advanced compression functions
-***********************************/
+ *  Advanced compression functions
+ ***********************************/
 
 /*! LZ4F_createCompressionContext() :
  * The first thing to do is to create a compressionContext object, which will be
@@ -492,7 +491,7 @@ size_t LZ4F_compressBegin( LZ4F_cctx* cctxPtr,
     memset( &prefNull, 0, sizeof( prefNull ) );
     if( preferencesPtr == NULL )
         preferencesPtr = &prefNull;
-    cctxPtr->prefs     = *preferencesPtr;
+    cctxPtr->prefs = *preferencesPtr;
 
     /* ctx Management */
     {
@@ -507,7 +506,7 @@ size_t LZ4F_compressBegin( LZ4F_cctx* cctxPtr,
                 cctxPtr->lz4CtxPtr = (void*)LZ4_createStream( );
             else
                 cctxPtr->lz4CtxPtr = (void*)LZ4_createStreamHC( );
-            cctxPtr->lz4CtxLevel   = tableID;
+            cctxPtr->lz4CtxLevel = tableID;
         }
     }
 
@@ -550,12 +549,10 @@ size_t LZ4F_compressBegin( LZ4F_cctx* cctxPtr,
     *dstPtr++ = ( BYTE )( ( ( 1 & _2BITS ) << 6 ) /* Version('01') */
         +
         ( ( cctxPtr->prefs.frameInfo.blockMode & _1BIT ) << 5 ) /* Block mode */
-        +
-        ( ( cctxPtr->prefs.frameInfo.contentChecksumFlag & _1BIT )
-            << 2 ) /* Frame checksum */
-        +
-        ( ( cctxPtr->prefs.frameInfo.contentSize > 0 )
-            << 3 ) ); /* Frame content size */
+        + ( ( cctxPtr->prefs.frameInfo.contentChecksumFlag & _1BIT )
+              << 2 ) /* Frame checksum */
+        + ( ( cctxPtr->prefs.frameInfo.contentSize > 0 )
+              << 3 ) ); /* Frame content size */
     /* BD Byte */
     *dstPtr++ =
         ( BYTE )( ( cctxPtr->prefs.frameInfo.blockSizeID & _3BITS ) << 4 );
@@ -679,20 +676,20 @@ static int LZ4F_localSaveDict( LZ4F_cctx_t* cctxPtr )
 typedef enum { notDone, fromTmpBuffer, fromSrcBuffer } LZ4F_lastBlockStatus;
 
 /*! LZ4F_compressUpdate() :
-* LZ4F_compressUpdate() can be called repetitively to compress as much data as
-* necessary.
-* The most important rule is that dstBuffer MUST be large enough (dstCapacity)
-* to ensure compression completion even in worst case.
-* If this condition is not respected, LZ4F_compress() will fail (result is an
-* errorCode)
-* You can get the minimum value of dstCapacity by using LZ4F_compressBound()
-* The LZ4F_compressOptions_t structure is optional : you can provide NULL as
-* argument.
-* The result of the function is the number of bytes written into dstBuffer : it
-* can be zero, meaning input data was just buffered.
-* The function outputs an error code if it fails (can be tested using
-* LZ4F_isError())
-*/
+ * LZ4F_compressUpdate() can be called repetitively to compress as much data as
+ * necessary.
+ * The most important rule is that dstBuffer MUST be large enough (dstCapacity)
+ * to ensure compression completion even in worst case.
+ * If this condition is not respected, LZ4F_compress() will fail (result is an
+ * errorCode)
+ * You can get the minimum value of dstCapacity by using LZ4F_compressBound()
+ * The LZ4F_compressOptions_t structure is optional : you can provide NULL as
+ * argument.
+ * The result of the function is the number of bytes written into dstBuffer : it
+ * can be zero, meaning input data was just buffered.
+ * The function outputs an error code if it fails (can be tested using
+ * LZ4F_isError())
+ */
 size_t LZ4F_compressUpdate( LZ4F_cctx* cctxPtr,
     void* dstBuffer,
     size_t dstCapacity,
@@ -801,8 +798,7 @@ size_t LZ4F_compressUpdate( LZ4F_cctx* cctxPtr,
                 cctxPtr->maxBufferSize ) /* necessarily LZ4F_blockLinked &&
                                             lastBlockCompressed==fromTmpBuffer
                                             */
-        &&
-        !( cctxPtr->prefs.autoFlush ) )
+        && !( cctxPtr->prefs.autoFlush ) )
     {
         int realDictSize = LZ4F_localSaveDict( cctxPtr );
         cctxPtr->tmpIn   = cctxPtr->tmpBuff + realDictSize;
@@ -826,17 +822,17 @@ size_t LZ4F_compressUpdate( LZ4F_cctx* cctxPtr,
 }
 
 /*! LZ4F_flush() :
-* Should you need to create compressed data immediately, without waiting for a
-* block to be filled,
-* you can call LZ4_flush(), which will immediately compress any remaining data
-* stored within compressionContext.
-* The result of the function is the number of bytes written into dstBuffer
-* (it can be zero, this means there was no data left within compressionContext)
-* The function outputs an error code if it fails (can be tested using
-* LZ4F_isError())
-* The LZ4F_compressOptions_t structure is optional : you can provide NULL as
-* argument.
-*/
+ * Should you need to create compressed data immediately, without waiting for a
+ * block to be filled,
+ * you can call LZ4_flush(), which will immediately compress any remaining data
+ * stored within compressionContext.
+ * The result of the function is the number of bytes written into dstBuffer
+ * (it can be zero, this means there was no data left within compressionContext)
+ * The function outputs an error code if it fails (can be tested using
+ * LZ4F_isError())
+ * The LZ4F_compressOptions_t structure is optional : you can provide NULL as
+ * argument.
+ */
 size_t LZ4F_flush( LZ4F_cctx* cctxPtr,
     void* dstBuffer,
     size_t dstCapacity,
@@ -882,20 +878,20 @@ size_t LZ4F_flush( LZ4F_cctx* cctxPtr,
 }
 
 /*! LZ4F_compressEnd() :
-* When you want to properly finish the compressed frame, just call
-* LZ4F_compressEnd().
-* It will flush whatever data remained within compressionContext (like
-* LZ4_flush())
-* but also properly finalize the frame, with an endMark and a checksum.
-* The result of the function is the number of bytes written into dstBuffer
-* (necessarily >= 4 (endMark size))
-* The function outputs an error code if it fails (can be tested using
-* LZ4F_isError())
-* The LZ4F_compressOptions_t structure is optional : you can provide NULL as
-* argument.
-* compressionContext can then be used again, starting with LZ4F_compressBegin().
-* The preferences will remain the same.
-*/
+ * When you want to properly finish the compressed frame, just call
+ * LZ4F_compressEnd().
+ * It will flush whatever data remained within compressionContext (like
+ * LZ4_flush())
+ * but also properly finalize the frame, with an endMark and a checksum.
+ * The result of the function is the number of bytes written into dstBuffer
+ * (necessarily >= 4 (endMark size))
+ * The function outputs an error code if it fails (can be tested using
+ * LZ4F_isError())
+ * The LZ4F_compressOptions_t structure is optional : you can provide NULL as
+ * argument.
+ * compressionContext can then be used again, starting with
+ * LZ4F_compressBegin(). The preferences will remain the same.
+ */
 size_t LZ4F_compressEnd( LZ4F_cctx* cctxPtr,
     void* dstBuffer,
     size_t dstMaxSize,
@@ -935,8 +931,8 @@ size_t LZ4F_compressEnd( LZ4F_cctx* cctxPtr,
 }
 
 /*-***************************************************
-*   Frame Decompression
-*****************************************************/
+ *   Frame Decompression
+ *****************************************************/
 
 struct LZ4F_dctx_s
 {
@@ -960,13 +956,13 @@ struct LZ4F_dctx_s
 }; /* typedef'd to LZ4F_dctx in lz4frame.h */
 
 /*! LZ4F_createDecompressionContext() :
-*   Create a decompressionContext object, which will track all decompression
-* operations.
-*   Provides a pointer to a fully allocated and initialized
-* LZ4F_decompressionContext object.
-*   Object can later be released using LZ4F_freeDecompressionContext().
-*   @return : if != 0, there was an error during context creation.
-*/
+ *   Create a decompressionContext object, which will track all decompression
+ * operations.
+ *   Provides a pointer to a fully allocated and initialized
+ * LZ4F_decompressionContext object.
+ *   Object can later be released using LZ4F_freeDecompressionContext().
+ *   @return : if != 0, there was an error during context creation.
+ */
 LZ4F_errorCode_t LZ4F_createDecompressionContext(
     LZ4F_dctx** LZ4F_decompressionContextPtr, unsigned versionNumber )
 {
@@ -1014,9 +1010,9 @@ typedef enum {
 } dStage_t;
 
 /*! LZ4F_headerSize() :
-*   @return : size of frame header
-*             or an error code, which can be tested using LZ4F_isError()
-*/
+ *   @return : size of frame header
+ *             or an error code, which can be tested using LZ4F_isError()
+ */
 static size_t LZ4F_headerSize( const void* src, size_t srcSize )
 {
     /* minimal srcSize to determine header size */
@@ -1183,18 +1179,17 @@ static size_t LZ4F_decodeHeader(
 }
 
 /*! LZ4F_getFrameInfo() :
-*   Decodes frame header information, such as blockSize. Usage is optional.
-*   The objective is to extract header information before receiving decompressed
-* data, typically for allocation purposes.
-*   LZ4F_getFrameInfo() can also be used *after* starting decompression, on a
-* valid LZ4F_decompressionContext_t.
-*   The number of bytes consumed from srcBuffer will be provided within
-* *srcSizePtr (necessarily <= original value).
-*   Decompression must resume from where it stopped (srcBuffer + *srcSizePtr)
-*   @return : hint of the better `srcSize` to use for next call to
-* LZ4F_decompress,
-*             or an error code which can be tested using LZ4F_isError().
-*/
+ *   Decodes frame header information, such as blockSize. Usage is optional.
+ *   The objective is to extract header information before receiving
+ * decompressed data, typically for allocation purposes. LZ4F_getFrameInfo() can
+ * also be used *after* starting decompression, on a valid
+ * LZ4F_decompressionContext_t. The number of bytes consumed from srcBuffer will
+ * be provided within *srcSizePtr (necessarily <= original value).
+ *   Decompression must resume from where it stopped (srcBuffer + *srcSizePtr)
+ *   @return : hint of the better `srcSize` to use for next call to
+ * LZ4F_decompress,
+ *             or an error code which can be tested using LZ4F_isError().
+ */
 LZ4F_errorCode_t LZ4F_getFrameInfo( LZ4F_dctx* dctxPtr,
     LZ4F_frameInfo_t* frameInfoPtr,
     const void* srcBuffer,
@@ -1212,7 +1207,7 @@ LZ4F_errorCode_t LZ4F_getFrameInfo( LZ4F_dctx* dctxPtr,
             NULL,
             &i,
             NULL ); /* returns : recommended nb of bytes for LZ4F_decompress()
-                       */
+                     */
     }
     else
     {
@@ -1338,31 +1333,31 @@ static void LZ4F_updateDict( LZ4F_dctx* dctxPtr,
 }
 
 /*! LZ4F_decompress() :
-* Call this function repetitively to regenerate data compressed within
-* srcBuffer.
-* The function will attempt to decode up to *srcSizePtr bytes from srcBuffer,
-* into dstBuffer of capacity *dstSizePtr.
-*
-* The number of bytes regenerated into dstBuffer will be provided within
-* *dstSizePtr (necessarily <= original value).
-*
-* The number of bytes effectively read from srcBuffer will be provided within
-* *srcSizePtr (necessarily <= original value).
-* If the number of bytes read is < number of bytes provided, then the
-* decompression operation is not complete.
-* Remaining data will have to be presented again in a subsequent invocation.
-*
-* The function result is an hint of the better srcSize to use for next call to
-* LZ4F_decompress.
-* Basically, it's the size of the current (or remaining) compressed block +
-* header of next block.
-* Respecting the hint provides some boost to performance, since it allows less
-* buffer shuffling.
-* Note that this is just a hint, it's always possible to any srcSize value.
-* When a frame is fully decoded, @return will be 0.
-* If decompression failed, @return is an error code which can be tested using
-* LZ4F_isError().
-*/
+ * Call this function repetitively to regenerate data compressed within
+ * srcBuffer.
+ * The function will attempt to decode up to *srcSizePtr bytes from srcBuffer,
+ * into dstBuffer of capacity *dstSizePtr.
+ *
+ * The number of bytes regenerated into dstBuffer will be provided within
+ * *dstSizePtr (necessarily <= original value).
+ *
+ * The number of bytes effectively read from srcBuffer will be provided within
+ * *srcSizePtr (necessarily <= original value).
+ * If the number of bytes read is < number of bytes provided, then the
+ * decompression operation is not complete.
+ * Remaining data will have to be presented again in a subsequent invocation.
+ *
+ * The function result is an hint of the better srcSize to use for next call to
+ * LZ4F_decompress.
+ * Basically, it's the size of the current (or remaining) compressed block +
+ * header of next block.
+ * Respecting the hint provides some boost to performance, since it allows less
+ * buffer shuffling.
+ * Note that this is just a hint, it's always possible to any srcSize value.
+ * When a frame is fully decoded, @return will be 0.
+ * If decompression failed, @return is an error code which can be tested using
+ * LZ4F_isError().
+ */
 size_t LZ4F_decompress( LZ4F_dctx* dctxPtr,
     void* dstBuffer,
     size_t* dstSizePtr,
@@ -1384,8 +1379,8 @@ size_t LZ4F_decompress( LZ4F_dctx* dctxPtr,
     memset( &optionsNull, 0, sizeof( optionsNull ) );
     if( decompressOptionsPtr == NULL )
         decompressOptionsPtr = &optionsNull;
-    *srcSizePtr              = 0;
-    *dstSizePtr              = 0;
+    *srcSizePtr = 0;
+    *dstSizePtr = 0;
 
     /* programmed as a state machine */
 

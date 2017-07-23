@@ -49,12 +49,12 @@ extern "C" {
 #include <stddef.h> /* size_t */
 
 /*-***************************************************************
-*  Compiler specifics
-*****************************************************************/
+ *  Compiler specifics
+ *****************************************************************/
 /*!
-*  LZ4_DLL_EXPORT :
-*  Enable exporting of functions when building a Windows DLL
-*/
+ *  LZ4_DLL_EXPORT :
+ *  Enable exporting of functions when building a Windows DLL
+ */
 #if defined( LZ4_DLL_EXPORT ) && ( LZ4_DLL_EXPORT == 1 )
 #define LZ4FLIB_API __declspec( dllexport )
 #elif defined( LZ4_DLL_IMPORT ) && ( LZ4_DLL_IMPORT == 1 )
@@ -73,8 +73,8 @@ extern "C" {
 #endif
 
 /*-************************************
-*  Error management
-**************************************/
+ *  Error management
+ **************************************/
 typedef size_t LZ4F_errorCode_t;
 
 LZ4FLIB_API unsigned LZ4F_isError( LZ4F_errorCode_t code );
@@ -82,10 +82,10 @@ LZ4FLIB_API const char* LZ4F_getErrorName( LZ4F_errorCode_t
         code ); /* return error code string; useful for debugging */
 
 /*-************************************
-*  Frame compression types
-**************************************/
+ *  Frame compression types
+ **************************************/
 /* #define LZ4F_DISABLE_OBSOLETE_ENUMS */ /* uncomment to disable obsolete enums
-                                             */
+                                           */
 #ifndef LZ4F_DISABLE_OBSOLETE_ENUMS
 #define LZ4F_OBSOLETE_ENUM( x ) , LZ4F_DEPRECATE( x ) = LZ4F_##x
 #else
@@ -143,7 +143,7 @@ typedef struct
     LZ4F_frameType_t frameType; /* LZ4F_frame, skippableFrame ; 0 == default */
     unsigned long long
         contentSize; /* Size of uncompressed (original) content ; 0 == unknown
-                        */
+                      */
     unsigned reserved[2]; /* must be zero for forward compatibility */
 } LZ4F_frameInfo_t;
 
@@ -163,8 +163,8 @@ typedef struct
 } LZ4F_preferences_t;
 
 /*-*********************************
-*  Simple compression function
-***********************************/
+ *  Simple compression function
+ ***********************************/
 /*!LZ4F_compressFrameBound() :
  * Returns the maximum possible size of a frame compressed with
  * LZ4F_compressFrame() given srcSize content and preferences.
@@ -194,8 +194,8 @@ LZ4FLIB_API size_t LZ4F_compressFrame( void* dstBuffer,
     const LZ4F_preferences_t* preferencesPtr );
 
 /*-***********************************
-*  Advanced compression functions
-*************************************/
+ *  Advanced compression functions
+ *************************************/
 typedef struct LZ4F_cctx_s LZ4F_cctx; /* incomplete type */
 typedef LZ4F_cctx*
     LZ4F_compressionContext_t; /* for compatibility with previous API version */
@@ -320,8 +320,8 @@ LZ4FLIB_API size_t LZ4F_compressEnd( LZ4F_cctx* cctx,
  */
 
 /*-*********************************
-*  Decompression functions
-***********************************/
+ *  Decompression functions
+ ***********************************/
 typedef struct LZ4F_dctx_s LZ4F_dctx; /* incomplete type */
 typedef LZ4F_dctx*
     LZ4F_decompressionContext_t; /* compatibility with previous API versions */

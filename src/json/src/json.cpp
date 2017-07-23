@@ -588,7 +588,7 @@ bool Reader::readToken( Token& token )
     }
     if( !ok )
         token.type_ = tokenError;
-    token.end_      = current_;
+    token.end_ = current_;
     return true;
 }
 
@@ -800,9 +800,10 @@ bool Reader::readObject( Token& tokenStart )
             return recoverFromError( tokenObjectEnd );
 
         Token comma;
-        if( !readToken( comma ) || ( comma.type_ != tokenObjectEnd &&
-                                       comma.type_ != tokenArraySeparator &&
-                                       comma.type_ != tokenComment ) )
+        if( !readToken( comma ) ||
+            ( comma.type_ != tokenObjectEnd &&
+                comma.type_ != tokenArraySeparator &&
+                comma.type_ != tokenComment ) )
         {
             return addErrorAndRecover(
                 "Missing ',' or '}' in object declaration",
@@ -1683,7 +1684,7 @@ bool OurReader::readToken( Token& token )
     }
     if( !ok )
         token.type_ = tokenError;
-    token.end_      = current_;
+    token.end_ = current_;
     return true;
 }
 
@@ -1896,9 +1897,10 @@ bool OurReader::readObject( Token& tokenStart )
             return recoverFromError( tokenObjectEnd );
 
         Token comma;
-        if( !readToken( comma ) || ( comma.type_ != tokenObjectEnd &&
-                                       comma.type_ != tokenArraySeparator &&
-                                       comma.type_ != tokenComment ) )
+        if( !readToken( comma ) ||
+            ( comma.type_ != tokenObjectEnd &&
+                comma.type_ != tokenArraySeparator &&
+                comma.type_ != tokenComment ) )
         {
             return addErrorAndRecover(
                 "Missing ',' or '}' in object declaration",
@@ -2423,7 +2425,7 @@ bool CharReaderBuilder::validate( Json::Value* invalid ) const
 {
     Json::Value my_invalid;
     if( !invalid )
-        invalid      = &my_invalid; // so we do not need to test for NULL
+        invalid = &my_invalid; // so we do not need to test for NULL
     Json::Value& inv = *invalid;
     std::set<JSONCPP_STRING> valid_keys;
     getValidReaderKeys( &valid_keys );
@@ -3673,7 +3675,7 @@ float Value::asFloat( ) const
 #if !defined( JSON_USE_INT64_DOUBLE_CONVERSION )
         return static_cast<float>( value_.uint_ );
 #else // if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
-        // This can fail (silently?) if the value is bigger than MAX_FLOAT.
+      // This can fail (silently?) if the value is bigger than MAX_FLOAT.
         return static_cast<float>( integerToDouble( value_.uint_ ) );
 #endif // if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
     case realValue:
@@ -3804,7 +3806,7 @@ void Value::resize( ArrayIndex newSize )
     JSON_ASSERT_MESSAGE( type_ == nullValue || type_ == arrayValue,
         "in Json::Value::resize(): requires arrayValue" );
     if( type_ == nullValue )
-        *this          = Value( arrayValue );
+        *this = Value( arrayValue );
     ArrayIndex oldSize = size( );
     if( newSize == 0 )
         clear( );
@@ -5964,7 +5966,7 @@ bool StreamWriterBuilder::validate( Json::Value* invalid ) const
 {
     Json::Value my_invalid;
     if( !invalid )
-        invalid      = &my_invalid; // so we do not need to test for NULL
+        invalid = &my_invalid; // so we do not need to test for NULL
     Json::Value& inv = *invalid;
     std::set<JSONCPP_STRING> valid_keys;
     getValidWriterKeys( &valid_keys );

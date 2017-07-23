@@ -73,23 +73,23 @@ extern "C" {
 #endif
 
 /* ****************************
-*  Definitions
-******************************/
+ *  Definitions
+ ******************************/
 #include <stddef.h> /* size_t */
 typedef enum { XXH_OK = 0, XXH_ERROR } XXH_errorcode;
 
 /* ****************************
-*  API modifier
-******************************/
+ *  API modifier
+ ******************************/
 /** XXH_PRIVATE_API
-*   This is useful to include xxhash functions in `static` mode
-*   in order to inline them, and remove their symbol from the public list.
-*   Methodology :
-*     #define XXH_PRIVATE_API
-*     #include "xxhash.h"
-*   `xxhash.c` is automatically included.
-*   It's not useful to compile and link it as a separate module.
-*/
+ *   This is useful to include xxhash functions in `static` mode
+ *   in order to inline them, and remove their symbol from the public list.
+ *   Methodology :
+ *     #define XXH_PRIVATE_API
+ *     #include "xxhash.h"
+ *   `xxhash.c` is automatically included.
+ *   It's not useful to compile and link it as a separate module.
+ */
 #ifdef XXH_PRIVATE_API
 #ifndef XXH_STATIC_LINKING_ONLY
 #define XXH_STATIC_LINKING_ONLY
@@ -105,7 +105,8 @@ typedef enum { XXH_OK = 0, XXH_ERROR } XXH_errorcode;
 #else
 #define XXH_PUBLIC_API                                                        \
     static /* this version may generate warnings for unused static functions; \
-              disable the relevant warning */
+              \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ disable the relevant warning                 \
+            */
 #endif
 #else
 #define XXH_PUBLIC_API /* do nothing */
@@ -155,8 +156,8 @@ regular symbol name will be automatically translated by this header.
 #endif
 
 /* *************************************
-*  Version
-***************************************/
+ *  Version
+ ***************************************/
 #define XXH_VERSION_MAJOR 0
 #define XXH_VERSION_MINOR 6
 #define XXH_VERSION_RELEASE 2
@@ -166,8 +167,8 @@ regular symbol name will be automatically translated by this header.
 XXH_PUBLIC_API unsigned XXH_versionNumber( void );
 
 /*-**********************************************************************
-*  32-bits hash
-************************************************************************/
+ *  32-bits hash
+ ************************************************************************/
 typedef unsigned int XXH32_hash_t;
 
 /*! XXH32() :
@@ -231,18 +232,18 @@ XXH_PUBLIC_API XXH32_hash_t XXH32_hashFromCanonical(
     const XXH32_canonical_t* src );
 
 /* Default result type for XXH functions are primitive unsigned 32 and 64 bits.
-*  The canonical representation uses human-readable write convention, aka
-* big-endian (large digits first).
-*  These functions allow transformation of hash result into and from its
-* canonical format.
-*  This way, hash values can be written into a file / memory, and remain
-* comparable on different systems and programs.
-*/
+ *  The canonical representation uses human-readable write convention, aka
+ * big-endian (large digits first).
+ *  These functions allow transformation of hash result into and from its
+ * canonical format.
+ *  This way, hash values can be written into a file / memory, and remain
+ * comparable on different systems and programs.
+ */
 
 #ifndef XXH_NO_LONG_LONG
 /*-**********************************************************************
-*  64-bits hash
-************************************************************************/
+ *  64-bits hash
+ ************************************************************************/
 typedef unsigned long long XXH64_hash_t;
 
 /*! XXH64() :
