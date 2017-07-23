@@ -20,7 +20,7 @@ Dependencies
 deps
 build/
 /Makefile
-/make.bat
+*.bat
 
 # User-specific files
 *.suo
