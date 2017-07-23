@@ -13,7 +13,7 @@
 
 #if !defined( __cplusplus )
 #error "libJSON does not yet have a C interface."
-#elif __cplusplus <= 199711L
+#elif __cplusplus <= 199711L && !defined( _MSC_VER )
 #error "The OCo Engine needs at least a C++11 compliant compiler"
 #endif // !defined( __cplusplus )
 
@@ -60,13 +60,13 @@ using _internal::Json::Features;
 
 // value.h
 typedef unsigned int ArrayIndex;
-using _internal::Json::StaticString;
 using _internal::Json::Path;
 using _internal::Json::PathArgument;
+using _internal::Json::StaticString;
 using _internal::Json::Value;
-using _internal::Json::ValueIteratorBase;
-using _internal::Json::ValueIterator;
 using _internal::Json::ValueConstIterator;
+using _internal::Json::ValueIterator;
+using _internal::Json::ValueIteratorBase;
 } // namespace JSON
 } // namespace OCo
 

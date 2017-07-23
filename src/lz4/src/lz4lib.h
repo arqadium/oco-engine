@@ -27,7 +27,7 @@ bool ocoLZ4DecompressSafe(
     const uint8_t* src, size_t srcSz, uint8_t* dst, size_t dstSz );
 bool ocoLZ4DecompressFast( const uint8_t* src, uint8_t* dst, size_t origSz );
 
-#elif __cplusplus <= 199711L
+#elif __cplusplus <= 199711L && !defined( _MSC_VER )
 #error "The OCo Engine needs at least a C++11 compliant compiler"
 #else // defined( __cplusplus ) && __cplusplus > 199711L
 

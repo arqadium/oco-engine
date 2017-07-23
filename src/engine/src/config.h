@@ -51,7 +51,7 @@
 
 #endif // !defined( _WIN32 )
 
-#elif __cplusplus <= 199711L
+#elif __cplusplus <= 199711L && !defined( _MSC_VER )
 #error "The OCo Engine needs at least a C++11 compliant compiler"
 #else // defined( __cplusplus ) && __cplusplus > 199711L
 
