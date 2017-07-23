@@ -22,11 +22,12 @@
 #include "win32.h"
 
 #if defined( _WIN32 )
-using boost::locale::conv::utf_to_utf;
 using boost::locale::conv::conversion_error;
+using boost::locale::conv::utf_to_utf;
 #endif // defined( _WIN32 )
 using OCo::Helpers::singleBit;
 using std::endl;
+using std::string;
 using std::uint32_t;
 using std::uint8_t;
 using std::vector;
@@ -34,7 +35,6 @@ using std::vector;
 #if !defined( _WIN32 )
 using std::cerr;
 using std::cout;
-using std::string;
 using std::stringstream;
 #else // defined( _WIN32 )
 using std::wcerr;
@@ -54,6 +54,11 @@ constexpr auto logPrefixGood{L"\033[1;32m[\u00D4\u00C7\u00F4]\033[0m "};
 constexpr auto logPrefixNeutral{L"\033[1;33m[\u00D4\u00C7\u00F4]\033[0m "};
 constexpr auto logPrefixBad{L"\033[1;31m[\u00D4\u00C7\u00F4]\033[0m "};
 constexpr auto logPrefixNoANSI{L"[\u00D4\u00C7\u00F4] "};
+constexpr auto logDPrefix{u8"\033[1;37m[\u00D4\u00C7\u00F4]\033[0m "};
+constexpr auto logDPrefixGood{u8"\033[1;32m[\u00D4\u00C7\u00F4]\033[0m "};
+constexpr auto logDPrefixNeutral{u8"\033[1;33m[\u00D4\u00C7\u00F4]\033[0m "};
+constexpr auto logDPrefixBad{u8"\033[1;31m[\u00D4\u00C7\u00F4]\033[0m "};
+constexpr auto logDPrefixNoANSI{u8"[\u00D4\u00C7\u00F4] "};
 #endif
 
 #if !defined( _WIN32 )
@@ -117,13 +122,13 @@ void ocoError( const wchar_t* str )
 static bool ocoPrint_D( const char* str, const char* prefix )
 {
 #if defined( _WIN32 )
-    const wchar_t* _str = nullptr;
+    wstring _str;
 
     try
     {
-        _str = utf_to_utf<wchar_t>( str );
+        _str = utf_to_utf<wchar_t, char>( str );
     }
-    catch( conversion_error& ex )
+    catch( conversion_error& )
     {
         if( OCo::SupportsANSI( ) )
         {
@@ -131,7 +136,7 @@ static bool ocoPrint_D( const char* str, const char* prefix )
         }
         else
         {
-            wcout << prefixNoANSI;
+            wcout << logPrefixNoANSI;
         }
 
         wcout << L"Unicode conversion error in logging function!" << endl;
@@ -139,7 +144,8 @@ static bool ocoPrint_D( const char* str, const char* prefix )
         return true;
     }
 
-    ocoPrint( _str, prefix );
+    ocoPrint(
+        _str.c_str( ), utf_to_utf<wchar_t, char>( string( prefix ) ).c_str( ) );
 
 #else // !defined( _WIN32 )
     ocoPrint( str, prefix );
@@ -150,22 +156,22 @@ static bool ocoPrint_D( const char* str, const char* prefix )
 
 extern "C" bool ocoLog_D( const char* str )
 {
-    return ocoPrint_D( str, logPrefix );
+    return ocoPrint_D( str, logDPrefix );
 }
 
 extern "C" bool ocoInfo_D( const char* str )
 {
-    return ocoPrint_D( str, logPrefixGood );
+    return ocoPrint_D( str, logDPrefixGood );
 }
 
 extern "C" bool ocoWarn_D( const char* str )
 {
-    return ocoPrint_D( str, logPrefixNeutral );
+    return ocoPrint_D( str, logDPrefixNeutral );
 }
 
 extern "C" bool ocoError_D( const char* str )
 {
-    return ocoPrint_D( str, logPrefixBad );
+    return ocoPrint_D( str, logDPrefixBad );
 }
 
 #if !defined( _WIN32 )

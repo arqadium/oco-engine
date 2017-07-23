@@ -58,10 +58,9 @@ typedef struct
     uint8_t devMinor[8]; // 337
     uint8_t prefix[155]; // 345
     uint8_t _padding[12]; // 500
-}
-OCoTarHeader;
+} OCoTarHeader;
 
-#elif __cplusplus <= 199711L
+#elif __cplusplus <= 199711L && !defined( _MSC_VER )
 #error "The OCo Engine needs at least a C++11 compliant compiler"
 #else // defined( __cplusplus ) && __cplusplus > 199711L
 
@@ -83,7 +82,7 @@ namespace Untar
 
 constexpr auto kMagicBytes{"ustar"};
 constexpr std::uint_least8_t kMagicBytesLen{6};
-constexpr auto kVersion = {'0', '0'};
+constexpr auto kVersion{"00"};
 constexpr std::uint_least8_t kVersionLen{2};
 
 struct Header
