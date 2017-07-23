@@ -46,8 +46,8 @@ def main(args):
         arc = zipfile.ZipFile(btoolDir + '.zip')
         pyfiles = ['buildtool.py', 'colour.py', 'ini.py']
         for pyfile in pyfiles:
-            btoolIn = arc.open(os.path.join('oco-toolchain-'+ tcVersion,
-                'src', pyfile))
+            btoolIn = arc.open('oco-toolchain-' + tcVersion + '/src/' +
+                pyfile)
             btoolOut = open(os.path.join(btoolDir, pyfile), 'wb')
             btoolOut.write(btoolIn.read())
             btoolOut.close()
@@ -55,7 +55,13 @@ def main(args):
         arc.close()
     if os.name == 'nt':
         with open('make.bat', 'w') as out:
-            out.write('python3 ' + btoolOName + ' main.ini "%1"\n')
+            out.write('python ' + btoolOName + ' main.ini "%1"\n')
+            out.close()
+        with open('clean.bat', 'w') as out:
+            out.write('python ' + btoolOName + ' main.ini clean\n')
+            out.close()
+        with open('lint.bat', 'w') as out:
+            out.write('python ' + btoolOName + ' main.ini lint\n')
             out.close()
     else:
         with open('Makefile', 'w') as out:
