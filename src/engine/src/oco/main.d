@@ -52,14 +52,22 @@ int main( string[] args )
     // Save return value
     int ret = ocoMain( argc, argv );
     
-    // Clean up our holy memory
-    for(ulong i; i < argc; i++)
+    version(Windows)
     {
-        free( argv[i] );
+        // Windows freaks when we free(), so let's not (we're exiting anyway)
+        return ret;
     }
-    
-    free( argv );
-    
-    // Return whatever ocoMain() gave us
-    return ret;
+    else
+    {
+        // Clean up our holy memory
+        for(ulong i; i < argc; i++)
+        {
+            free( argv[i] );
+        }
+        
+        free( argv );
+        
+        // Return whatever ocoMain() gave us
+        return ret;
+    }
 }
