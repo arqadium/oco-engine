@@ -73,8 +73,6 @@ typedef struct
 #include <string>
 #include <vector>
 
-#include <boost/filesystem.hpp>
-
 namespace OCo
 {
 namespace Untar
