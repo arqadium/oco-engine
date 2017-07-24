@@ -77,7 +77,7 @@ static void ocoPrint( const wchar_t* str, const wchar_t* prefix )
         wcout << logPrefixNoANSI;
     }
 
-    wcout << prefix << str << endl;
+    wcout << str << endl;
 #else // !defined( _WIN32 )
     cout << prefix << str << endl;
 #endif // defined( _WIN32 )
