@@ -7,8 +7,35 @@ Compiling the OCo Engine from Source
 
 1. MICROSOFT WINDOWS
 
-Currently unsupported; see <https://github.com/arqadium/oco-toolchain> for
-details on support.
+Prerequisites:-
+    Required:
+        1. Windows 10.0.10586 or later
+        2. Access to a shell/console
+        3. Python 3.5+ (notes 1 & 2)
+        4. Digital Mars D compiler (DMD) 2.074.1+ (note 1)
+        5. Microsoft Visual C++ compiler (via Visual Studio 2017)
+        6. CPU with AVX (not AVX2) support (note 3)
+        7. CPU with SSE2 support (note 4)
+        8. External dependency binaries and headers (note 5)
+    Recommended (optional):
+        1. Console2 by Marko Bozikovic, for readability of coloured output
+        2. Windows PowerShell instead of CMD
+        3. clang-format, for linting C and C++ code
+        4. dfmt, for linting D code
+    Notes:
+        1. Program must be in your system PATH variable
+        2. Ensure version 3.5+ by running `> python --version` beforehand
+        3. Only applicable when building for 64-bit x86 platforms
+        4. All 64-bit x86 CPUs have this; check if your SKU is 32-bit only
+        5. We keep a ready-set archive of these with the proper directory
+           hierarchy, and will have a toolchain program for independent
+           builds of this soon
+
+Two-step build:
+  > python configure
+  > .\make <debug|release>
+
+Output binaries should be in the build\ directory.
 
 
 
@@ -17,6 +44,8 @@ details on support.
 Two-step build:
   $ ./configure
   $ make [release]
+
+Output binaries should be in the build/ directory.
 
 
 
