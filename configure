@@ -55,14 +55,15 @@ def main(args):
         arc.close()
     if os.name == 'nt':
         with open('make.bat', 'w') as out:
-            out.write('python ' + btoolOName + ' main.ini "%1"\n')
-            out.close()
-        with open('clean.bat', 'w') as out:
-            out.write('python ' + btoolOName + ' main.ini clean\n')
-            out.close()
+            out.write('@ECHO OFF\nPYTHON ' + btoolOName + ' main.ini "%1"\n')
+        with open('clean.bat', 'wb') as out:
+            text = '@ECHO OFF\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Arqadium Build Tool\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Part of the \u00D4\u00C7\u00F4 Working Set Toolchain\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Copyright \u00A9 2017 Arqadium. All rights reserved.\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m \x1B[38mCleaning\x1B[0m \x1B[1;30mthe build files\x1B[0m...\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m\r\nDEL /s /q ' + buildDir + '\\code\\ 2>nul >nul\r\nRMDIR /s /q ' + buildDir + '\\code\\ 2>nul >nul\r\nDEL /s /q /f ' + buildDir + '\\*.exe 2>nul >nul\r\nDEL /s /q /f ' + buildDir + '\\*.dll 2>nul >nul\r\nDEL /s /q /f ' + buildDir + '\\*.lib 2>nul >nul\r\n'
+            out.write(text.encode('utf8'))
+        with open('distclean.bat', 'wb') as out:
+            text = '@ECHO OFF\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Arqadium Build Tool\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Part of the \u00D4\u00C7\u00F4 Working Set Toolchain\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Copyright \u00A9 2017 Arqadium. All rights reserved.\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m \x1B[1;4;38mCleaning\x1B[0m \x1B[1;30mthe build files\x1B[0m...\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m\r\nDEL /s /q ' + buildDir + '\\\r\nRMDIR /s /q ' + buildDir + '\\\r\n'
+            out.write(text.encode('utf8'))
         with open('lint.bat', 'w') as out:
-            out.write('python ' + btoolOName + ' main.ini lint\n')
-            out.close()
+            out.write('@ECHO OFF\nPYTHON ' + btoolOName + ' main.ini lint\n')
     else:
         with open('Makefile', 'w') as out:
             out.write('.PHONY: debug release clean distclean lint\ndebug:' +
