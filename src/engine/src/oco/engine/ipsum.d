@@ -9,7 +9,7 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-module oco.ipsum;
+module oco.engine.ipsum;
 
 /++ ============================= M O D U L E ============================= ++
  +
@@ -25,7 +25,9 @@ module oco.ipsum;
 
 debug
 {
-static import oco.helpers;
+static import oco.engine.helpers;
+static import oco.untar.untar;
+import std.conv : to;
 
 string[] kLoremIpsum;
 
@@ -52,27 +54,26 @@ static this( )
 
 extern (C) void ocoIpsum( )
 {
-    debug
+    foreach(line; kLoremIpsum)
     {
-        foreach(line; kLoremIpsum)
-        {
-            oco.helpers.Log( line );
-        }
-        
-        foreach(line; kLoremIpsum)
-        {
-            oco.helpers.Info( line );
-        }
-        
-        foreach(line; kLoremIpsum)
-        {
-            oco.helpers.Warn( line );
-        }
-        
-        foreach(line; kLoremIpsum)
-        {
-            oco.helpers.Error( line );
-        }
+        oco.engine.helpers.Log( line );
     }
+    
+    foreach(line; kLoremIpsum)
+    {
+        oco.engine.helpers.Info( line );
+    }
+    
+    foreach(line; kLoremIpsum)
+    {
+        oco.engine.helpers.Warn( line );
+    }
+    
+    foreach(line; kLoremIpsum)
+    {
+        oco.engine.helpers.Error( line );
+    }
+    
+    oco.engine.helpers.Log( to!(string)(oco.untar.untar.Placeholder( 13 )) );
 }
 }

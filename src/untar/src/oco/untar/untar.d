@@ -9,31 +9,9 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-module oco.error;
+module oco.untar.untar;
 
-/++ ============================= M O D U L E ============================= ++
- +
- + TITLE:       Error Functions
- + DESCRIPTION: This provides functions for handling errors in D, the old-
- +              fashioned way. We cannot use exceptions as they don't exist in
- +              C, our common denominator for interlingual compatibility.
- +/
-
-enum Error : uint
+export uint Placeholder( uint input )
 {
-    Success,
-    BadFileHeader,
-    BadFileExt,
-    BadFileStreamRead,
-    BadChecksum,
-    CannotCloseStream
+    return input << 4;
 }
-
-enum Level
-{
-    Info,
-    Warn,
-    Error
-}
-
-void DebugPrint( Error what, Level level );

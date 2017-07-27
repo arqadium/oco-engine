@@ -9,7 +9,7 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-module oco.error;
+module oco.engine.error;
 
 /++ ============================= M O D U L E ============================= ++
  +
@@ -19,7 +19,7 @@ module oco.error;
  +              C, our common denominator for interlingual compatibility.
  +/
 
-static import oco.helpers;
+static import oco.engine.helpers;
 
 enum Error : uint
 {
@@ -66,7 +66,13 @@ static this( )
     kOCoErrorTexts = assumeUnique( tmp );
 }
 
-extern (C) void ocoDebugPrint( Error what, Level level )
+extern (C) void ocoDebugPrint( uint what, uint level )
+{
+    DebugPrint( cast(Error)what, cast(Level)level );
+}
+
+// This function is exposed in our D interface
+void DebugPrint( Error what, Level level )
 {
     debug
     {
@@ -81,25 +87,19 @@ extern (C) void ocoDebugPrint( Error what, Level level )
         switch(level)
         {
         default:
-            oco.helpers.Log( msg );
+            oco.engine.helpers.Log( msg );
             
             break;
         case Level.Info:
-            oco.helpers.Info( msg );
+            oco.engine.helpers.Info( msg );
             
             break;
         case Level.Warn:
-            oco.helpers.Warn( msg );
+            oco.engine.helpers.Warn( msg );
             
             break;
         case Level.Error:
-            oco.helpers.Error( msg );
+            oco.engine.helpers.Error( msg );
         }
     }
-}
-
-// This function is exposed in our D interface
-void DebugPrint( Error what, Level level )
-{
-    ocoDebugPrint( what, level );
 }

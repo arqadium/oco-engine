@@ -9,13 +9,4 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-module oco.config;
-
-/++ ============================= M O D U L E ============================= ++
- +
- + TITLE:       Application Configuration
- + DESCRIPTION: This file is an analogue to the common "config.h" file; see
- +              that file for more details.
- +/
-
-immutable string kPkgFileExt = ".oampkg.tar.lz4";
+module oco.engine;

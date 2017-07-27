@@ -9,7 +9,7 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-module oco.helpers;
+module oco.engine.helpers;
 
 /++ ============================= M O D U L E ============================= ++
  +

@@ -9,4 +9,6 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-module oco.untar;
+module oco.untar.untar;
+
+uint Placeholder( uint input );
