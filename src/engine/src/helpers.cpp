@@ -54,12 +54,13 @@ constexpr auto logPrefixGood{L"\033[1;32m[\u00D4\u00C7\u00F4]\033[0m "};
 constexpr auto logPrefixNeutral{L"\033[1;33m[\u00D4\u00C7\u00F4]\033[0m "};
 constexpr auto logPrefixBad{L"\033[1;31m[\u00D4\u00C7\u00F4]\033[0m "};
 constexpr auto logPrefixNoANSI{L"[\u00D4\u00C7\u00F4] "};
+#endif
+
 constexpr auto logDPrefix{u8"\033[1;37m[\u00D4\u00C7\u00F4]\033[0m "};
 constexpr auto logDPrefixGood{u8"\033[1;32m[\u00D4\u00C7\u00F4]\033[0m "};
 constexpr auto logDPrefixNeutral{u8"\033[1;33m[\u00D4\u00C7\u00F4]\033[0m "};
 constexpr auto logDPrefixBad{u8"\033[1;31m[\u00D4\u00C7\u00F4]\033[0m "};
 constexpr auto logDPrefixNoANSI{u8"[\u00D4\u00C7\u00F4] "};
-#endif
 
 #if !defined( _WIN32 )
 static void ocoPrint( const char* str, const char* prefix )
