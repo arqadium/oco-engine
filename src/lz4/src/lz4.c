@@ -78,7 +78,7 @@
  * Prefer these methods in priority order (0 > 1 > 2)
  */
 #ifndef LZ4_FORCE_MEMORY_ACCESS /* can be defined externally, on command line \
-                                   \ \ \ \ \ \ \ \ \ \ \ \ for example */
+                                   \ \ \ \ \ \ \ \ \ \ \ \ \ for example */
 #if defined( __GNUC__ ) &&                                          \
     ( defined( __ARM_ARCH_6__ ) || defined( __ARM_ARCH_6J__ ) ||    \
         defined( __ARM_ARCH_6K__ ) || defined( __ARM_ARCH_6Z__ ) || \
@@ -98,9 +98,9 @@
  * Define this parameter if your target system or compiler does not support
  * hardware bit count
  */
-#if defined( _MSC_VER ) &&                                                  \
-    defined(                                                                \
-        _WIN32_WCE ) /* Visual Studio for Windows CE does not support \ \ \ \
+#if defined( _MSC_VER ) &&                                                    \
+    defined(                                                                  \
+        _WIN32_WCE ) /* Visual Studio for Windows CE does not support \ \ \ \ \
                         \ \ \ \ \ \ \ \ \ Hardware bit count */
 #define LZ4_FORCE_SW_BITCOUNT
 #endif

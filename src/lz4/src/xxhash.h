@@ -105,7 +105,8 @@ typedef enum { XXH_OK = 0, XXH_ERROR } XXH_errorcode;
 #else
 #define XXH_PUBLIC_API                                                        \
     static /* this version may generate warnings for unused static functions; \
-              \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ disable the relevant warning                 \
+              \                                                               \
+              \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ disable the relevant warning \                                                                            \
             */
 #endif
 #else
