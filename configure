@@ -16,7 +16,7 @@ try:
 except ImportError:
     from urllib import urlretrieve
 
-tcVersion = '0.1.4'
+tcVersion = '0.2.1'
 
 
 
@@ -65,15 +65,25 @@ def main(args):
         with open('lint.bat', 'w') as out:
             out.write('@ECHO OFF\nPYTHON ' + btoolOName + ' main.ini lint\n')
     else:
+        HEAD = u'\\033[1;38m[\u00D4\u00C7\u00F4]\\033[0m\\n\\033[1;38m[' + \
+            u'\u00D4\u00C7' '\u00F4]\\033[0m Arqadium Build Tool\\n' + \
+            u'\\033[1;38m[\u00D4\u00C7\u00F4]\\033[0m Part of the \u00D4' + \
+            u'\u00C7\u00F4 Working Set Toolchain\\n\\033[1;38m[' + \
+            u'\u00D4\u00C7\u00F4]\\033[0m Copyright \u00A9 2017 Arqadium.' + \
+            u' All rights reserved.\\n\\033[1;38m[\u00D4\u00C7\u00F4]' + \
+            u'\\033[0m\\n\\033[1;38m[\u00D4\u00C7\u00F4]\\033[0m ' + \
+            u'\\033[38mCleaning\\033[0m \\033[1;30mthe build ' + \
+            u'files\\033[0m...\\n\\033[1;38m[\u00D4\u00C7\u00F4]\\033[0m'
         with open('Makefile', 'w') as out:
-            out.write('.PHONY: debug release clean distclean lint\ndebug:' +
+            out.write('.PHONY: debug release clean distclean lint\n\ndebug:' +
                 '\n\t@python3 ' + btoolOName + ' main.ini debug\n\n' +
                 'release:\n\t@python3 ' + btoolOName + ' main.ini release' +
-                '\n\nclean:\n\t@rm -rf ' + buildDir + '/code\n\t@rm -f ' +
-                '$$(find ' + buildDir + ' -exec file {} \; | grep -i elf ' +
-                '| sed -e \'s/:.*//\')\n\ndistclean:\n\t@rm -rf ' + buildDir +
-                '\n\t@rm -f Makefile\n\nlint:\n\t@python3 ' + btoolOName +
-                ' main.ini lint\n')
+                '\n\nclean:\n\t@echo -e "' + HEAD + '"\n\t@rm -rf ' +
+                buildDir + '/code\n\t@rm -f $$(find ' + buildDir +
+                ' -exec file {} \; | grep -i elf | sed -e \'s/:.*//\')\n\n' +
+                'distclean:\n\t@echo -e "' + HEAD + '"\n\t@rm -rf ' +
+                buildDir + '\n\t@rm -f Makefile\n\nlint:\n\t@python3 ' +
+                btoolOName + ' main.ini lint\n')
             out.close()
 
 
