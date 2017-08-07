@@ -156,9 +156,8 @@
 /*-************************************
  *  Basic Types
  **************************************/
-#if defined( __cplusplus ) ||        \
-    ( defined( __STDC_VERSION__ ) && \
-        ( __STDC_VERSION__ >= 199901L ) /* C99 */ )
+#if defined( __cplusplus ) || ( defined( __STDC_VERSION__ ) && \
+                                  ( __STDC_VERSION__ >= 199901L ) /* C99 */ )
 #include <stdint.h>
 typedef uint8_t BYTE;
 typedef uint16_t U16;
@@ -849,7 +848,7 @@ FORCE_INLINE int LZ4_compress_generic( LZ4_stream_t_internal* const cctx,
                 *token  = ( RUN_MASK << ML_BITS );
                 for( ; len >= 255; len -= 255 )
                     *op++ = 255;
-                *op++ = (BYTE)len;
+                *op++     = (BYTE)len;
             }
             else
                 *token = ( BYTE )( litLength << ML_BITS );
@@ -964,7 +963,7 @@ _last_literals:
             *op++              = RUN_MASK << ML_BITS;
             for( ; accumulator >= 255; accumulator -= 255 )
                 *op++ = 255;
-            *op++ = (BYTE)accumulator;
+            *op++     = (BYTE)accumulator;
         }
         else
         {
@@ -1180,9 +1179,8 @@ static int LZ4_compress_destSize_generic( LZ4_stream_t_internal* const ctx,
                 forwardH = LZ4_hashPosition( forwardIp, tableType );
                 LZ4_putPositionOnHash( ip, h, ctx->hashTable, tableType, base );
 
-            } while(
-                ( ( tableType == byU16 ) ? 0
-                                         : ( match + MAX_DISTANCE < ip ) ) ||
+            } while( ( ( tableType == byU16 ) ? 0 : ( match + MAX_DISTANCE <
+                                                        ip ) ) ||
                 ( LZ4_read32( match ) != LZ4_read32( ip ) ) );
         }
 
@@ -1210,7 +1208,7 @@ static int LZ4_compress_destSize_generic( LZ4_stream_t_internal* const ctx,
                 *token       = ( RUN_MASK << ML_BITS );
                 for( ; len >= 255; len -= 255 )
                     *op++ = 255;
-                *op++ = (BYTE)len;
+                *op++     = (BYTE)len;
             }
             else
                 *token = ( BYTE )( litLength << ML_BITS );
@@ -1299,7 +1297,7 @@ _last_literals:
             *op++              = RUN_MASK << ML_BITS;
             for( ; accumulator >= 255; accumulator -= 255 )
                 *op++ = 255;
-            *op++ = (BYTE)accumulator;
+            *op++     = (BYTE)accumulator;
         }
         else
         {
@@ -1448,7 +1446,7 @@ static void LZ4_renormDictT( LZ4_stream_t_internal* LZ4_dict, const BYTE* src )
         LZ4_dict->currentOffset = 64 KB;
         if( LZ4_dict->dictSize > 64 KB )
             LZ4_dict->dictSize = 64 KB;
-        LZ4_dict->dictionary = dictEnd - LZ4_dict->dictSize;
+        LZ4_dict->dictionary   = dictEnd - LZ4_dict->dictSize;
     }
 }
 
@@ -1481,7 +1479,7 @@ int LZ4_compress_fast_continue( LZ4_stream_t* LZ4_stream,
                 streamPtr->dictSize = 64 KB;
             if( streamPtr->dictSize < 4 )
                 streamPtr->dictSize = 0;
-            streamPtr->dictionary = dictEnd - streamPtr->dictSize;
+            streamPtr->dictionary   = dictEnd - streamPtr->dictSize;
         }
     }
 
@@ -1631,7 +1629,7 @@ FORCE_INLINE int LZ4_decompress_generic( const char* const source,
     const BYTE* const lowPrefix, /* == dest when no prefix */
     const BYTE* const dictStart, /* only if dict==usingExtDict */
     const size_t dictSize /* note : = 0 if noDict */
-)
+    )
 {
     /* Local Variables */
     const BYTE* ip         = (const BYTE*)source;

@@ -82,15 +82,15 @@ extern "C" {
 #if defined( LZ4_DLL_EXPORT ) && ( LZ4_DLL_EXPORT == 1 )
 #define LZ4LIB_API __declspec( dllexport )
 #elif defined( LZ4_DLL_IMPORT ) && ( LZ4_DLL_IMPORT == 1 )
-#define LZ4LIB_API                                                       \
-    __declspec(                                                          \
-        dllimport ) /* It isn't required but allows to generate better \ \
-                       \ \ \ \ \                                       \ \
-                       \ \ \ \ \ \ \ \ \ \ \                                                                       \
-                       \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \                                                                       \
-                       code, \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \                                                                       \
-                       saving a function pointer load from the IAT and \ \
-                       \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ an    \ \ \ indirect                                                                \
+#define LZ4LIB_API                                                        \
+    __declspec(                                                           \
+        dllimport ) /* It isn't required but allows to generate better \  \
+                       \ \ \ \ \                                       \  \
+                       \ \ \ \ \ \ \ \ \ \ \                              \
+                       \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \                    \
+                       code, \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \          \
+                       saving a function pointer load from the IAT and \  \
+                       \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ an    \ \ \ indirect \
                        jump.*/
 #else
 #define LZ4LIB_API
@@ -101,11 +101,11 @@ extern "C" {
 #define LZ4_VERSION_MINOR                                                      \
     7 /* for new (non-breaking) interface capabilities \ \ \ \ \ \ \ \ \ \ \ \ \
        * \                                                                     \
-       * \ \                                                                             \
-       * \ \ \                                                                             \
-       * \ \ \ \                                                                             \
-       * \ \ \ \ \                                                                             \
-       * \ \ \ \ \ \                                                                             \
+       * \ \                                                                   \
+       * \ \ \                                                                 \
+       * \ \ \ \                                                               \
+       * \ \ \ \ \                                                             \
+       * \ \ \ \ \ \                                                           \
        */
 #define LZ4_VERSION_RELEASE 5 /* for tweaks, bug-fixes, or development */
 
@@ -453,9 +453,8 @@ LZ4LIB_API int LZ4_decompress_fast_usingDict( const char* source,
 #define LZ4_HASH_SIZE_U32 \
     ( 1 << LZ4_HASHLOG ) /* required as macro for static allocation */
 
-#if defined( __cplusplus ) ||        \
-    ( defined( __STDC_VERSION__ ) && \
-        ( __STDC_VERSION__ >= 199901L ) /* C99 */ )
+#if defined( __cplusplus ) || ( defined( __STDC_VERSION__ ) && \
+                                  ( __STDC_VERSION__ >= 199901L ) /* C99 */ )
 #include <stdint.h>
 
 typedef struct

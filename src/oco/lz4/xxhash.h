@@ -103,10 +103,10 @@ typedef enum { XXH_OK = 0, XXH_ERROR } XXH_errorcode;
 #elif defined( _MSC_VER )
 #define XXH_PUBLIC_API static __inline
 #else
-#define XXH_PUBLIC_API                                                        \
-    static /* this version may generate warnings for unused static functions; \
-              \                                                               \
-              \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ disable the relevant warning \                                                                            \
+#define XXH_PUBLIC_API                                                         \
+    static /* this version may generate warnings for unused static functions;  \
+              \                                                                \
+              \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ disable the relevant warning \ \
             */
 #endif
 #else

@@ -118,7 +118,7 @@ FORCE_INLINE void LZ4HC_Insert( LZ4HC_CCtx_internal* hc4, const BYTE* ip )
         U32 const h  = LZ4HC_hashPtr( base + idx );
         size_t delta = idx - hashTable[h];
         if( delta > MAX_DISTANCE )
-            delta = MAX_DISTANCE;
+            delta           = MAX_DISTANCE;
         DELTANEXTU16( idx ) = (U16)delta;
         hashTable[h]        = idx;
         idx++;
@@ -231,9 +231,9 @@ FORCE_INLINE int LZ4HC_InsertAndGetWiderMatch( LZ4HC_CCtx_internal* hc4,
             {
                 if( LZ4_read32( matchPtr ) == LZ4_read32( ip ) )
                 {
-                    int mlt = MINMATCH +
-                        LZ4_count(
-                            ip + MINMATCH, matchPtr + MINMATCH, iHighLimit );
+                    int mlt = MINMATCH + LZ4_count( ip + MINMATCH,
+                                             matchPtr + MINMATCH,
+                                             iHighLimit );
                     int back = 0;
 
                     while( ( ip + back > iLowLimit ) &&
@@ -314,9 +314,8 @@ FORCE_INLINE int LZ4HC_encodeSequence( const BYTE** ip,
     /* Encode Literal length */
     length = (int)( *ip - *anchor );
     token  = ( *op )++;
-    if( ( limitedOutputBuffer ) &&
-        ( ( *op + ( length >> 8 ) + length + ( 2 + 1 + LASTLITERALS ) ) >
-            oend ) )
+    if( ( limitedOutputBuffer ) && ( ( *op + ( length >> 8 ) + length +
+                                         ( 2 + 1 + LASTLITERALS ) ) > oend ) )
         return 1; /* Check output limit */
     if( length >= (int)RUN_MASK )
     {
@@ -325,7 +324,7 @@ FORCE_INLINE int LZ4HC_encodeSequence( const BYTE** ip,
         len    = length - RUN_MASK;
         for( ; len > 254; len -= 255 )
             *( *op )++ = 255;
-        *( *op )++ = (BYTE)len;
+        *( *op )++     = (BYTE)len;
     }
     else
         *token = ( BYTE )( length << ML_BITS );
@@ -564,7 +563,7 @@ static int LZ4HC_compress_hashChain( LZ4HC_CCtx_internal* const ctx,
                 if( ml > OPTIMAL_ML )
                     ml = OPTIMAL_ML;
                 if( ip + ml > start2 + ml2 - MINMATCH )
-                    ml = (int)( start2 - ip ) + ml2 - MINMATCH;
+                    ml     = (int)( start2 - ip ) + ml2 - MINMATCH;
                 correction = ml - (int)( start2 - ip );
                 if( correction > 0 )
                 {
@@ -595,10 +594,9 @@ static int LZ4HC_compress_hashChain( LZ4HC_CCtx_internal* const ctx,
     /* Encode Last Literals */
     {
         int lastRun = (int)( iend - anchor );
-        if( ( limit ) &&
-            ( ( (char*)op - dest ) + lastRun + 1 +
-                    ( ( lastRun + 255 - RUN_MASK ) / 255 ) >
-                (U32)maxOutputSize ) )
+        if( ( limit ) && ( ( (char*)op - dest ) + lastRun + 1 +
+                                 ( ( lastRun + 255 - RUN_MASK ) / 255 ) >
+                             (U32)maxOutputSize ) )
             return 0; /* Check output limit */
         if( lastRun >= (int)RUN_MASK )
         {
@@ -606,7 +604,7 @@ static int LZ4HC_compress_hashChain( LZ4HC_CCtx_internal* const ctx,
             lastRun -= RUN_MASK;
             for( ; lastRun > 254; lastRun -= 255 )
                 *op++ = 255;
-            *op++ = (BYTE)lastRun;
+            *op++     = (BYTE)lastRun;
         }
         else
             *op++ = ( BYTE )( lastRun << ML_BITS );
@@ -832,7 +830,7 @@ static int LZ4_compressHC_continue_generic( LZ4_streamHC_t* LZ4_streamHCPtr,
         if( ( sourceEnd > dictBegin ) && ( (const BYTE*)source < dictEnd ) )
         {
             if( sourceEnd > dictEnd )
-                sourceEnd = dictEnd;
+                sourceEnd    = dictEnd;
             ctxPtr->lowLimit = ( U32 )( sourceEnd - ctxPtr->dictBase );
             if( ctxPtr->dictLimit - ctxPtr->lowLimit < 4 )
                 ctxPtr->lowLimit = ctxPtr->dictLimit;

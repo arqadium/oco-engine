@@ -78,10 +78,9 @@ You can contact the author at :
 /*-************************************
  *  Basic Types
  **************************************/
-#if !defined( __VMS ) &&                 \
-    ( defined( __cplusplus ) ||          \
-        ( defined( __STDC_VERSION__ ) && \
-            ( __STDC_VERSION__ >= 199901L ) /* C99 */ ) )
+#if !defined( __VMS ) && ( defined( __cplusplus ) ||          \
+                             ( defined( __STDC_VERSION__ ) && \
+                                 ( __STDC_VERSION__ >= 199901L ) /* C99 */ ) )
 #include <stdint.h>
 typedef uint8_t BYTE;
 typedef uint16_t U16;
@@ -491,7 +490,7 @@ size_t LZ4F_compressBegin( LZ4F_cctx* cctxPtr,
     memset( &prefNull, 0, sizeof( prefNull ) );
     if( preferencesPtr == NULL )
         preferencesPtr = &prefNull;
-    cctxPtr->prefs = *preferencesPtr;
+    cctxPtr->prefs     = *preferencesPtr;
 
     /* ctx Management */
     {
@@ -506,7 +505,7 @@ size_t LZ4F_compressBegin( LZ4F_cctx* cctxPtr,
                 cctxPtr->lz4CtxPtr = (void*)LZ4_createStream( );
             else
                 cctxPtr->lz4CtxPtr = (void*)LZ4_createStreamHC( );
-            cctxPtr->lz4CtxLevel = tableID;
+            cctxPtr->lz4CtxLevel   = tableID;
         }
     }
 
@@ -549,10 +548,12 @@ size_t LZ4F_compressBegin( LZ4F_cctx* cctxPtr,
     *dstPtr++ = ( BYTE )( ( ( 1 & _2BITS ) << 6 ) /* Version('01') */
         +
         ( ( cctxPtr->prefs.frameInfo.blockMode & _1BIT ) << 5 ) /* Block mode */
-        + ( ( cctxPtr->prefs.frameInfo.contentChecksumFlag & _1BIT )
-              << 2 ) /* Frame checksum */
-        + ( ( cctxPtr->prefs.frameInfo.contentSize > 0 )
-              << 3 ) ); /* Frame content size */
+        +
+        ( ( cctxPtr->prefs.frameInfo.contentChecksumFlag & _1BIT )
+            << 2 ) /* Frame checksum */
+        +
+        ( ( cctxPtr->prefs.frameInfo.contentSize > 0 )
+            << 3 ) ); /* Frame content size */
     /* BD Byte */
     *dstPtr++ =
         ( BYTE )( ( cctxPtr->prefs.frameInfo.blockSizeID & _3BITS ) << 4 );
@@ -798,7 +799,8 @@ size_t LZ4F_compressUpdate( LZ4F_cctx* cctxPtr,
                 cctxPtr->maxBufferSize ) /* necessarily LZ4F_blockLinked &&
                                             lastBlockCompressed==fromTmpBuffer
                                             */
-        && !( cctxPtr->prefs.autoFlush ) )
+        &&
+        !( cctxPtr->prefs.autoFlush ) )
     {
         int realDictSize = LZ4F_localSaveDict( cctxPtr );
         cctxPtr->tmpIn   = cctxPtr->tmpBuff + realDictSize;
@@ -1379,8 +1381,8 @@ size_t LZ4F_decompress( LZ4F_dctx* dctxPtr,
     memset( &optionsNull, 0, sizeof( optionsNull ) );
     if( decompressOptionsPtr == NULL )
         decompressOptionsPtr = &optionsNull;
-    *srcSizePtr = 0;
-    *dstSizePtr = 0;
+    *srcSizePtr              = 0;
+    *dstSizePtr              = 0;
 
     /* programmed as a state machine */
 

@@ -125,7 +125,7 @@ FORCE_INLINE int LZ4HC_BinTree_InsertAndGetAllMatches( LZ4HC_CCtx_internal* ctx,
             const BYTE* vLimit = ip + ( dictLimit - matchIndex );
             match              = dictBase + matchIndex;
             if( vLimit > iHighLimit )
-                vLimit = iHighLimit;
+                vLimit  = iHighLimit;
             matchLength = LZ4_count( ip, match, vLimit );
             if( ( ip + matchLength == vLimit ) && ( vLimit < iHighLimit ) )
                 matchLength +=
@@ -431,10 +431,9 @@ static int LZ4HC_compress_optimal( LZ4HC_CCtx_internal* ctx,
     /* Encode Last Literals */
     {
         int lastRun = (int)( iend - anchor );
-        if( ( limit ) &&
-            ( ( (char*)op - dest ) + lastRun + 1 +
-                    ( ( lastRun + 255 - RUN_MASK ) / 255 ) >
-                (U32)maxOutputSize ) )
+        if( ( limit ) && ( ( (char*)op - dest ) + lastRun + 1 +
+                                 ( ( lastRun + 255 - RUN_MASK ) / 255 ) >
+                             (U32)maxOutputSize ) )
             return 0; /* Check output limit */
         if( lastRun >= (int)RUN_MASK )
         {
@@ -442,7 +441,7 @@ static int LZ4HC_compress_optimal( LZ4HC_CCtx_internal* ctx,
             lastRun -= RUN_MASK;
             for( ; lastRun > 254; lastRun -= 255 )
                 *op++ = 255;
-            *op++ = (BYTE)lastRun;
+            *op++     = (BYTE)lastRun;
         }
         else
             *op++ = ( BYTE )( lastRun << ML_BITS );
