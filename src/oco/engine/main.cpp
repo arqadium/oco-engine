@@ -43,26 +43,15 @@ using std::size_t;
 using std::string;
 using std::uintmax_t;
 using std::vector;
-#if defined( _WIN32 )
-using std::wstring;
-#endif // defined( _WIN32 )
 
 namespace
 {
 
-#ifdef _WIN32
-const vector<wstring> kStartupText{L"",
-    L"Project Mochi \u2013 \u00D4\u00C7\u00F4 Game Engine",
-    L"Copyright \u00A9 2017 Trinity Software. All rights reserved",
-    L""};
-constexpr auto kRogueException{L"Exception thrown! Exiting..."};
-#else
 const vector<string> kStartupText{u8"",
     u8"Project Mochi \u2013 \u00D4\u00C7\u00F4 Game Engine",
     u8"Copyright \u00A9 2017 Trinity Software. All rights reserved",
     u8""};
 constexpr auto kRogueException{u8"Exception thrown! Exiting..."};
-#endif
 
 constexpr auto kSampleImagePath{u8"sample.png"};
 
@@ -114,9 +103,7 @@ extern "C" int ocoMain( int ac, char* av[] )
     try
     {
 #ifdef _WIN32
-        _setmode( _fileno( stderr ), _O_U16TEXT );
-        _setmode( _fileno( stdin ), _O_U16TEXT );
-        _setmode( _fileno( stdout ), _O_U16TEXT );
+        // TODO: Add code to change codepage, maybe
         EnableANSIConsole( );
 #endif
 

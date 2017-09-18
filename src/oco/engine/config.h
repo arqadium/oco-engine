@@ -16,7 +16,6 @@
 ///
 
 #if !defined( __cplusplus )
-#if !defined( _WIN32 )
 
 #if __STDC_VERSION__ >= 201112L
 // if using C11
@@ -40,17 +39,6 @@
 
 #endif // __STDC_VERSION__ >= 201112L
 
-#else // defined( _WIN32 )
-
-#define CFG__PKG_FILE_EXT_L L".oampkg.tar.lz4"
-#define CFG__ERR_BAD_FILE_HEADER_L L"File header bytes are invalid"
-#define CFG__ERR_BAD_FILE_EXT_L L"File extension is invalid"
-#define CFG__ERR_BAD_FILE_STREAM_L L"Failed to open file (read)"
-#define CFG__ERR_BAD_CHECKSUM_L L"Checksumming failed"
-#define CFG__ERR_CANNOT_CLOSE_STREAM_L L"Cannot close file stream"
-
-#endif // !defined( _WIN32 )
-
 #elif __cplusplus <= 199711L && !defined( _MSC_VER )
 #error "The OCo Engine needs at least a C++11 compliant compiler"
 #else // defined( __cplusplus ) && __cplusplus > 199711L
@@ -66,19 +54,10 @@ namespace OCo
 namespace Config
 {
 
-#if !defined( _WIN32 )
-
 constexpr auto kPkgFileExt{u8".oampkg.tar.lz4"};
-
-#else // defined( _WIN32 )
-
-constexpr auto kPkgFileExt{L".oampkg.tar.lz4"};
-
-#endif // !defined( _WIN32 )
 
 namespace Err
 {
-#if !defined( _WIN32 )
 
 constexpr auto kBadFileHeader{u8"File header bytes are invalid"};
 constexpr auto kBadFileExt{u8"File extension is invalid"};
@@ -86,15 +65,6 @@ constexpr auto kBadFileStreamRead{u8"Failed to open file (read)"};
 constexpr auto kBadChecksum{u8"Checksumming failed"};
 constexpr auto kCannotCloseStream{u8"Cannot close file stream"};
 
-#else // defined( _WIN32 )
-
-constexpr auto kBadFileHeader{L"File header bytes are invalid"};
-constexpr auto kBadFileExt{L"File extension is invalid"};
-constexpr auto kBadFileStreamRead{L"Failed to open file (read)"};
-constexpr auto kBadChecksum{L"Checksumming failed"};
-constexpr auto kCannotCloseStream{L"Cannot close file stream"};
-
-#endif // !defined( _WIN32 )
 } // namespace Err
 } // namespace Config
 } // namespace OCo
