@@ -26,7 +26,6 @@ module oco.engine.ipsum;
 debug
 {
 static import oco.engine.helpers;
-static import oco.untar.untar;
 import std.conv : to;
 
 string[] kLoremIpsum;
@@ -73,7 +72,5 @@ extern (C) void ocoIpsum( )
     {
         oco.engine.helpers.Error( line );
     }
-    
-    oco.engine.helpers.Log( to!(string)(oco.untar.untar.Placeholder( 13 )) );
 }
 }

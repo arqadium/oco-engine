@@ -83,49 +83,5 @@ extern "C" double ocoVector2Cross( OCoVector2* vecA, OCoVector2* vecB );
 extern "C" void ocoVector2Normal( OCoVector2* vec );
 extern "C" void ocoVector2Normalise( OCoVector2* vec );
 
-namespace OCo
-{
-
-class Vector2
-{
-public:
-    double x, y;
-    
-    Vector2( )
-        : x( 0.0f )
-        , y( 0.0f ) { }
-    Vector2( double val )
-        : x( val )
-        , y( val ) { }
-    Vector2( double xVal, double yVal )
-        : x( xVal )
-        , y( yVal ) { }
-    
-    inline Vector2& operator-( )
-    {
-        this.x = -this.x;
-        this.y = -this.y;
-        
-        return *this;
-    }
-    
-    inline Vector2& operator=( const Vector2& vec )
-    {
-        this.x = vec.x;
-        this.y = vec.y;
-        
-        return *this;
-    }
-    
-    inline Vector2& operator=( const double& val )
-    {
-        this.x = val;
-        this.y = val;
-        
-        return *this;
-    }
-};
-
-}
-
+#endif // !defined( __cplusplus )
 #endif // !defined( INC__OCO_ENGINE_VECTOR2_H )

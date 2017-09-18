@@ -8,8 +8,8 @@
  *      file, then you can obtain one at <http://mozilla.org/MPL/2.0/>.      *
 \*****************************************************************************/
 
-#if !defined( INC__OCO_UNTAR_UNTAR_H )
-#define INC__OCO_UNTAR_UNTAR_H ( 1 )
+#if !defined( INC__OCO_OCOPKG_UNPACK_H )
+#define INC__OCO_OCOPKG_UNPACK_H ( 1 )
 
 #if !defined( __cplusplus )
 
@@ -109,4 +109,4 @@ std::uint_least32_t Placeholder( );
 } // namespace OCo
 
 #endif // !defined( __cplusplus )
-#endif // !defined( INC__OCO_UNTAR_UNTAR_H )
+#endif // !defined( INC__OCO_OCOPKG_UNPACK_H )

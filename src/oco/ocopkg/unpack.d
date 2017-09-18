@@ -46,8 +46,9 @@ struct EntryLZ4
     ushort type;
     string name;
 }
-
+/+
 Header getHeader( File ocoPkg )
 {
     
 }
++/
