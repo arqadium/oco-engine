@@ -34,13 +34,13 @@
 1. INTRODUCTION
 
     The "OCo Engine" is a new game engine under development at Arqadium, a
-US-based software development company. While there are several closed-source
-game development suites that can do what OCo does (perhaps even doing it
-better), we do not subscribe to the philosophy of commoditising software by
-itself, for several reasons. We have also found wonderful competitors to
-those suites such as the Godot Engine, but due to a multitude of concerns
-(explained below), we wish to develop our own engine in-house under a
-somewhat more copyleft licence than Godot's "Expat Licence".
+software development company. While there are several other game development
+suites that can do what OCo does, we would like to engineer something better
+from the ground up. We also want to take advantage of our corporate backbone,
+to provide a "best of both worlds" compromise between open source and closed-
+source software in the video game industry. While OCo will be used with our
+own titles in-house, we hope that someday it can stand as a product in its own
+right.
 
 
 
@@ -50,19 +50,18 @@ somewhat more copyleft licence than Godot's "Expat Licence".
 the engine's development - thank Microsoft Windows and its nonexistent Unicode
 support for corrupting an "En dash" into the accented letters "OCo". We have
 tried to reproduce this error many times, and have failed ever since then!
-But it is good enough for us - we'd rather focus our naming efforts on more
-relevant kinds of branding in our company.
+But it's enough - with dedication, it can be a unique and loved name and
+brand.
 
 
 
 3. PURPOSE AND SCOPE OF THIS PROJECT
 
-    The purpose of this project is to put together a barebones game engine for
-a Genesis-style 2D platformer codenamed "Project Mochi", currently targeting
-Microsoft Windows (non-UWP), GNU/Linux (Arch + Debian), and Android 4+. We are
-considering supporting the PlayStation 4 and Nintendo Switch, however any
-production for these consoles will not be crowd-sourced. No plans are being
-made to target the Xbox family, macOS, iOS, Nintendo 3DS, or Microsoft's UWP.
+    The purpose of this project is to put together a general-purpose game
+engine that can target PCs, mobile and consoles in a design-once + deploy-all
+development workflow. We will begin by building a foundation for 2D game
+development, gradually introducing hardware acceleration alongside more niche
+features, like shaders and parallelised physics.
 
     Eventually, we wish to expand the capabilities of the OCo Engine to
 shoulder our larger project in preproduction, Project Trinity. This will
@@ -72,49 +71,7 @@ apply just as well.
 
 
 
-4. "WHY NOT JUST USE GODOT?"
-
-While it's true that Godot meets more of our needs than any other engine,
-proving to be relatively stable, well-engineered, in active development, and
-licenced as Free Software, it can't do it all. Here are some reasons why we
-chose to forego using Godot and instead build our own engine:
-
- 1. Godot is general-purpose to a fault: this makes porting its functionality
-    privately to closed platforms (e.g. Nintendo Switch) a massive undertaking
-    for a company of our size. Some things we would leave out of the porting
-    process would break the experience of using Godot due to our differing
-    approaches to engine design; our approach is deliberately minimal so as to
-    save money.
- 2. Godot cannot publicly support NDA-stricken platforms by itself. It
-    probably isn't wise to wishfully wait for Nintendo or Sony to come to
-    their senses about software copyrights, so we aren't going to.
- 3. The major roadblocks to rolling our own engine (up-front cost, mostly) are
-    at least mitigated if not alleviated by our unique approach to making it
-    happen. Godot may be free, but on the flipside our software isn't insanely
-    expensive either thanks to compromise. Once we have more capital, private
-    ports become a realistic proposition.
-
-
-
-5. HOW WE ARE PROFITABLE AND UNRELIANT
-
-    Something that confuses many people at first glance of our operations is
-this: How on Earth is Arqadium able to make money selling FOSS video games?
-It's surprisingly simple, actually. What we do is finance a very small core
-team of software developers to keep cadence for progress, and invite in the
-general public to contribute and help build the software behind our games. The
-key difference between our modus operandum and that of many "Open Source
-Games" is this: we privately produce all of our game's assets, and get our
-return-on-investment through their copyright. Our programs are built to handle
-the assets we make, but the engine shall be compilable without anything but
-dummy assets for the sake of licence compliance. Lastly, our use of the
-Mozilla Public Licence enables us to privately finance extensions to our FOSS
-projects for platforms under NDA, such as the Nintendo Switch, if we want to
-later on.
-
-
-
-6. "WHY SHOULD I CONTRIBUTE?"
+4. "WHY SHOULD I CONTRIBUTE?"
 
     The incentives to contribute to our projects may not be immediately
 obvious to a developer. Indeed, there are even potential drawbacks to donating
@@ -140,3 +97,14 @@ Pros:-
  3. Contributing to our FOSS projects lends you the ability to interact with
     a paid core of developers working for a for-profit company; this can lend
     much-needed "real world" credibility to an otherwise more basic portfolio.
+
+5. ADDITIONAL INFORMATION
+
+    This README should provide a good general intro to our project. Other
+things that you should read as a developer are the COMPILING and perhaps the
+CONTRIBUTING files, or the COPYING file if you're into legal. There is also a
+list of substantial contributors in the AUTHORS file.
+
+    If you need to contact us, you can best reach us on our Discord guild, at
+<https://discord.gg/VbJAsHX>. There are press materials on our Twitter at
+<https://twitter.com/arqadium>, and our website, <https://www.arqadium.com/>.
