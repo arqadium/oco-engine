@@ -9,92 +9,667 @@
 # you can obtain one at <http://mozilla.org/MPL/2.0/>.
 #
 
-import os, zipfile
+import os, platform, re, sys, traceback
+from subprocess import CalledProcessError, run, PIPE
 
-try:
-    from urllib.request import urlretrieve
-except ImportError:
-    from urllib import urlretrieve
+COLOURS = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan',
+    'white']
+STYLES = ['bold', 'faint', 'italic', 'underline', 'blink', 'blink2',
+    'negative', 'concealed', 'crossed']
 
-tcVersion = '0.2.1'
-
-
-
-## ============================ F U N C T I O N ============================ #
-## void main(string[])
-##
-## TITLE:       Main
-## DESCRIPTION: Application entry point
-##
-## PARAMETER: list of command-line arguments, starting with the script name.
-##
-## RETURNS: Integer exit code; handed back to the operating system.
-def main(args):
-    buildDir = os.path.join(os.getcwd(), 'build')
-    btoolDir = os.path.join(buildDir, 'tools')
-    btoolOName = os.path.join(btoolDir, 'buildtool.py')
-    if not os.path.exists(btoolDir):
-        os.makedirs(btoolDir)
-        try:
-            urlretrieve(
-            'https://github.com/arqadium/oco-toolchain/archive/v' + tcVersion
-                + '.zip',
-                btoolDir + '.zip')
-        except Exception as ex:
-            print('Exception thrown while retrieving URL; check connection')
-            return
-        arc = zipfile.ZipFile(btoolDir + '.zip')
-        pyfiles = ['buildtool.py', 'colour.py', 'ini.py']
-        for pyfile in pyfiles:
-            btoolIn = arc.open('oco-toolchain-' + tcVersion + '/src/' +
-                pyfile)
-            btoolOut = open(os.path.join(btoolDir, pyfile), 'wb')
-            btoolOut.write(btoolIn.read())
-            btoolOut.close()
-            btoolIn.close()
-        arc.close()
-    if os.name == 'nt':
-        with open('make.bat', 'w') as out:
-            out.write('@ECHO OFF\nPYTHON ' + btoolOName + ' main.ini "%1"\n')
-        with open('clean.bat', 'wb') as out:
-            text = '@ECHO OFF\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Arqadium Build Tool\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Part of the \u00D4\u00C7\u00F4 Working Set Toolchain\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Copyright \u00A9 2017 Arqadium. All rights reserved.\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m \x1B[38mCleaning\x1B[0m \x1B[1;30mthe build files\x1B[0m...\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m\r\nDEL /s /q ' + buildDir + '\\code\\ 2>nul >nul\r\nRMDIR /s /q ' + buildDir + '\\code\\ 2>nul >nul\r\nDEL /s /q /f ' + buildDir + '\\*.exe 2>nul >nul\r\nDEL /s /q /f ' + buildDir + '\\*.dll 2>nul >nul\r\nDEL /s /q /f ' + buildDir + '\\*.lib 2>nul >nul\r\n'
-            out.write(text.encode('utf8'))
-        with open('distclean.bat', 'wb') as out:
-            text = '@ECHO OFF\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Arqadium Build Tool\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Part of the \u00D4\u00C7\u00F4 Working Set Toolchain\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Copyright \u00A9 2017 Arqadium. All rights reserved.\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m \x1B[1;4;38mCleaning\x1B[0m \x1B[1;30mthe build files\x1B[0m...\r\nECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m\r\nDEL /s /q ' + buildDir + '\\\r\nRMDIR /s /q ' + buildDir + '\\\r\n'
-            out.write(text.encode('utf8'))
-        with open('lint.bat', 'w') as out:
-            out.write('@ECHO OFF\nPYTHON ' + btoolOName + ' main.ini lint\n')
+def colour(s, fg=None, bg=None, style=None):
+    sgr = []
+    if fg:
+        if fg in COLOURS:
+            sgr.append(str(30 + COLOURS.index(fg)))
+        elif isinstance(fg, int) and 0 <= fg <= 255:
+            sgr.append('38;5;%d' % int(fg))
+        else:
+            raise Exception('Invalid colour "%s"' % fg)
+    if bg:
+        if bg in COLOURS:
+            sgr.append(str(40 + COLOURS.index(bg)))
+        elif isinstance(bg, int) and 0 <= bg <= 255:
+            sgr.append('48;5;%d' % bg)
+        else:
+            raise Exception('Invalid colour "%s"' % bg)
+    if style:
+        for st in style.split('+'):
+            if st in STYLES:
+                sgr.append(str(1 + STYLES.index(st)))
+            else:
+                raise Exception('Invalid style "%s"' % st)
+    if sgr:
+        prefix = '\x1b[' + ';'.join(sgr) + 'm'
+        suffix = '\x1b[0m'
+        return prefix + s + suffix
     else:
-        HEAD = u'\\033[1;38m[\u00D4\u00C7\u00F4]\\033[0m\\n\\033[1;38m[' + \
-            u'\u00D4\u00C7' '\u00F4]\\033[0m Arqadium Build Tool\\n' + \
-            u'\\033[1;38m[\u00D4\u00C7\u00F4]\\033[0m Part of the \u00D4' + \
-            u'\u00C7\u00F4 Working Set Toolchain\\n\\033[1;38m[' + \
-            u'\u00D4\u00C7\u00F4]\\033[0m Copyright \u00A9 2017 Arqadium.' + \
-            u' All rights reserved.\\n\\033[1;38m[\u00D4\u00C7\u00F4]' + \
-            u'\\033[0m\\n\\033[1;38m[\u00D4\u00C7\u00F4]\\033[0m ' + \
-            u'\\033[38mCleaning\\033[0m \\033[1;30mthe build ' + \
-            u'files\\033[0m...\\n\\033[1;38m[\u00D4\u00C7\u00F4]\\033[0m'
-        with open('Makefile', 'w') as out:
-            out.write('.PHONY: debug release clean distclean lint\n\ndebug:' +
-                '\n\t@python3 ' + btoolOName + ' main.ini debug\n\n' +
-                'release:\n\t@python3 ' + btoolOName + ' main.ini release' +
-                '\n\nclean:\n\t@echo -e "' + HEAD + '"\n\t@rm -rf ' +
-                buildDir + '/code\n\t@rm -f $$(find ' + buildDir +
-                ' -exec file {} \; | grep -i elf | sed -e \'s/:.*//\')\n\n' +
-                'distclean:\n\t@echo -e "' + HEAD + '"\n\t@rm -rf ' +
-                buildDir + '\n\t@rm -f Makefile\n\nlint:\n\t@python3 ' +
-                btoolOName + ' main.ini lint\n')
-            out.close()
+        return s
 
+def strip_colour(s):
+    return re.sub('\x1b\[.+?m', '', s)
 
+iniNullExpr = re.compile(r'\s*([#;].*)?')
+iniTruthy = re.compile(r't(rue)?|T(rue|RUE)?|y(es)?|Y(es|ES)?')
+iniFalsey = re.compile(r'f(alse)?|F(alse|ALSE)?|no?|N[Oo]?')
+iniNumeric = re.compile(r'[0-9]+|0[Xx][0-9A-Fa-f]+|0[Oo][0-7]+|0[Bb][01]+')
+iniBinary = re.compile(r'0[Bb][01]+')
+iniOctal = re.compile(r'0[Oo][0-7]+')
+iniDecimal = re.compile(r'[0-9]+')
+iniHexadecimal = re.compile(r'0[Xx][0-9A-Fa-f]+')
 
-## =========================== B O O T S T R A P =========================== #
-## Application bootstrapper, guarding against code execution upon import.
+class Config:
+    def _parseValue(data):
+        if iniTruthy.fullmatch(data):
+            return True
+        elif iniFalsey.fullmatch(data):
+            return False
+        ret = ['']
+        j = 0
+        quoting = False
+        quoted = False # Checked to allow strings of numeric look-alikes
+        dataLen = len(data)
+        # Values are treated as RFC 4180-compliant CSVs
+        for ch, i in enumerate(data):
+            if ch == ',':
+                if quoting == False:
+                    if quoted == False and iniNumeric.fullmatch(ret[j]):
+                        if iniDecimal.fullmatch(ret[j]):
+                            ret[j] = int(ret[j][2:], 2)
+                        elif iniHexadecimal.fullmatch(ret[j]):
+                            ret[j] = int(ret[j][2:], 16)
+                        elif iniDecimal.fullmatch(ret[j]):
+                            ret[j] = int(ret[j], 10)
+                        else:
+                            ret[j] = int(ret[j][2:], 8)
+                    j += 1
+                    ret.append('')
+                    quoted = False
+                else:
+                    ret[j] += ','
+            elif ch == '"':
+                quoted = True
+                # Check if quote is escaped
+                if i < dataLen - 1 and data[i + 1] == '"':
+                    if quoting == True:
+                        ret[j] += '"'
+                    # else, it's just an empty pair of quotes. Do nothing
+                # If it's not double, toggle quoting state
+                elif quoting == True:
+                    quoting = False
+                else: quoting = True
+            ret[j] += ch
+        return ret if j > 0 else ret[0]
+
+    def __init__(self, ini=None):
+        self._props = {'': {}}
+        if ini == None:
+            return
+        lines = ini.splitlines()
+        badLines = []
+        curSection = '' # Needs to be blank for "global" first section
+        for line in lines:
+            # Ignore comments and empty lines
+            if iniNullExpr.fullmatch(line) != None:
+                continue
+            # Bounds check and see if it's a section
+            if len(line) > 0 and line[0] == '[':
+                name = line.lstrip('[').rstrip(']').lower()
+                self._props[name] = {}
+                curSect = name
+            elif '=' in line:
+                pair = line.split('=', 1)
+                key = pair[0].lower()
+                if key in self._props[curSect]:
+                    badLines[len(badLines)] = line
+                    continue
+                self._props[curSect][key] = _parseValue(pair[1])
+            else:
+                badLines += [line]
+        if len(badLines) > 0:
+            raise Exception('Parsing failed due to malformed syntax; the ' +
+                'following lines were found to be invalid:\n' +
+                '\n'.join(badLines) + '\n')
+
+    def load(self, section, key):
+        if section not in self._props:
+            raise Exception('Section "' + section + '" does not exist')
+        elif key not in self._props[section]:
+            raise Exception('Key "' + key + '" not found in section "' +
+                section + '"')
+        return self._props[section][key]
+
+    def loadGlobal(self, key):
+        if key not in self._props['']:
+            raise Exception('Global key "' + key + '" does not exist')
+        return self._props[''][key]
+
+    def store(self, section, key, value):
+        if section not in self._props:
+            self._props[section] = {}
+        self._props[section][key] = value
+
+    def storeGlobal(self, key, value):
+        self._props[''][key] = value
+
+    def stringify(self):
+        def forItem(item):
+            if isinstance(item, bool):
+                if item == True:
+                    return '1'
+                else: return '0'
+            if iniTruthy.fullmatch(item):
+                return '"' + item + '"'
+            elif iniFalsey.fullmatch(item):
+                return '"' + item + '"'
+            ret = ''
+            quoted = False
+            for ch in item:
+                if ch == '"':
+                    quoted = True
+                    ret += '""'
+                    continue
+                elif ch == ',':
+                    quoted = True
+                ret += ch
+            if quoted:
+                ret = '"' + ret + '"'
+            return ret
+
+        def forList(arr):
+            ret = ''
+            for item in arr:
+                ret += forItem(item) + ','
+            return ret[:-1]
+
+        def makeLine(sect, key):
+            ret = key + '='
+            if isinstance(self._props[sect][key], str) == False:
+                ret += forList(self._props[sect][key])
+            else:
+                ret += forItem(self._props[sect][key])
+            ret += '\n'
+            return ret
+
+        ret = '\n'
+        for key in self._props['']:
+            if key.startswith('__'): continue
+            ret += makeLine('', key)
+        for sect in self._props:
+            if sect.startswith('__') or sect == '': continue
+            ret += '\n[' + sect + ']\n'
+            for key in self._props[sect]:
+                if key.startswith('__'): continue
+                ret += makeLine(sect, key)
+        return ret
+
+def which(program):
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+    return None
+
+def parsePhaseTexts(phases):
+    ret = {}
+    for phase in phases:
+        fg = 'white'
+        if phases[phase]['status'] == 'info':
+            fg = 'blue'
+        elif phases[phase]['status'] == 'pass':
+            fg = 'green'
+        elif phases[phase]['status'] == 'warn':
+            fg = 'yellow'
+        elif phases[phase]['status'] == 'error':
+            fg = 'red'
+        ret[phase] = colour(s=phases[phase]['text'], fg=fg,
+            style='bold+underline')
+    return ret
+
+def parseStepTexts(steps):
+    longest = 0
+    for key in steps:
+        textLen = len(steps[key]['text'])
+        if textLen > longest:
+            longest = textLen
+    ret = {}
+    for key in steps:
+        buff = ' ' * (longest - len(steps[key]['text']) + 1)
+        if steps[key]['style'] == None:
+            ret[key] = colour(
+                fg=steps[key]['fg'],
+                s=steps[key]['text']
+            ) + buff
+            continue
+        ret[key] = colour(
+            fg=steps[key]['fg'],
+            style=steps[key]['style'],
+            s=steps[key]['text']
+        ) + buff
+    return ret
+
+def getPrefixText(debug, status):
+    ret = colour(u'[\u00D4\u00C7\u00F4/', fg='white', style='bold')
+    if debug:
+        ret += colour(u'debug', fg='yellow', style='bold')
+    else:
+        ret += colour(u'release', fg='blue', style='bold')
+    if status != 'boot':
+        ret += u' '
+        if status == 'warn':
+            ret += colour(u'warn', fg='yellow', style='bold')
+        elif status == 'error':
+            ret += colour(u'error', fg='red', style='bold')
+        else:
+            ret += colour(u'info', fg='cyan', style='bold')
+    return ret + colour(u']', fg='white', style='bold')
+
+def getFlags():
+    ret = {}
+    ret['host'] = {}
+    ret['target'] = {}
+    if os.path.isfile('config.gen'):
+        cfg = Config(open('config.gen', 'r').read())
+        ret['host']['64bit'] = cfg.load('host', '64bit')
+        ret['host']['arch'] = cfg.load('host', 'arch')
+        ret['host']['os'] = cfg.load('host', 'os')
+        ret['target']['debug'] = cfg.load('target', 'debug')
+        ret['target']['64bit'] = cfg.load('target', '64bit')
+        ret['target']['arch'] = cfg.load('target', 'arch')
+        ret['target']['os'] = cfg.load('target', 'os')
+    # Get host system info
+    mach = platform.machine().lower()
+    # Is it 64-bit?
+    if mach.endswith('64'):
+        ret['host']['64bit'] = True
+    else:
+        # 32-bit is assumed as default
+        ret['host']['64bit'] = False
+    # CPU architecture
+    if mach.startswith('arm'):
+        ret['host']['arch'] = 'arm'
+    elif mach.startswith('ppc'):
+        ret['host']['arch'] = 'powerpc'
+    else:
+        # x86 is assumed as default
+        ret['host']['arch'] = 'x86'
+    # Operating system
+    if sys.platform.startswith('linux'):
+        ret['host']['os'] = 'linux'
+    elif sys.platform == 'win32' or sys.platform == 'cygwin':
+        ret['host']['os'] = 'nt'
+    elif sys.platform == 'darwin':
+        ret['host']['os'] = 'macos'
+    else:
+        # Need-to-know info that we can't infer
+        raise Exception('Unsupported host operating system')
+    # Remove script name for sort-through
+    args = sys.argv[1:]
+    # Set build debugging status
+    if 'release' in args:
+        ret['target']['debug'] = False
+    else:
+        # Debugging is on by default
+        ret['target']['debug'] = True
+    if '64bit' in args:
+        ret['target']['64bit'] = True
+    elif '32bit' in args:
+        ret['target']['64bit'] = False
+    else:
+        # Default is a native build
+        ret['target']['64bit'] = ret['host']['64bit']
+    # Set target CPU architecture
+    if 'arm' in args:
+        ret['target']['arch'] = 'arm'
+    elif 'powerpc' in args:
+        ret['target']['arch'] = 'powerpc'
+    elif 'x86' in args:
+        ret['target']['arch'] = 'x86'
+    else:
+        # Default is a native build
+        ret['target']['arch'] = ret['host']['arch']
+    if 'linux' in args:
+        ret['target']['os'] = 'linux'
+    elif 'nt' in args:
+        ret['target']['os'] = 'nt'
+    elif 'android' in args:
+        ret['target']['os'] = 'android'
+    elif 'macos' in args:
+        ret['target']['os'] = 'macos'
+    elif 'ios' in args:
+        ret['target']['os'] = 'ios'
+    else:
+        # Default is a native build
+        ret['target']['os'] = ret['host']['os']
+    from os import getcwd, path
+    ret['buildDir'] = path.join(getcwd(), 'build')
+    for arg in args:
+        if arg.startswith('build-dir='):
+            tmp = arg.split('=', 1)[1]
+            if tmp != '':
+                ret['buildDir'] = tmp
+    return ret
+
+flags = getFlags()
+
+def hostOSBranch(nt, nix, macos=None):
+    if flags['host']['os'] == 'nt':
+        return nt
+    elif macos == None:
+        return nix
+    elif flags['host']['os'] == 'macos':
+        return macos
+    else:
+        return nix
+
+def hostArchBranch(x86, arm, powerpc=None):
+    if flags['host']['arch'] == 'x86':
+        return x86
+    elif powerpc == None:
+        return arm
+    elif flags['host']['arch'] == 'powerpc':
+        return powerpc
+    else:
+        return arm
+
+def debugBranch(debug, release):
+    if flags['target']['debug'] == True:
+        return debug
+    return release
+
+txt = {
+    'prefix': {
+        'boot': getPrefixText(flags['target']['debug'], 'boot'),
+        'info': getPrefixText(flags['target']['debug'], 'info'),
+        'warn': getPrefixText(flags['target']['debug'], 'warn'),
+        'error': getPrefixText(flags['target']['debug'], 'error')
+    },
+    'step': parseStepTexts({
+        'asm': {
+            'fg': 'green',
+            'style': None,
+            'text': 'Assembling'
+        },
+        'c': {
+            'fg': 'cyan',
+            'style': None,
+            'text': 'Compiling'
+        },
+        'c++': {
+            'fg': 'blue',
+            'style': None,
+            'text': 'Compiling'
+        },
+        'd': {
+            'fg': 'magenta',
+            'style': None,
+            'text': 'Compiling'
+        },
+        'gfx': {
+            'fg': 'yellow',
+            'style': None,
+            'text': 'Transmogrifying'
+        },
+        'conv': {
+            'fg': 'yellow',
+            'style': 'bold',
+            'text': 'Converting'
+        },
+        'link': {
+            'fg': 'red',
+            'style': None,
+            'text': 'Linking'
+        },
+        'lint': {
+            'fg': 'black',
+            'style': 'bold',
+            'text': 'Linting'
+        }
+    }),
+    'phase': parsePhaseTexts({
+        'prep': {
+            'text': 'Preparing to build',
+            'status': 'info'
+        },
+        'start': {
+            'text': 'Build started',
+            'status': 'info'
+        },
+        'done': {
+            'text': 'Build finished cleanly',
+            'status': 'pass'
+        },
+        'warn': {
+            'text': 'Build finished with warnings',
+            'status': 'warn'
+        },
+        'error': {
+            'text': 'Build aborted with errors',
+            'status': 'error'
+        }
+    }),
+    'startup': [
+        u'',
+        u'Arqadium Build Tool',
+        u'Part of the \u00D4\u00C7\u00F4 Working Set Toolchain',
+        u'Copyright \u00A9 2017-2018 Arqadium. All rights reserved.',
+        u''
+    ]
+}
+
+def pprint(s=None, step=None, phase=None, status='info'):
+    if phase != None and phase in txt['phase']:
+        print(txt['prefix'][status] + ' ' + txt['phase'][phase])
+    elif s == None:
+        print(txt['prefix'][status])
+    elif step != None and step in txt['step']:
+        print(txt['prefix'][status] + ' ' + txt['step'][step] +
+            colour(s, fg='black', style='bold') + '...')
+    else:
+        print(txt['prefix'][status] + ' ' + s)
+
+def pprintTrace(step=None, phase=None, status='error'):
+    lines = traceback.format_exc().splitlines()
+    for line in lines:
+        pprint(s=line, step=step, phase=phase, status=status)
+
+makefileHeader = '\\033[1;38m[\u00D4\u00C7\u00F4]\\033[0m\\n\\033[1;38m[' + \
+    '\u00D4\u00C7' '\u00F4]\\033[0m Arqadium Build Tool\\n' + \
+    '\\033[1;38m[\u00D4\u00C7\u00F4]\\033[0m Part of the \u00D4' + \
+    '\u00C7\u00F4 Working Set Toolchain\\n\\033[1;38m[' + \
+    '\u00D4\u00C7\u00F4]\\033[0m Copyright \u00A9 2017 Arqadium.' + \
+    ' All rights reserved.\\n\\033[1;38m[\u00D4\u00C7\u00F4]' + \
+    '\\033[0m\\n\\033[1;38m[\u00D4\u00C7\u00F4]\\033[0m ' + \
+    '\\033[38mCleaning\\033[0m \\033[1;30mthe build ' + \
+    'files\\033[0m...\\n\\033[1;38m[\u00D4\u00C7\u00F4]\\033[0m'
+makefile = [
+    '.PHONY: debug release clean distclean lint',
+    '',
+    'debug:',
+    '\t@env python3 ./configure',
+    '',
+    'release:',
+    '\t@env python3 ./configure release',
+    '',
+    'clean:',
+    '\t@echo -e "' + makefileHeader + '"',
+    '\t@rm -rf ' + flags['buildDir'] + '/code',
+    '\t@rm -f $$(find ' + flags['buildDir'] + ' -exec file {} \; | ' +
+        'grep -i elf | sed -e \'s/:.*//\')',
+    '',
+    'distclean:'
+    '\t@echo -e "' + makefileHeader + '"',
+    '\t@rm -rf ' + flags['buildDir'],
+    '\t@rm -f Makefile',
+    '',
+    'lint:',
+    '\t@env python3 ./configure Lint'
+]
+
+builders = {
+    'make': [
+            '@ECHO OFF',
+            'PYTHON .\\configure'
+        ],
+    'clean': [
+            '@ECHO OFF',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Arqadium Build Tool',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Part of the ' +
+                '\u00D4\u00C7\u00F4 Working Set Toolchain',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Copyright \u00A9 ' +
+                '2017 Arqadium. All rights reserved.',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m \x1B[38mCleaning' +
+                '\x1B[0m \x1B[1;30mthe build files\x1B[0m...',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m',
+            'DEL /s /q "' + flags['buildDir'] + '\\code"\\ 2>nul >nul',
+            'RMDIR /s /q "' + flags['buildDir'] + '\\code"\\ 2>nul >nul',
+            'DEL /s /q /f "' + flags['buildDir'] + '\\*.exe" 2>nul >nul',
+            'DEL /s /q /f "' + flags['buildDir'] + '\\*.dll" 2>nul >nul',
+            'DEL /s /q /f "' + flags['buildDir'] + '\\*.lib" 2>nul >nul'
+        ],
+    'distclean': [
+            '@ECHO OFF',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Arqadium Build Tool',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Part of the ' +
+                '\u00D4\u00C7\u00F4 Working Set Toolchain',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m Copyright \u00A9 ' +
+                '2017 Arqadium. All rights reserved.',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m \x1B[38mCleaning' +
+                '\x1B[0m \x1B[1;30mthe build files\x1B[0m...',
+            'ECHO \x1B[1;38m[\u00D4\u00C7\u00F4]\x1B[0m',
+            'DEL /s /q "' + flags['buildDir'] + '"\\ 2>nul >nul',
+            'RMDIR /s /q "' + flags['buildDir'] + '"\\ 2>nul >nul',
+            'DEL /s /q /f lint.bat 2>nul >nul',
+            'DEL /s /q /f make.bat 2>nul >nul',
+            'DEL /s /q /f config.gen 2>nul >nul',
+            'DEL /s /q /f clean.bat 2>nul >nul',
+            'DEL /s /q /f distclean.bat 2>nul >nul'
+        ],
+    'lint': [
+            '@ECHO OFF',
+            'PYTHON .\\configure Lint'
+        ]
+}
+
+def genRc(proj, engine):
+    icon = ''
+    if proj['output']['type'] == 'executable':
+        icon = '0 ICON "'
+        if flags['target']['debug'] == True:
+            icon += proj['debugIcon'].replace('\\', '\\\\')
+        else: icon += proj['releaseIcon'].replace('\\', '\\\\')
+        icon += '"\n'
+    return os.linesep.join(['#include "config.h"',
+        '1 VERSIONINFO',
+        'FILEFLAGSMASK 0x3Fl',
+        'FILEFLAGS 0l',
+        'FILEOS 0x40004l',
+        'FILETYPE 1l',
+        'FILESUBTYPE 0l',
+        'BEGIN',
+        '  BLOCK "StringFileInfo"',
+        '  BEGIN',
+        '    BLOCK "040904E4"',
+        '    BEGIN',
+        '      VALUE "CompanyName", "Arqadium\\000"',
+        '      VALUE "FileDescription", "' + proj['desc'] + '\\000"',
+        '      VALUE "FileVersion", "' + proj['version'] + '\\000"',
+        '      VALUE "InternalName", "' + proj['moniker'] + '\\000"',
+        '      VALUE "LegalCopyright", "Copyright \\251 2017-2018 ' +
+            'Arqadium\\000"',
+        '      VALUE "OriginalFilename", "' + proj['moniker'] + '.exe\\000"',
+        '      VALUE "ProductName", "OCo Engine\\000"',
+        '      VALUE "ProductVersion", "' + engine['version'] + '\\000"',
+        '    END',
+        '  END',
+        '  BLOCK "VarFileInfo"',
+        '  BEGIN',
+        '    VALUE "Translation", 0x409, 1252',
+        '  END',
+        'END',
+        icon])
+
+def usingUTF8():
+    if os.name == 'nt':
+        if sys.stdout.encoding != 'cp65001':
+            run('chcp 65001', shell=True, check=True, stdout=PIPE)
+            return False
+    return True
+
+def main(args):
+    if not usingUTF8():
+        print('Changed the codepage to UTF-8. Please re-run this script.')
+        return 0
+    for line in txt['startup']:
+        pprint(line, status='boot')
+    if os.path.isfile('config.gen') == False:
+        # Behave like a configure script, generating Makefiles and such
+        # Generate the build config
+        with open('config.gen', 'w') as confFile:
+            config = Config()
+            config.storeGlobal('buildDir', flags['buildDir'])
+            config.store('host', '64bit', flags['host']['64bit'])
+            config.store('host', 'arch', flags['host']['arch'])
+            config.store('host', 'os', flags['host']['os'])
+            config.store('target', 'debug', flags['target']['debug'])
+            config.store('target', '64bit', flags['target']['64bit'])
+            config.store('target', 'arch', flags['target']['arch'])
+            config.store('target', 'os', flags['target']['os'])
+            confText = config.stringify()
+            if confText[-1] != '\n':
+                confText += '\n'
+            confFile.write(confText)
+        # Create the build scripts
+        if os.name == 'nt':
+            for builder in builders:
+                with open(builder + '.bat', 'wb') as out:
+                    out.write(os.linesep.join(builders[builder]).encode('utf8'))
+        else:
+            with open('Makefile', 'wb') as out:
+                out.write(os.linesep.join(makefile).encode('utf8'))
+        pprint('Configuration complete!')
+        pprint('Settings can be viewed/edited in the config.gen file.')
+        if os.name == 'nt':
+            pprint('Run .\\make to build the engine.')
+        else:
+            pprint('Run make to build the engine.')
+        pprint()
+        return 0
+    # Past here, building takes place.
+    return 0
+
 if __name__ == '__main__':
-    try:
-        from sys import argv, exit
-        main(argv)
-    except Exception as ex:
-        raise ex
-    except:
-        print('Rogue exception:', sys.exc_info()[0])
+    def _boot():
+        try:
+            ret = main(sys.argv)
+            if ret < 0:
+                ret -= 2
+            return ret
+        except Exception as ex:
+            pprint(status='error')
+            pprint(status='error', s='Exception thrown: {0}'.format(ex))
+            pprintTrace()
+            pprint(status='error')
+            pprint(status='error', phase='error')
+            return -2
+        except:
+            pprint(status='error')
+            pprint(status='error',
+                s='Rogue exception: {0}'.format(sys.exc_info()[0]))
+            pprintTrace()
+            pprint(status='error')
+            pprint(status='error', phase='error')
+            return -1
+    sys.exit(_boot())
