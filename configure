@@ -184,7 +184,7 @@ class Config:
 
         def makeLine(sect, key):
             ret = key + '='
-            if isinstance(self._props[sect][key], str) == False:
+            if isinstance(self._props[sect][key], list):
                 ret += forList(self._props[sect][key])
             else:
                 ret += forItem(self._props[sect][key])
