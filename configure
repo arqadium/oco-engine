@@ -9,7 +9,7 @@
 # you can obtain one at <http://mozilla.org/MPL/2.0/>.
 #
 
-import os, platform, re, sys, traceback
+import glob, os, platform, re, sys, traceback
 from subprocess import CalledProcessError, run, PIPE
 
 COLOURS = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan',
@@ -59,7 +59,7 @@ iniDecimal = re.compile(r'[0-9]+')
 iniHexadecimal = re.compile(r'0[Xx][0-9A-Fa-f]+')
 
 class Config:
-    def _parseValue(data):
+    def _parseValue(self, data):
         if iniTruthy.fullmatch(data):
             return True
         elif iniFalsey.fullmatch(data):
@@ -70,7 +70,7 @@ class Config:
         quoted = False # Checked to allow strings of numeric look-alikes
         dataLen = len(data)
         # Values are treated as RFC 4180-compliant CSVs
-        for ch, i in enumerate(data):
+        for i, ch in enumerate(data):
             if ch == ',':
                 if quoting == False:
                     if quoted == False and iniNumeric.fullmatch(ret[j]):
@@ -107,7 +107,7 @@ class Config:
             return
         lines = ini.splitlines()
         badLines = []
-        curSection = '' # Needs to be blank for "global" first section
+        curSect = '' # Needs to be blank for "global" first section
         for line in lines:
             # Ignore comments and empty lines
             if iniNullExpr.fullmatch(line) != None:
@@ -123,7 +123,7 @@ class Config:
                 if key in self._props[curSect]:
                     badLines[len(badLines)] = line
                     continue
-                self._props[curSect][key] = _parseValue(pair[1])
+                self._props[curSect][key] = self._parseValue(pair[1])
             else:
                 badLines += [line]
         if len(badLines) > 0:
@@ -132,6 +132,8 @@ class Config:
                 '\n'.join(badLines) + '\n')
 
     def load(self, section, key):
+        section = section.lower()
+        key = key.lower()
         if section not in self._props:
             raise Exception('Section "' + section + '" does not exist')
         elif key not in self._props[section]:
@@ -140,24 +142,26 @@ class Config:
         return self._props[section][key]
 
     def loadGlobal(self, key):
+        key = key.lower()
         if key not in self._props['']:
             raise Exception('Global key "' + key + '" does not exist')
         return self._props[''][key]
 
     def store(self, section, key, value):
+        section = section.lower()
         if section not in self._props:
             self._props[section] = {}
-        self._props[section][key] = value
+        self._props[section][key.lower()] = value
 
     def storeGlobal(self, key, value):
-        self._props[''][key] = value
+        self._props[''][key.lower()] = value
 
     def stringify(self):
         def forItem(item):
             if isinstance(item, bool):
                 if item == True:
-                    return '1'
-                else: return '0'
+                    return 'yes'
+                else: return 'no'
             if iniTruthy.fullmatch(item):
                 return '"' + item + '"'
             elif iniFalsey.fullmatch(item):
@@ -285,6 +289,8 @@ def getFlags():
         ret['target']['64bit'] = cfg.load('target', '64bit')
         ret['target']['arch'] = cfg.load('target', 'arch')
         ret['target']['os'] = cfg.load('target', 'os')
+        ret['buildDir'] = cfg.loadGlobal('buildDir')
+        return ret
     # Get host system info
     mach = platform.machine().lower()
     # Is it 64-bit?
@@ -467,7 +473,11 @@ txt = {
 
 def pprint(s=None, step=None, phase=None, status='info'):
     if phase != None and phase in txt['phase']:
-        print(txt['prefix'][status] + ' ' + txt['phase'][phase])
+        if s == None:
+            print(txt['prefix'][status] + ' ' + txt['phase'][phase])
+        else:
+            print(txt['prefix'][status] + ' ' + txt['phase'][phase] + ' for ' +
+                colour(s, fg='white', style='bold') + '...')
     elif s == None:
         print(txt['prefix'][status])
     elif step != None and step in txt['step']:
@@ -601,6 +611,61 @@ def genRc(proj, engine):
         'END',
         icon])
 
+def pathify(path):
+    if os.name == 'nt':
+        return path.replace('/', '\\')
+    return path
+
+class Project:
+    _exprC = re.compile(r'.+\.c$')
+    _exprCXX = re.compile(r'.+\.c(c|pp|xx|\+\+)$')
+    _exprD = re.compile(r'.+\.d$')
+
+    def __init__(self, projName, projCfg, slnCfg):
+        self.name = projName
+        self.prettyName = projCfg.loadGlobal('prettyName')
+        self.srcDir = pathify(slnCfg.loadGlobal('sourceRoot') + '/' +
+            slnCfg.loadGlobal('ident') + '/' + projName)
+        if os.path.isdir(self.srcDir) == False:
+            raise Exception('Source directory for project "' + self.name +
+            '" does not exist: "' + self.srcDir + '"')
+        srcGlob = os.path.join(self.srcDir, '**', '*')
+        self.cFiles = []
+        self.cxxFiles = []
+        self.dFiles = []
+        for item in glob.iglob(srcGlob, recursive=True):
+            if self._exprC.fullmatch(item):
+                self.cFiles.append(item)
+            elif self._exprCXX.fullmatch(item):
+                self.cxxFiles.append(item)
+            elif self._exprD.fullmatch(item):
+                self.dFiles.append(item)
+        self.incDirs = [pathify(slnCfg.loadGlobal('sourceRoot'))]
+
+    def build(self):
+        pprint(s=self.prettyName, phase='start')
+
+
+
+class Solution:
+    projects = []
+    def __init__(self, slnCfg):
+        _projects = slnCfg.loadGlobal('projects')
+        projects = None
+        if isinstance(_projects, str):
+            projects = [_projects]
+        else:
+            projects = _projects
+        for proj in projects:
+            self.projects.append(Project(proj, Config(open(os.path.join(
+                pathify(slnCfg.loadGlobal('sourceRoot')),
+                slnCfg.loadGlobal('ident'), proj, 'project.ini'), 'r',
+                encoding='utf-8').read()), slnCfg))
+
+    def build(self):
+        for proj in self.projects:
+            proj.build()
+
 def usingUTF8():
     if os.name == 'nt':
         if sys.stdout.encoding != 'cp65001':
@@ -648,6 +713,8 @@ def main(args):
         pprint()
         return 0
     # Past here, building takes place.
+    sol = Solution(Config(open('main.ini', 'r', encoding='utf-8').read()))
+    sol.build()
     return 0
 
 if __name__ == '__main__':
