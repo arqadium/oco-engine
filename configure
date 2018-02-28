@@ -276,6 +276,83 @@ def getPrefixText(debug, status):
             ret += colour(u'info', fg='cyan', style='bold')
     return ret + colour(u']', fg='white', style='bold')
 
+txt = {
+    'noPPC': 'Assembling PowerPC code is not supported',
+    'noARM': 'Assembling ARM code is not supported',
+    'prefix': {
+        'boot': getPrefixText(flags['target']['debug'], 'boot'),
+        'info': getPrefixText(flags['target']['debug'], 'info'),
+        'warn': getPrefixText(flags['target']['debug'], 'warn'),
+        'error': getPrefixText(flags['target']['debug'], 'error')
+    },
+    'step': parseStepTexts({
+        'c': {
+            'fg': 'green',
+            'style': None,
+            'text': 'Compiling'
+        },
+        'c++': {
+            'fg': 'cyan',
+            'style': None,
+            'text': 'Compiling'
+        },
+        'd': {
+            'fg': 'blue',
+            'style': None,
+            'text': 'Compiling'
+        },
+        'gfx': {
+            'fg': 'magenta',
+            'style': None,
+            'text': 'Transmogrifying'
+        },
+        'conv': {
+            'fg': 'yellow',
+            'style': 'bold',
+            'text': 'Converting'
+        },
+        'link': {
+            'fg': 'red',
+            'style': None,
+            'text': 'Linking'
+        },
+        'lint': {
+            'fg': 'black',
+            'style': 'bold',
+            'text': 'Linting'
+        }
+    }),
+    'phase': parsePhaseTexts({
+        'prep': {
+            'text': 'Preparing to build',
+            'status': 'info'
+        },
+        'start': {
+            'text': 'Build started',
+            'status': 'info'
+        },
+        'done': {
+            'text': 'Build finished cleanly',
+            'status': 'pass'
+        },
+        'warn': {
+            'text': 'Build finished with warnings',
+            'status': 'warn'
+        },
+        'error': {
+            'text': 'Build aborted with errors',
+            'status': 'error'
+        }
+    }),
+    'startup': [
+        u'',
+        u'Arqadium Build Tool',
+        u'Part of the \u00D4\u00C7\u00F4 Working Set Toolchain',
+        u'Copyright \u00A9 2017-2018 Arqadium. All rights reserved.',
+        u''
+    ]
+}
+
 def getFlags():
     ret = {}
     ret['host'] = {}
@@ -366,6 +443,70 @@ def getFlags():
 
 flags = getFlags()
 
+def getCFlags(cxx=False):
+    ret = []
+    if flags['host']['os'] == 'nt':
+        ret += ['/bigobj', '/c', '/GF', '/nologo', '/Za', '/EHsc']
+        if cxx == True:
+            ret += ['/std:c++14']
+        if flags['target']['arch'] == 'powerpc':
+            raise Exception(txt['noPPC'])
+        elif flags['target']['arch'] == 'arm':
+            ret += ['/D_ARCH=arm']
+        else:
+            ret += ['/D_ARCH=x86']
+        if flags['target']['64bit'] == True:
+            ret += ['/arch:AVX', '/D_64BIT=1']
+        else:
+            ret += ['/arch:SSE2', '/D_64BIT=0']
+        if flags['target']['debug'] == True:
+            ret += ['/Od', '/W3', '/UNDEBUG']
+        else:
+            ret += ['/GLdwy', '/O2t', '/w', '/DNDEBUG=1']
+    else:
+        ret += ['-c', '-fPIC', '-mtune=generic', '-mfpmath=sse', '-pipe']
+        if cxx == False:
+            ret += ['-x', 'c', '-ansi']
+        else:
+            ret += ['-x', 'c++', '-std=c++14']
+        if flags['target']['arch'] == 'powerpc':
+            ret += ['-D_ARCH=powerpc']
+        elif flags['target']['arch'] == 'arm':
+            ret += ['-D_ARCH=arm']
+        else:
+            ret += ['-D_ARCH=x86']
+        if flags['target']['64bit'] == True:
+            ret += ['-m64', '-march=sandybridge', '-mavx', '-D_64BIT=1']
+        else:
+            ret += ['-m32', '-march=pentium4', '-D_64BIT=0']
+        if flags['target']['debug'] == True:
+            ret += ['-UNDEBUG']
+        else:
+            ret += ['-DNDEBUG=1']
+    return ret
+
+def getDFlags():
+    if flags['target']['arch'] != 'x86':
+        raise Exception('Compiling D code is not supported outside x86')
+    ret = ['-color', '-c']
+    if flags['target']['debug'] == True:
+        ret += ['-debug', '-g', '-gs', '-boundscheck=on', '-w']
+    else:
+        ret += ['-boundscheck=off', '-O', '-release', '-wi']
+    if flags['target']['64bit'] == True:
+        ret += ['-m64', '-mcpu=avx']
+    else:
+        ret += ['-m32', '-mcpu=baseline']
+    return ret
+
+cFlags = getCFlags()
+cxxFlags = getCFlags(cxx=True)
+dFlags = getDFlags()
+
+cc = 'cl.exe' if os.name == 'nt' else 'gcc'
+cxx = 'cl.exe' if os.name == 'nt' else 'g++'
+dc = 'dmd.exe' if os.name == 'nt' else 'dmd'
+
 def hostOSBranch(nt, nix, macos=None):
     if flags['host']['os'] == 'nt':
         return nt
@@ -390,86 +531,6 @@ def debugBranch(debug, release):
     if flags['target']['debug'] == True:
         return debug
     return release
-
-txt = {
-    'prefix': {
-        'boot': getPrefixText(flags['target']['debug'], 'boot'),
-        'info': getPrefixText(flags['target']['debug'], 'info'),
-        'warn': getPrefixText(flags['target']['debug'], 'warn'),
-        'error': getPrefixText(flags['target']['debug'], 'error')
-    },
-    'step': parseStepTexts({
-        'asm': {
-            'fg': 'green',
-            'style': None,
-            'text': 'Assembling'
-        },
-        'c': {
-            'fg': 'cyan',
-            'style': None,
-            'text': 'Compiling'
-        },
-        'c++': {
-            'fg': 'blue',
-            'style': None,
-            'text': 'Compiling'
-        },
-        'd': {
-            'fg': 'magenta',
-            'style': None,
-            'text': 'Compiling'
-        },
-        'gfx': {
-            'fg': 'yellow',
-            'style': None,
-            'text': 'Transmogrifying'
-        },
-        'conv': {
-            'fg': 'yellow',
-            'style': 'bold',
-            'text': 'Converting'
-        },
-        'link': {
-            'fg': 'red',
-            'style': None,
-            'text': 'Linking'
-        },
-        'lint': {
-            'fg': 'black',
-            'style': 'bold',
-            'text': 'Linting'
-        }
-    }),
-    'phase': parsePhaseTexts({
-        'prep': {
-            'text': 'Preparing to build',
-            'status': 'info'
-        },
-        'start': {
-            'text': 'Build started',
-            'status': 'info'
-        },
-        'done': {
-            'text': 'Build finished cleanly',
-            'status': 'pass'
-        },
-        'warn': {
-            'text': 'Build finished with warnings',
-            'status': 'warn'
-        },
-        'error': {
-            'text': 'Build aborted with errors',
-            'status': 'error'
-        }
-    }),
-    'startup': [
-        u'',
-        u'Arqadium Build Tool',
-        u'Part of the \u00D4\u00C7\u00F4 Working Set Toolchain',
-        u'Copyright \u00A9 2017-2018 Arqadium. All rights reserved.',
-        u''
-    ]
-}
 
 def pprint(s=None, step=None, phase=None, status='info'):
     if phase != None and phase in txt['phase']:
@@ -642,10 +703,17 @@ class Project:
                 self.dFiles.append(item)
         self.incDirs = [pathify(slnCfg.loadGlobal('sourceRoot'))]
 
+    def compileC(self, srcFile):
+        if flags['target']['arch'] == 'powerpc':
+            raise Exception(txt['noPPC'])
+        elif flags['target']['arch'] == 'arm':
+            raise Exception(txt['noARM'])
+        else:
+            # TODO: Add output flags
+            subprocess.run([cc] + cFlags, shell=True, stdout=subprocess.PIPE)
+
     def build(self):
         pprint(s=self.prettyName, phase='start')
-
-
 
 class Solution:
     projects = []
