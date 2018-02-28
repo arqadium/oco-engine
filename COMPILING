@@ -14,9 +14,9 @@ Prerequisites:-
         3. Python 3.5+ (notes 1 & 2)
         4. Digital Mars D compiler (DMD) 2.074.1+ (note 1)
         5. Microsoft Visual C++ compiler (via Visual Studio 2017)
-        6. CPU with AVX (not AVX2) support (note 3)
-        7. CPU with SSE2 support (note 4)
-        8. External dependency binaries and headers (note 5)
+        6. CPU with AVX support (notes 3 & 4)
+        7. CPU with SSE2 support (note 5)
+        8. External dependency binaries and headers (note 6)
     Recommended (optional):
         1. Console2 by Marko Bozikovic, for readability of coloured output
         2. Windows PowerShell instead of CMD
@@ -24,10 +24,12 @@ Prerequisites:-
         4. dfmt, for linting D code
     Notes:
         1. Program must be in your system PATH variable
-        2. Ensure version 3.5+ by running `> python --version` beforehand
+        2. Ensure version 3.5+ by running `python --version` beforehand
         3. Only applicable when building for 64-bit x86 platforms
-        4. All 64-bit x86 CPUs have this; check if your SKU is 32-bit only
-        5. We keep a ready-set archive of these with the proper directory
+        4. Only original AVX instructions are required; AVX2 is optional
+        5. Only applicable when building for 32-bit x86 platforms; 64-bit x86
+           CPUs always support this
+        6. We keep a ready-set archive of these with the proper directory
            hierarchy, and will have a toolchain program for independent
            builds of this soon
 
@@ -40,6 +42,24 @@ Output binaries should be in the build\ directory.
 
 
 2. GNU/LINUX
+
+Prerequisites:-
+    Required:
+        1. Kernel 2.6.27 or newer
+        2. Bash-compatible shell
+        3. Python 3.5+
+        4. Digital Mars D Compiler (DMD)
+        5. GNU Compiler Collection, for C and C++
+        6. CPU with AVX support (notes 1 & 2)
+        7. CPU with SSE2 support (note 3)
+    Recommended (optional):
+        1. clang-format, for linting C and C++ code
+        2. dfmt, for linting D code
+    Notes:
+        1. Only applicable when building for 64-bit x86 platforms
+        2. Only original AVX instructions are required; AVX2 is optional
+        3. Only applicable when building for 32-bit x86 platforms; 64-bit x86
+           CPUs always support this
 
 Two-step build:
   $ ./configure
