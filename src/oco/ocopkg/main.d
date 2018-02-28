@@ -13,7 +13,7 @@ module oco.ocopkg.main;
 
 version(Windows)
 {
-
+/+
 import core.sys.windows.windows;
 import core.sys.windows.dll;
 
@@ -44,5 +44,5 @@ BOOL DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pvReserved)
     default:
     }
     return true;
-}
+} +/
 }

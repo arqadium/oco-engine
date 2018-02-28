@@ -25,11 +25,15 @@ bool ansiConsoleEnabled{true};
 #endif
 }
 
-void ocoEnableANSIConsole( ) { OCo::EnableANSIConsole( ); }
+void ocoEnableUnicodeConsole( )
+{
+#if defined( _WIN32 )
+    SetConsoleCP( 65001 );
+    SetConsoleOutputCP( 65001 );
+#endif // defined( _WIN32 )
+}
 
-bool ocoSupportsANSI( ) { return ansiConsoleEnabled; }
-
-void OCo::EnableANSIConsole( )
+void ocoEnableANSIConsole( )
 {
 #ifdef _WIN32
     // Set output mode to handle virtual terminal sequences
@@ -56,4 +60,4 @@ void OCo::EnableANSIConsole( )
 #endif
 }
 
-bool OCo::SupportsANSI( ) { return ansiConsoleEnabled; }
+bool ocoSupportsANSI( ) { return ansiConsoleEnabled; }

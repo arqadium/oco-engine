@@ -23,18 +23,12 @@ extern "C" {
 #include <string>
 #include <vector>
 
-#include <SFML/Graphics.hpp>
-#include <boost/locale.hpp>
-
 #include "helpers.h"
 #include "ipsum.h"
 #include "win32.h"
-
-using OCo::EnableANSIConsole;
-using OCo::Helpers::Error;
-using OCo::Helpers::Log;
+/*
 using sf::RenderWindow;
-using sf::VideoMode;
+using sf::VideoMode; */
 using std::array;
 using std::endl;
 using std::exception;
@@ -43,47 +37,16 @@ using std::size_t;
 using std::string;
 using std::uintmax_t;
 using std::vector;
-#if defined( _WIN32 )
-using std::wstring;
-#endif // defined( _WIN32 )
 
 namespace
 {
 
-#ifdef _WIN32
-const vector<wstring> kStartupText{L"",
-    L"Project Mochi \u2013 \u00D4\u00C7\u00F4 Game Engine",
-    L"Copyright \u00A9 2017 Trinity Software. All rights reserved",
-    L""};
-constexpr auto kRogueException{L"Exception thrown! Exiting..."};
-#else
-const vector<string> kStartupText{u8"",
-    u8"Project Mochi \u2013 \u00D4\u00C7\u00F4 Game Engine",
-    u8"Copyright \u00A9 2017 Trinity Software. All rights reserved",
-    u8""};
-constexpr auto kRogueException{u8"Exception thrown! Exiting..."};
-#endif
-
-constexpr auto kSampleImagePath{u8"sample.png"};
-
-vector<string> parseArgs( int ac, char* av[] )
-{
-    vector<string> ret( ac );
-
-    for( int i = 0; i < ac; ++i )
-    {
-        ret.at( i ) = av[i];
-    }
-
-    return ret;
-}
-
-void MainLoop( vector<string> args )
-{
+void MainLoop( int ac, char* av[] )
+{ /*
     RenderWindow window{VideoMode{640, 360}, u8"Project Mochi!"};
     sf::Texture img;
 
-    img.loadFromFile( kSampleImagePath );
+    img.loadFromFile( u8"sample.png" );
 
     sf::Sprite spr{img};
 
@@ -102,7 +65,7 @@ void MainLoop( vector<string> args )
         window.clear( );
         window.draw( spr );
         window.display( );
-    }
+    } */
 #if !defined( NDEBUG )
     ocoIpsum( );
 #endif // !defined( NDEBUG )
@@ -113,23 +76,21 @@ extern "C" int ocoMain( int ac, char* av[] )
 {
     try
     {
-#ifdef _WIN32
-        _setmode( _fileno( stderr ), _O_U16TEXT );
-        _setmode( _fileno( stdin ), _O_U16TEXT );
-        _setmode( _fileno( stdout ), _O_U16TEXT );
-        EnableANSIConsole( );
-#endif
+        // Only functional under Windows NT
+        ocoEnableUnicodeConsole( );
+        ocoEnableANSIConsole( );
 
-        for( auto& line : kStartupText )
-        {
-            Log( line );
-        }
+        // Print boot text
+        ocoLog( u8"" );
+        ocoLog( u8"Project Mochi \u2013 \u00D4\u00C7\u00F4 Game Engine" );
+        ocoLog( u8"Copyright \u00A9 2017 Arqadium. All rights reserved" );
+        ocoLog( u8"" );
 
-        MainLoop( parseArgs( ac, av ) );
+        MainLoop( ac, av );
     }
     catch( ... )
     {
-        Error( kRogueException );
+        ocoError( u8"Rogue Exception thrown! Exiting..." );
 
         return 1;
     }

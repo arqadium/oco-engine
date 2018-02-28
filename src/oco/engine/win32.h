@@ -19,6 +19,7 @@
 
 #include <stdbool.h>
 
+void ocoEnableUnicodeConsole( void );
 void ocoEnableANSIConsole( void );
 bool ocoSupportsANSI( void );
 
@@ -30,15 +31,9 @@ bool ocoSupportsANSI( void );
 /// C++11 INTERFACE
 ///
 
+extern "C" void ocoEnableUnicodeConsole( );
 extern "C" void ocoEnableANSIConsole( );
 extern "C" bool ocoSupportsANSI( );
-
-namespace OCo
-{
-
-void EnableANSIConsole( );
-bool SupportsANSI( );
-}
 
 #endif // !defined( __cplusplus )
 #endif // !defined( INC__OCO_ENGINE_WIN32_H )

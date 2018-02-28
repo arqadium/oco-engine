@@ -23,27 +23,27 @@ module oco.engine.helpers;
 import std.string : toStringz;
 
 // These are implemented in helpers.cpp
-extern (C) bool ocoLog_D( const char* str );
-extern (C) bool ocoInfo_D( const char* str );
-extern (C) bool ocoWarn_D( const char* str );
-extern (C) bool ocoError_D( const char* str );
+extern (C) bool ocoLog( const char* str );
+extern (C) bool ocoInfo( const char* str );
+extern (C) bool ocoWarn( const char* str );
+extern (C) bool ocoError( const char* str );
 
 bool Log( string str )
 {
-    return ocoLog_D( toStringz( str ) );
+    return ocoLog( toStringz( str ) );
 }
 
 bool Info( string str )
 {
-    return ocoInfo_D( toStringz( str ) );
+    return ocoInfo( toStringz( str ) );
 }
 
 bool Warn( string str )
 {
-    return ocoWarn_D( toStringz( str ) );
+    return ocoWarn( toStringz( str ) );
 }
 
 bool Error( string str )
 {
-    return ocoError_D( toStringz( str ) );
+    return ocoError( toStringz( str ) );
 }

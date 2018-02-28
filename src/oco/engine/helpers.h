@@ -17,17 +17,10 @@
 /// C INTERFACE
 ///
 
-#if !defined( _WIN32 )
 void ocoLog( const char* str );
 void ocoInfo( const char* str );
 void ocoWarn( const char* str );
 void ocoError( const char* str );
-#else // defined( _WIN32 )
-void ocoLog( const wchar_t* str );
-void ocoInfo( const wchar_t* str );
-void ocoWarn( const wchar_t* str );
-void ocoError( const wchar_t* str );
-#endif // !defined( _WIN32 )
 
 #elif __cplusplus <= 199711L && !defined( _MSC_VER )
 #error "The OCo Engine needs at least a C++11 compliant compiler"
@@ -39,20 +32,11 @@ void ocoError( const wchar_t* str );
 
 #include <array>
 #include <cstdint>
-#include <string>
-#include <vector>
 
-#if !defined( _WIN32 )
 extern "C" void ocoLog( const char* str );
 extern "C" void ocoInfo( const char* str );
 extern "C" void ocoWarn( const char* str );
 extern "C" void ocoError( const char* str );
-#else // defined( _WIN32 )
-extern "C" void ocoLog( const wchar_t* str );
-extern "C" void ocoInfo( const wchar_t* str );
-extern "C" void ocoWarn( const wchar_t* str );
-extern "C" void ocoError( const wchar_t* str );
-#endif // !defined( _WIN32 )
 
 namespace OCo
 {
@@ -62,82 +46,31 @@ namespace Helpers
 namespace ANSI
 {
 
-enum Codes : std::uint32_t
-{
-    None      = 0x0,
-    Bold      = 0x1,
-    Underline = 0x2,
-    Blink     = 0x4,
-    Reverse   = 0x8,
-    Invisible = 0x10,
-    BlackFG   = 0x20,
-    WhiteFG   = 0x40,
-    RedFG     = 0x80,
-    GreenFG   = 0x100,
-    BlueFG    = 0x200,
-    CyanFG    = 0x400,
-    YellowFG  = 0x800,
-    MagentaFG = 0x1000,
-    BlackBG   = 0x2000,
-    WhiteBG   = 0x4000,
-    RedBG     = 0x8000,
-    GreenBG   = 0x10000,
-    BlueBG    = 0x20000,
-    CyanBG    = 0x40000,
-    YellowBG  = 0x80000,
-    MagentaBG = 0x100000,
-};
+constexpr auto kANSIReset{u8"\033[0m"};
+constexpr auto kANSIStart{u8"\033["};
+constexpr auto kANSISep{u8";"};
+constexpr auto kANSIEnd{u8"m"};
+constexpr auto kANSICodeBold{u8"1"};
+constexpr auto kANSICodeUnderline{u8"4"};
+constexpr auto kANSICodeBlink{u8"5"};
+constexpr auto kANSICodeReverse{u8"7"};
+constexpr auto kANSICodeBlackF{u8"30"};
+constexpr auto kANSICodeWhiteF{u8"37"};
+constexpr auto kANSICodeRedF{u8"31"};
+constexpr auto kANSICodeGreenF{u8"32"};
+constexpr auto kANSICodeBlueF{u8"34"};
+constexpr auto kANSICodeCyanF{u8"36"};
+constexpr auto kANSICodeYellowF{u8"33"};
+constexpr auto kANSICodeMagentaF{u8"35"};
+constexpr auto kANSICodeBlackB{u8"40"};
+constexpr auto kANSICodeWhiteB{u8"47"};
+constexpr auto kANSICodeRedB{u8"41"};
+constexpr auto kANSICodeGreenB{u8"42"};
+constexpr auto kANSICodeBlueB{u8"44"};
+constexpr auto kANSICodeCyanB{u8"46"};
+constexpr auto kANSICodeYellowB{u8"43"};
+constexpr auto kANSICodeMagentaB{u8"45"};
 } // namespace ANSI
-
-constexpr std::uint32_t singleBit( std::uint8_t which )
-{
-    if( which > 31 )
-    {
-        return 0;
-    }
-
-    return 1 << which;
-}
-
-#if !defined( _WIN32 )
-void Log( std::string str );
-void Log( const char* str );
-void Log( std::vector<std::string> str );
-
-void Info( std::string str );
-void Info( const char* str );
-void Info( std::vector<std::string> str );
-
-void Warn( std::string str );
-void Warn( const char* str );
-void Warn( std::vector<std::string> str );
-
-void Error( std::string str );
-void Error( const char* str );
-void Error( std::vector<std::string> str );
-
-std::string ANSIFormat( std::string str, std::uint32_t opts );
-std::string ANSIFormat( const char* str, std::uint32_t opts );
-#else // defined( _WIN32 )
-void Log( std::wstring str );
-void Log( const wchar_t* str );
-void Log( std::vector<std::wstring> str );
-
-void Info( std::wstring str );
-void Info( const wchar_t* str );
-void Info( std::vector<std::wstring> str );
-
-void Warn( std::wstring str );
-void Warn( const wchar_t* str );
-void Warn( std::vector<std::wstring> str );
-
-void Error( std::wstring str );
-void Error( const wchar_t* str );
-void Error( std::vector<std::wstring> str );
-
-std::wstring ANSIFormat( std::wstring str, std::uint32_t opts );
-std::wstring ANSIFormat( const wchar_t* str, std::uint32_t opts );
-#endif // !defined( _WIN32 )
 
 inline std::uint16_t charArrToU16( std::array<char, 2> bytes )
 {
