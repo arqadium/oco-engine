@@ -9,7 +9,7 @@
 # you can obtain one at <http://mozilla.org/MPL/2.0/>.
 #
 
-import glob, os, platform, re, sys, traceback
+import glob, os, pathlib, platform, re, sys, traceback
 from subprocess import CalledProcessError, run, PIPE
 
 COLOURS = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan',
@@ -206,6 +206,9 @@ class Config:
                 if key.startswith('__'): continue
                 ret += makeLine(sect, key)
         return ret
+
+def mkdirp(path):
+    pathlib.Path(path).mkdir(parents=True, exist_ok=True)
 
 def which(program):
     def is_exe(fpath):
@@ -503,10 +506,6 @@ cFlags = getCFlags()
 cxxFlags = getCFlags(cxx=True)
 dFlags = getDFlags()
 
-cc = 'cl.exe' if os.name == 'nt' else 'gcc'
-cxx = 'cl.exe' if os.name == 'nt' else 'g++'
-dc = 'dmd.exe' if os.name == 'nt' else 'dmd'
-
 def hostOSBranch(nt, nix, macos=None):
     if flags['host']['os'] == 'nt':
         return nt
@@ -531,6 +530,17 @@ def debugBranch(debug, release):
     if flags['target']['debug'] == True:
         return debug
     return release
+
+cc = hostOSBranch('cl.exe', 'gcc')
+cxx = hostOSBranch('cl.exe', 'g++')
+dc = hostOSBranch('dmd.exe', 'dmd')
+
+ccOflag = hostOSBranch('/Fo', '-o')
+cxxOflag = ccOflag
+dcOflag = '-od=' # Needs concatenation
+
+# Needs concatenation on Windows
+linkOflag = hostOSBranch('/OUT:', '-o')
 
 def pprint(s=None, step=None, phase=None, status='info'):
     if phase != None and phase in txt['phase']:
@@ -681,6 +691,9 @@ class Project:
     _exprC = re.compile(r'.+\.c$')
     _exprCXX = re.compile(r'.+\.c(c|pp|xx|\+\+)$')
     _exprD = re.compile(r'.+\.d$')
+    _objSuffix = hostOSBranch('.obj', '.o')
+    _libSuffic = hostOSBranch('.lib', '.a')
+    _execSuffix = hostOSBranch('.exe', '')
 
     def __init__(self, projName, projCfg, slnCfg):
         self.name = projName
@@ -702,6 +715,8 @@ class Project:
             elif self._exprD.fullmatch(item):
                 self.dFiles.append(item)
         self.incDirs = [pathify(slnCfg.loadGlobal('sourceRoot'))]
+        self.outDir = os.path.join(flags['buildDir'], 'object', projName)
+        mkdirp(self.outDir)
 
     def compileC(self, srcFile):
         if flags['target']['arch'] == 'powerpc':
@@ -709,8 +724,9 @@ class Project:
         elif flags['target']['arch'] == 'arm':
             raise Exception(txt['noARM'])
         else:
-            # TODO: Add output flags
-            subprocess.run([cc] + cFlags, shell=True, stdout=subprocess.PIPE)
+            # TODO: Transform srcFile name into outFile name
+            subprocess.run([cc] + cFlags + [ccOflag, '', srcFile], shell=True,
+                stdout=subprocess.PIPE)
 
     def build(self):
         pprint(s=self.prettyName, phase='start')
